@@ -1,2 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"><channel><title>SwiftChat Alpha</title><link>https://swiftchat.ronniewong.cc/</link><description>Signed macOS alpha updates for SwiftChat. The first release is being prepared.</description><language>en</language></channel></rss>
+<?xml version='1.0' encoding='utf-8'?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0"><channel><title>SwiftChat Alpha</title><link>https://swiftchat.ronniewong.cc</link><description>SwiftChat macOS alpha updates</description><item><title>SwiftChat 0.1.0 (4) Alpha</title><description>SwiftChat 提供原生 macOS 對話工作區，整合 AIChat 與 ChatGPT Web。
+
+• 建立新對話時，可選擇已連線的服務、模型、推理強度，以及 ChatGPT 的 Chat／Work 模式；服務帳號與輸入偏好可在原生設定中管理。
+• macOS 支援 Work with Apps，可從 Terminal、TextEdit、Notes 與 Xcode 預覽並附加唯讀文字脈絡；送出時會重新讀取來源，且不會啟動或修改來源應用程式。
+• 原生 Browser 可在 macOS 獨立視窗開啟，支援分頁、前進／後退、重新載入、網站對話框、檔案選取與下載；一般外部連結仍交由系統預設瀏覽器處理。
+• Composer 支援圖片與檔案附件、拖放及 macOS 剪貼簿貼上；附件可查看狀態、移除與預覽，macOS 圖片也可用 Quick Look 開啟。
+• macOS 的 ChatGPT Composer 提供 @ 參考選單，可搜尋已安裝的外掛及 library 檔案與資料夾，並保留多行輸入與輸入法標記文字。
+• macOS 提供 Sparkle 更新檢查，可從 SwiftChat 選單或設定中的 Updates 開啟。
+
+ChatGPT 整合依賴網站行為，可能受網站變更影響。本次僅分發 macOS 26 或以上版本。這是 alpha 版本；回報問題時請勿附上私密對話內容或憑證。</description><sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion><enclosure url="https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.4/SwiftChat-0.1.0-4-macOS.zip" length="8099848" type="application/octet-stream" sparkle:version="4" sparkle:shortVersionString="0.1.0" sparkle:edSignature="LB2GvlWUY86KSgCLflCNyo0LHepeZlKzp9iW98B/mEMPrG5xLm2nD4kHHasbvY6hO3EDn/PzrOZn2jvVXYrtDw==" /></item></channel></rss>
