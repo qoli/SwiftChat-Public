@@ -21,4 +21,4 @@ integration on September 24, 2026. `conversation.png` uses a newly created
 synthetic Kyoto itinerary conversation; `context.png` previews a purpose-made
 TextEdit note; no personal chat history is shown. `icon.png` is exported from the
 compiled app icon. Screenshots and branding are not covered by the adapter MIT
-license. Browser screenshot content belongs to its respective website authors.
+license. `browser.png` shows the public SwiftChat homepage inside the native Browser.
