@@ -9,6 +9,7 @@ function fixture(mode = 'work') {
   const ctx = vm.createContext({nativeAttachments: new Map(), verifyNativeAttachments(){},Promise, Error, queueMicrotask, location:{pathname:'/'},
     currentConversationMode:()=>mode, contextError:code=>new Error('app-context:'+code),
     mentionError:code=>new Error('mentions:'+code),
+    freeAutoThinkingState:()=>null,
     probeChatGPTComposer:()=>({ok:true, anchors:{editor,form}}),
     activateWebsiteComposer:()=>{}, hideWebsiteComposer:()=>{}, reportNativeState:()=>{},
     syncDraftToSite:text=>{editor.text=text; return true;},

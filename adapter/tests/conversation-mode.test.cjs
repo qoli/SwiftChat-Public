@@ -21,6 +21,8 @@ function fixture({timeoutMs = 0} = {}) {
     },
     setTimeout:fn=>setTimeout(fn,timeoutMs), clearTimeout,
     activeConversationID: () => location.pathname.startsWith('/c/') ? location.pathname.slice(3) : null,
+    freeWebsiteConversationMode: () => null,
+    freeAutoThinkingState: () => null,
     document: {querySelectorAll:()=>controlAvailable ? [{getAttribute:()=>selected}] : []},
     exactlyOne: (_,selector) => controlAvailable ? {
       get disabled() { return disabled; },

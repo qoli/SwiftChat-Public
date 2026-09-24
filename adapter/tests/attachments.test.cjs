@@ -33,6 +33,7 @@ function fixture() {
     isGenerating:()=>false,websiteMentionState:()=>state,
     attachmentControl:()=>input,exactlyOne:(target,selector)=>selector==='editor'?host:selector==='form'?form:input,
     mentionError:invariant=>new Error(`mentions:${invariant}`),
+    freeAutoThinkingState:()=>null,
     probeChatGPTComposer:()=>({ok:true,anchors:{form,editor:{}}}),
     activateWebsiteComposer(){},hideWebsiteComposer(){},reportNativeState(){reports.push(copy(ctx.nativeAttachmentReport()));},
     waitForWebsiteState:async(read,invariant)=>{const value=read();if(!value) throw new Error(invariant);return value;},

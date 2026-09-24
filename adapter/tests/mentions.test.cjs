@@ -96,6 +96,7 @@ test('submission guard rejects a concurrent submit and releases after failed pre
     reportNativeState:(...e)=>events.push(e),prepareNativeMentions:()=>new Promise((_,reject)=>{fail=reject;})});
   const submit=source.slice(source.indexOf('\tvar nativeSubmissionInFlight'),source.indexOf('\tfunction forwardAttachmentPicker(kind)'));
   vm.runInContext(submit,ctx);
+  ctx.freeAutoThinkingState=()=>null;
   const first=ctx.submitNativeDraft('@PDF',[{}]);
   assert.equal(events[0][0],'sending');
   await assert.rejects(ctx.submitNativeDraft('@PDF',[{}]),/submission-in-flight/);

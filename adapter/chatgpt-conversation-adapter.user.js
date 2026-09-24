@@ -2,7 +2,7 @@
 // Directly bundled as an Xcode resource. This file has no runtime or build dependencies.
 (() => {
 	"use strict";
-	var ADAPTER_VERSION = "2.16.7";
+	var ADAPTER_VERSION = "2.16.9";
 	var documentID = crypto.randomUUID();
 	var SELECTORS = {
 		thread: "#thread",
@@ -27,6 +27,7 @@
 	function currentConversationMode() {
 		if (location.pathname === "/") {
 			const controls = document.querySelectorAll('[data-tpp-toggle-value][role="radio"][aria-checked="true"]');
+			if (controls.length === 0) return freeWebsiteConversationMode();
 			if (controls.length !== 1) return null;
 			const value = controls[0].getAttribute("data-tpp-toggle-value");
 			return value === "work" ? "work" : value === "chatgpt" ? "chat" : null;
@@ -42,6 +43,11 @@
 	function modelContextKey() {
 		const probe = probeChatGPTComposer();
 		if (!probe.ok) return null;
+		// Context metadata is unavailable while the fiber root/composer controls transition.
+		// Explicit snapshot and mutation operations retain their contract errors.
+		let auto;
+		try { auto = freeAutoThinkingState(); } catch { return null; }
+		if (auto) return JSON.stringify([location.pathname, currentConversationMode(), "autoThinking", auto.modelID, auto.thinkingEnabled]);
 		const control = uniqueControl(probe.anchors.form, SELECTORS.modelControl);
 		if (!control) return null;
 		return JSON.stringify([location.pathname, currentConversationMode(), control.textContent.trim()]);
@@ -117,6 +123,9 @@
 		const value = mode === "chat" ? "chatgpt" : "work";
 		const readControl = () => exactlyOne(document, `[data-tpp-toggle-value="${value}"][role="radio"]`);
 		try {
+			// Some free-account surfaces expose mode through their composer state
+			// without a mode switch. Confirm the requested state; never invent one.
+			if (currentConversationMode() === mode && probeChatGPTComposer().ok) return true;
 			await waitForWebsiteState(readControl, "new-conversation:mode-control-missing", diagnostic);
 			if (currentConversationMode() !== mode) {
 				// The website renders disabled toggles before they become interactive.
@@ -1045,11 +1054,30 @@
 			throw error;
 		}
 	}
+	async function observeNativeThinkingRequest(input, init) {
+		const report = nativeThinkingSendDiagnostic;
+		if (!report) return;
+		let matched = false;
+		try {
+			const target = typeof input === "string" ? input : input instanceof URL ? input.href : input?.url;
+			if (!/\/backend-api\/(?:f\/)?conversation$/.test(new URL(target, location.href).pathname)) return;
+			matched = true;
+			nativeThinkingSendDiagnostic = null;
+			const raw = typeof init?.body === "string" ? init.body : init?.body == null && input instanceof Request ? await input.clone().text() : null;
+			const body = raw === null ? null : JSON.parse(raw);
+			const hasReason = value => value !== null && typeof value === "object" && Object.entries(value).some(([key, child]) => key === "system_hints" && Array.isArray(child) && child.includes("reason") || hasReason(child));
+			report(body ? (hasReason(body) ? "send.request.reason-on" : "send.request.reason-off") : "send.request.unobserved", "end");
+		} catch {
+			// Observation, including a failed reporter, must never reject fetch.
+			if (matched) { try { report("send.request.unobserved", "end"); } catch {} }
+		}
+	}
 	function installHistoryResponseObserver() {
 		if (observerInstalled) return;
 		observerInstalled = true;
 		const pageFetch = window.fetch;
 		window.fetch = async function(input, init) {
+			void observeNativeThinkingRequest(input, init);
 			const query = mentionRequestQuery(input, init), generation = mentionSearchGeneration;
 			let response;
 			try { response = await fetchWithAppContext(pageFetch, this, input, init); }
@@ -1400,13 +1428,21 @@
 		}))};
 	}
 	var nativeSubmissionInFlight = false;
-	async function submitNativeDraft(text, mentions = [], appContext = "", attachmentIDs = []) {
+	var nativeThinkingSendDiagnostic = null;
+	async function submitNativeDraft(text, mentions = [], appContext = "", attachmentIDs = [], thinkingPreference = null, diagnostic) {
 		if (nativeSubmissionInFlight) throw mentionError("submission-in-flight");
 		const probe = probeChatGPTComposer();
 		if (!probe.ok) return false;
 		nativeSubmissionInFlight = true;
 		let prepared = null, sent = false, contextLease = null;
 		try {
+			if (thinkingPreference !== null && typeof thinkingPreference !== "boolean") throw new Error("auto-thinking:invalid-selection");
+			let thinkingSelection = null;
+			try { thinkingSelection = freeAutoThinkingState(); } catch {}
+			const requestedThinking = thinkingPreference ?? thinkingSelection?.thinkingEnabled;
+			if (typeof requestedThinking === "boolean") diagnostic?.(requestedThinking ? "send.thinking.requested-on" : "send.thinking.requested-off", "begin");
+			const thinkingPath = location.pathname;
+			const thinkingMode = thinkingPreference !== null ? currentConversationMode() : null;
 			if (attachmentIDs.length || nativeAttachments.size) verifyNativeAttachments(attachmentIDs);
 			const contextMode = appContext ? currentConversationMode() : null;
 			if (appContext && contextMode !== "chat" && contextMode !== "work") {
@@ -1419,7 +1455,16 @@
 			else if (!syncDraftToSite(text)) { reportNativeState("composer-error", "draft:sync-failed"); return false; }
 			await new Promise((resolve) => queueMicrotask(resolve));
 			await new Promise((resolve) => requestAnimationFrame(() => resolve()));
-			// Check after the website has parsed the DOM mutation, before sending.
+			// Native owns an explicit per-window preference. Apply it to each
+			// prepared message; the website may clear its one-message hint later.
+			if (thinkingPreference !== null) {
+				if (location.pathname !== thinkingPath || currentConversationMode() !== thinkingMode) throw new Error("auto-thinking:conversation-changed");
+				if (!freeAutoThinkingState()) throw new Error("auto-thinking:website-contract-unavailable");
+				await setNativeThinkingEnabled(thinkingPreference, diagnostic);
+				activateWebsiteComposer(probe.anchors.form);
+			}
+			// Applying a hint can affect prepared mentions or text. Confirm the
+			// complete draft again instead of silently replacing a plugin choice.
 			if (prepared ? !prepared.verify() : normalizeEditorText(editorDraftText(probe.anchors.editor)) !== normalizeEditorText(text)) {
 				reportNativeState("composer-error", "draft:line-structure-mismatch");
 				return false;
@@ -1428,7 +1473,19 @@
 			if (appContext && currentConversationMode() !== contextMode) throw contextError("conversation-mode-changed");
 			if (contextMode === "chat") contextLease = armAppContext(text, appContext);
 			verifyNativeAttachments(attachmentIDs, prepared?.attachmentFiles ?? []);
+			if (thinkingPreference !== null) {
+				const current = freeAutoThinkingState();
+				if (current) diagnostic?.(current.thinkingEnabled ? "send.thinking.pre-send-on" : "send.thinking.pre-send-off", "end");
+				if (location.pathname !== thinkingPath || currentConversationMode() !== thinkingMode || !current || current.thinkingEnabled !== thinkingPreference) throw new Error("auto-thinking:pre-send-selection-mismatch");
+			} else if (thinkingSelection) {
+				try {
+					const current = freeAutoThinkingState();
+					if (current) diagnostic?.(current.thinkingEnabled ? "send.thinking.pre-send-on" : "send.thinking.pre-send-off", "end");
+				} catch {}
+			}
+			nativeThinkingSendDiagnostic = thinkingSelection || thinkingPreference !== null ? diagnostic : null;
 			if (!forwardSend()) {
+				nativeThinkingSendDiagnostic = null;
 				reportNativeState("composer-error", "send-button:not-ready");
 				return false;
 			}
@@ -1440,7 +1497,7 @@
 			nativeAttachments.clear();
 			return true;
 		} catch (error) {
-			reportNativeState("composer-error", /^(mentions|app-context|attachments):[a-z0-9-]+$/.test(error.message) ? error.message : "mentions:submission-failed");
+			reportNativeState("composer-error", /^(mentions|app-context|attachments|auto-thinking):[a-z0-9-]+$/.test(error.message) ? error.message : "mentions:submission-failed");
 			throw error;
 		} finally {
 			try {
@@ -1540,6 +1597,8 @@
 	async function nativeModelControlSnapshot(diagnostic) {
 		const path = location.pathname;
 		const mode = currentConversationMode();
+		const auto = freeAutoThinkingState();
+		if (auto) return {kind: "autoThinking", modelName: auto.modelName, thinkingEnabled: auto.thinkingEnabled, workUnavailable: auto.workUnavailable, contextKey: modelContextKey()};
 		if (!await openHiddenModelControl(diagnostic)) throw new Error("model-snapshot:menu-open-failed");
 		let snapshot;
 		try {
@@ -1604,6 +1663,19 @@
 	// Read the website's already loaded catalogs; opening a native draft must not
 	// select a mode/model, navigate, or issue a second catalog request.
 	function newConversationWebsiteState(pickerRequirement = "required") {
+		const fibers = websiteComposerFibers();
+		const clients = new Set(), pickers = new Set();
+		for (const fiber of fibers) {
+			const props = fiber.memoizedProps;
+			if (typeof props?.client?.getQueryCache === "function") clients.add(props.client);
+			const picker = props?.dropdownContent?.props;
+			if (picker?.composerIntelligencePickerState && picker.modelsData) pickers.add(picker);
+		}
+		if (pickerRequirement === "pending" && clients.size === 1 && pickers.size === 0) return null;
+		if (clients.size !== 1 || pickers.size > 1 || (pickers.size === 0 && pickerRequirement !== "optional")) throw new Error(`new-conversation:website-state-ambiguous:clients=${clients.size}:pickers=${pickers.size}:mode=${currentConversationMode()}:menu=${isModelControlExpanded()}`);
+		return { client: [...clients][0], picker: [...pickers][0], fibers };
+	}
+	function websiteComposerFibers() {
 		let host = exactlyOne(document, SELECTORS.editor);
 		while (host && !Object.keys(host).some(key => key.startsWith("__reactFiber$"))) host = host.parentElement;
 		if (!host) throw new Error("new-conversation:react-root-unavailable");
@@ -1611,20 +1683,134 @@
 		while (root.return) root = root.return;
 		root = root.stateNode?.current;
 		if (!root) throw new Error("new-conversation:current-root-unavailable");
-		const clients = new Set(), pickers = new Set(), fibers = [];
+		const fibers = [];
 		const stack = [root];
 		while (stack.length) {
-			const fiber = stack.pop(), props = fiber.memoizedProps;
+			const fiber = stack.pop();
 			fibers.push(fiber);
-			if (typeof props?.client?.getQueryCache === "function") clients.add(props.client);
-			const picker = props?.dropdownContent?.props;
-			if (picker?.composerIntelligencePickerState && picker.modelsData) pickers.add(picker);
 			if (fiber.child) stack.push(fiber.child);
 			if (fiber.sibling) stack.push(fiber.sibling);
 		}
-		if (pickerRequirement === "pending" && clients.size === 1 && pickers.size === 0) return null;
-		if (clients.size !== 1 || pickers.size > 1 || (pickers.size === 0 && pickerRequirement !== "optional")) throw new Error(`new-conversation:website-state-ambiguous:clients=${clients.size}:pickers=${pickers.size}:mode=${currentConversationMode()}:menu=${isModelControlExpanded()}`);
-		return { client: [...clients][0], picker: [...pickers][0], fibers };
+		return fibers;
+	}
+	function websiteHasFreePlan(fibers) {
+		const plans = new Set(fibers.map(fiber => fiber.memoizedProps?.account?.data?.lightAccount?.planType).filter(plan => typeof plan === "string"));
+		return plans.size === 1 && plans.has("free");
+	}
+	function websiteWorkUnavailable(fibers) {
+		const availability = new Set(fibers.map(fiber => fiber.memoizedProps?.isTPPAvailable).filter(value => typeof value === "boolean"));
+		return websiteHasFreePlan(fibers) && availability.size === 1 && availability.has(false);
+	}
+	function newConversationWorkUnavailable(state) {
+		if (websiteWorkUnavailable(state.fibers ?? [])) return true;
+		return !state.picker && websiteHasFreePlan(state.fibers ?? []) && freeAutoThinkingState(state)?.workUnavailable === true;
+	}
+	function freeWebsiteConversationMode() {
+		let fibers;
+		try { fibers = websiteComposerFibers(); } catch { return null; }
+		if (!websiteHasFreePlan(fibers)) return null;
+		const modes = new Set(fibers.map(fiber => fiber.memoizedProps).filter(props => props?.composerController && typeof props.isTPPConversationMode === "boolean").map(props => props.isTPPConversationMode));
+		return modes.size === 1 ? ([...modes][0] ? "work" : "chat") : null;
+	}
+	function freeAutoThinkingState(state = null) {
+		const fibers = state?.fibers ?? websiteComposerFibers();
+		if (!websiteHasFreePlan(fibers)) return null;
+		// A verified intelligence picker remains authoritative even on a free
+		// account. Auto is a separate website contract, never picker recovery.
+		if (fibers.some(fiber => {
+			const picker = fiber.memoizedProps?.dropdownContent?.props;
+			return picker?.composerIntelligencePickerState && picker.modelsData;
+		})) return null;
+		const owners = fibers.map(fiber => fiber.memoizedProps).filter(props => props?.composerController && props.currentModelId && props.currentModelConfig && Object.prototype.hasOwnProperty.call(props, "activeSystemHintType"));
+		if (!owners.length || owners.some(props => props.currentModelId !== "auto" || props.currentModelConfig.id !== "auto")) return null;
+		const values = owners.map(props => {
+			const hints = props.availableSystemHints?.filter(hint => hint.systemHint === "reason");
+			if (hints?.length !== 1 || typeof hints[0].name !== "string" || !hints[0].name || typeof props.currentModelConfig.title !== "string" || !props.currentModelConfig.title) throw new Error("auto-thinking:website-contract-changed");
+			return {modelID: props.currentModelId, modelName: props.currentModelConfig.title, label: hints[0].name, thinkingEnabled: props.activeSystemHintType === "reason"};
+		});
+		if (new Set(values.map(value => JSON.stringify(value))).size !== 1) throw new Error("auto-thinking:website-state-ambiguous");
+		const value = values[0];
+		// Compact and hidden composers move Thinking into the plus menu. Reading
+		// a catalog projects the website state without opening any control.
+		return {...value, workUnavailable: true};
+	}
+	function thinkingMenuItem() {
+		const menu = activeModelMenu();
+		if (!menu) return null;
+		const matches = Array.from(menu.querySelectorAll('[role="menuitemradio"]')).filter(item => {
+			let fiber = item[Object.keys(item).find(key => key.startsWith("__reactFiber$"))];
+			while (fiber) {
+				if (fiber.memoizedProps?.hint?.systemHint === "reason") return true;
+				fiber = fiber.return;
+			}
+			return false;
+		});
+		if (matches.length > 1) throw new Error("auto-thinking:menu-control-ambiguous");
+		return matches[0] ?? null;
+	}
+	async function changeWebsiteThinking(state, enabled, diagnostic) {
+		const probe = probeChatGPTComposer();
+		if (!probe.ok) throw new Error("auto-thinking:composer-unavailable");
+		const form = probe.anchors.form;
+		activateWebsiteComposer(form);
+		let plus = null;
+		try {
+			const buttons = Array.from(form.querySelectorAll("button[aria-pressed]")).filter(button => button.textContent.trim() === state.label);
+			if (buttons.length > 1) throw new Error(`auto-thinking:control-ambiguous:count=${buttons.length}`);
+			let button = buttons[0];
+			if (button) {
+				const pressed = button.getAttribute("aria-pressed");
+				if (!["true", "false"].includes(pressed) || (pressed === "true") !== state.thinkingEnabled) throw new Error("auto-thinking:control-state-mismatch");
+			} else if (!enabled) {
+				button = exactlyOne(form, '[data-system-hint-type="reason"] button');
+				if (!button) throw new Error("auto-thinking:remove-control-unavailable");
+			} else {
+				plus = exactlyOne(form, 'button[data-testid="composer-plus-btn"]');
+				if (!plus || plus.disabled || plus.getAttribute("aria-disabled") === "true") throw new Error("auto-thinking:menu-control-unavailable");
+				setModelTransportVisible(true);
+				if (plus.getAttribute("aria-expanded") !== "true") {
+					plus.dispatchEvent(new PointerEvent("pointerdown", {bubbles:true, button:0, buttons:1, pointerType:"mouse", isPrimary:true}));
+					plus.dispatchEvent(new PointerEvent("pointerup", {bubbles:true, button:0, pointerType:"mouse", isPrimary:true}));
+					plus.click();
+				}
+				button = await waitForWebsiteState(thinkingMenuItem, "auto-thinking:menu-item-unavailable", diagnostic);
+				if (button.getAttribute("aria-checked") !== "false") throw new Error("auto-thinking:control-state-mismatch");
+			}
+			if (button.disabled || button.getAttribute("aria-disabled") === "true") throw new Error("auto-thinking:control-disabled");
+			button.click();
+		} finally {
+			try {
+				if (plus?.getAttribute("aria-expanded") === "true") {
+					document.dispatchEvent(new KeyboardEvent("keydown", {key:"Escape", code:"Escape", bubbles:true}));
+					document.dispatchEvent(new KeyboardEvent("keyup", {key:"Escape", code:"Escape", bubbles:true}));
+					await waitForWebsiteState(() => plus.getAttribute("aria-expanded") !== "true" && !isModelMenuVisible(), "auto-thinking:menu-close-failed", diagnostic);
+				}
+			} finally { if (plus) setModelTransportVisible(false); hideWebsiteComposer(form); }
+		}
+	}
+	async function setNativeThinkingEnabled(enabled, diagnostic) {
+		if (typeof enabled !== "boolean") throw new Error("auto-thinking:invalid-selection");
+		const path = location.pathname, mode = currentConversationMode();
+		const state = freeAutoThinkingState();
+		if (!state) throw new Error("auto-thinking:website-contract-unavailable");
+		if (state.thinkingEnabled === enabled) return true;
+		await changeWebsiteThinking(state, enabled, diagnostic);
+		await waitForWebsiteState(() => {
+			if (location.pathname !== path || currentConversationMode() !== mode) throw new Error("auto-thinking:conversation-changed");
+			const current = freeAutoThinkingState();
+			if (!current) throw new Error("auto-thinking:website-contract-changed");
+			return current.thinkingEnabled === enabled;
+		}, "auto-thinking:selection-not-confirmed", diagnostic);
+		return true;
+	}
+	async function applyAutoConversationSelection(mode, modelID, thinkingEnabled, diagnostic) {
+		if (location.pathname !== "/" || currentConversationMode() !== mode) throw new Error("new-conversation:selection-requires-confirmed-empty-mode");
+		const catalog = await loadNewConversationCatalog(mode, diagnostic);
+		if (location.pathname !== "/" || currentConversationMode() !== mode) throw new Error("new-conversation:mode-changed-before-selection");
+		if (!catalog.models.some(model => model.id === modelID && model.selectionKind === "autoThinking")) throw new Error("auto-thinking:selection-no-longer-available");
+		const current = freeAutoThinkingState();
+		if (!current || current.modelID !== modelID) throw new Error("auto-thinking:website-contract-changed");
+		return await setNativeThinkingEnabled(thinkingEnabled, diagnostic);
 	}
 	function projectNewConversationCatalog(mode, data, selectedVersionID = null) {
 		if (!["chat", "work"].includes(mode)) throw new Error("new-conversation:invalid-mode");
@@ -1639,7 +1825,7 @@
 				return { id: String(preset.id), label: preset.title, modelSlug: preset.model_slug, thinkingEffort: preset.thinking_effort ?? null };
 			});
 			if (new Set(efforts.map(effort => effort.id)).size !== efforts.length) throw new Error("new-conversation:duplicate-preset");
-			return { id: version.id, label: version.displayTextForIntelligence, efforts, defaultEffortID: null };
+			return { id: version.id, label: version.displayTextForIntelligence, selectionKind: "intelligencePreset", efforts, defaultEffortID: null };
 		}).filter(model => model.efforts.length > 0);
 		if (!models.length || new Set(models.map(model => model.id)).size !== models.length || new Set(models.map(model => model.label)).size !== models.length) throw new Error("new-conversation:empty-or-ambiguous-catalog");
 		return { mode, models, selectedModelID: models.some(model => model.id === selectedVersionID) ? selectedVersionID : null };
@@ -1649,6 +1835,7 @@
 		// A draft reads cached catalogs even while the website picker is not mounted.
 		// Its current selection is optional metadata, not ownership of the catalog.
 		const state = newConversationWebsiteState("optional");
+		if (mode === "work" && newConversationWorkUnavailable(state)) throw new Error("auto-thinking:requested-mode-unavailable");
 		const key = mode === "work" ? "tpp-models" : "models";
 		const matching = state.client.getQueryCache().getAll().filter(query => query.queryKey?.[0] === key);
 		const queries = matching.filter(query => query.state.status === "success");
@@ -1661,6 +1848,15 @@
 			}).join(",");
 			throw new Error(`new-conversation:catalog-not-ready-or-ambiguous:queries=${matching.length}:ready=${queries.length}:states=${states || "none"}`);
 		}
+		if (!state.picker && websiteHasFreePlan(state.fibers ?? [])) {
+			if (mode !== "chat" || currentConversationMode() !== mode) throw new Error("auto-thinking:requested-mode-unavailable");
+			const auto = freeAutoThinkingState(state);
+			if (!auto) throw new Error("auto-thinking:website-contract-unavailable");
+			const data = queries[0].state.data;
+			const versions = data?.versions?.filter(version => version.id === auto.modelID && version.enabled === true);
+			if (versions?.length !== 1 || !data.models?.has(auto.modelID)) throw new Error("auto-thinking:catalog-contract-changed");
+			return {mode, workUnavailable: auto.workUnavailable, models: [{id: auto.modelID, label: auto.modelName, selectionKind: "autoThinking", thinkingEnabled: auto.thinkingEnabled, efforts: [], defaultEffortID: null}], selectedModelID: auto.modelID};
+		}
 		const selected = currentConversationMode() === mode ? state.picker?.composerIntelligencePickerState.selectedVersionEntry?.id : null;
 		const catalog = projectNewConversationCatalog(mode, queries[0].state.data, selected);
 		const current = state.picker?.composerIntelligencePickerState.currentSelection;
@@ -1671,7 +1867,9 @@
 	}
 	function loadNewConversationCatalog(mode, diagnostic) {
 		if (!["chat", "work"].includes(mode)) throw new Error("new-conversation:invalid-mode");
-		const cache = newConversationWebsiteState("optional").client.getQueryCache();
+		const state = newConversationWebsiteState("optional");
+		if (mode === "work" && newConversationWorkUnavailable(state)) throw new Error("auto-thinking:requested-mode-unavailable");
+		const cache = state.client.getQueryCache();
 		const key = mode === "work" ? "tpp-models" : "models";
 		return waitForWebsiteState(() => {
 			if (newConversationWebsiteState("optional").client.getQueryCache() !== cache) throw new Error("new-conversation:catalog-context-changed");
@@ -1765,6 +1963,7 @@
 				"aria-label",
 				"aria-current",
 				"aria-expanded",
+				"aria-pressed",
 				"aria-checked"
 			]
 		});
@@ -1782,8 +1981,9 @@
 			selectNewConversationMode: (mode) => diagnoseOperation("conversation.mode", diagnostic => selectNewConversationMode(mode, diagnostic)),
 			newConversationCatalog: (mode) => diagnoseOperation("conversation.catalog", diagnostic => loadNewConversationCatalog(mode, diagnostic)),
 			applyNewConversationSelection: (mode, model, effort) => diagnoseOperation("conversation.configure", diagnostic => applyNewConversationSelection(mode, model, effort, diagnostic)),
+			applyAutoConversationSelection: (mode, model, thinking) => diagnoseOperation("conversation.configure", diagnostic => applyAutoConversationSelection(mode, model, thinking, diagnostic)),
 			reportCurrentState: () => mountConversationAdapter(),
-			submitNativeDraft,
+			submitNativeDraft: (text, mentions, appContext, attachmentIDs, thinkingPreference = null) => diagnoseOperation("conversation.submit", diagnostic => submitNativeDraft(text, mentions, appContext, attachmentIDs, thinkingPreference, diagnostic)),
 			searchMentions,
 			invalidateMentionCache,
 			forwardAttachmentPicker,
@@ -1796,7 +1996,8 @@
 			openNativeModelControl: () => diagnoseOperation("model.snapshot", diagnostic => openNativeModelControl(diagnostic)),
 			nativeModelControlSnapshot: () => diagnoseOperation("model.snapshot", diagnostic => nativeModelControlSnapshot(diagnostic)),
 			selectNativeModel: (label) => diagnoseOperation("model.select", diagnostic => selectNativeModel(label, diagnostic)),
-			setNativeReasoningValue: (value) => diagnoseOperation("model.effort", diagnostic => setNativeReasoningValue(value, diagnostic))
+			setNativeReasoningValue: (value) => diagnoseOperation("model.effort", diagnostic => setNativeReasoningValue(value, diagnostic)),
+			setNativeThinkingEnabled: (enabled) => diagnoseOperation("model.thinking", diagnostic => setNativeThinkingEnabled(enabled, diagnostic))
 		};
 		if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", startConversationAdapter, { once: true });
 		else startConversationAdapter();

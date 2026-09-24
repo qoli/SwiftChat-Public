@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "publicProtocol": "0.1.0-alpha.1",
-  "adapterVersion": "2.16.7",
-  "sourceRevision": "abc0757bfdf0115f65b4c1d182137a479d975c45",
+  "adapterVersion": "2.16.9",
+  "sourceRevision": "df0ca4387b9146cc4721589e55a62431837a0fe1",
   "sourceFilesModified": false,
   "authority": "Private SwiftChat repository; one-way reviewed export",
   "files": [
     {
       "source": "Resources/ConversationFlow/ChatGPT/chatgpt-conversation-adapter.user.js",
       "path": "adapter/chatgpt-conversation-adapter.user.js",
-      "sourceSHA256": "f07a631c379ad9a49ad041638fa8b0b34dd2c10d7572665300e5f002f3c8f38a",
-      "sha256": "f07a631c379ad9a49ad041638fa8b0b34dd2c10d7572665300e5f002f3c8f38a"
+      "sourceSHA256": "f6617eb2e850ed3551172bd4af158beee580f811ec774d9273122c03de40d6d1",
+      "sha256": "f6617eb2e850ed3551172bd4af158beee580f811ec774d9273122c03de40d6d1"
     },
     {
       "source": "Tests/Adapter/app-context.test.cjs",
@@ -21,14 +21,14 @@
     {
       "source": "Tests/Adapter/attachments.test.cjs",
       "path": "adapter/tests/attachments.test.cjs",
-      "sourceSHA256": "4a1f4ae7d6cc0f20f7f4a6fd6e2d1c17324be0e44f6ff0f6f84a2e89eda05238",
-      "sha256": "1d67bb0ca60eb1eb81f43e1ac45c9493e277c985626fbbb4979a7aa3022f002c"
+      "sourceSHA256": "5b081a004ee66d55172c43049aecb618dc6e360a98816b5395746c41912f9041",
+      "sha256": "6ee37103454ffbe61ffdba18ed0fded93c110de342ebc984db6852ee39b0d62f"
     },
     {
       "source": "Tests/Adapter/conversation-mode.test.cjs",
       "path": "adapter/tests/conversation-mode.test.cjs",
-      "sourceSHA256": "081fa12991582f664003ea4b3d808b9b8622bcc0189b20170a0286d4a5e47e27",
-      "sha256": "6132b0451b6adbefeb3b2adb5572ed1653b7522654e8bcc4c61d27754c3b74ce"
+      "sourceSHA256": "c713d22cc2ce6e7340714e38e49b16f1483955c348cba0d76cd7acc487a7b5e5",
+      "sha256": "16badce45ad1a287036ea611795518e832b5a4e699ceebd7c1ea26de55f0d9b6"
     },
     {
       "source": "Tests/Adapter/history-pagination.test.cjs",
@@ -39,8 +39,8 @@
     {
       "source": "Tests/Adapter/mentions.test.cjs",
       "path": "adapter/tests/mentions.test.cjs",
-      "sourceSHA256": "aa4e5a2c671cd52d45b7f42ae5cdc82729cecd5425e00e94d856188afd9286a7",
-      "sha256": "e0a1729e854036e1b3bddd70ef9027b2b992f739d67ccc7c5e0c70d074d4c7cd"
+      "sourceSHA256": "895e93b47ee40dcb2de49ebb3371b20c8391531f49dd41c4d9b208489795a17d",
+      "sha256": "ac415054e7911146e5601bde106cc63cef153f6c35d8a22834b395d02e945ce1"
     },
     {
       "source": "Tests/Adapter/new-conversation-catalog.test.cjs",
@@ -57,8 +57,8 @@
     {
       "source": "Tests/Adapter/web-context.test.cjs",
       "path": "adapter/tests/web-context.test.cjs",
-      "sourceSHA256": "787638f2cb69e924a52dadf46ef8fbb6fc975dcb8fcb60f0b622159794733f13",
-      "sha256": "6b79f45c51e72ea82f50a84a3f9cd7e2a34eda32cc4adc5094c35761b9720cb4"
+      "sourceSHA256": "8d5e0e4fbb4dc59b36d8d47a4e827fb125f3dedc5ed842c4a1751d3851561b25",
+      "sha256": "5967b94656467af4db5d158f12a57f2c2b3a2db59a5f63cdf2c403564096e433"
     }
   ]
 }
