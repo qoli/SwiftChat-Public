@@ -1,6 +1,4 @@
 <?xml version='1.0' encoding='utf-8'?>
-<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0"><channel><title>SwiftChat Alpha</title><link>https://swiftchat.ronniewong.cc</link><description>SwiftChat macOS alpha updates</description><item><title>SwiftChat 0.1.0 (6) Alpha</title><description>• 在「設定 → Accounts &amp; Services → AIChat Services」可新增自訂 API 服務，支援 OpenAI Chat Completions、OpenAI Responses 與 Anthropic Messages；可設定多個模型、測試連線，並在新對話中選用。API 金鑰會存放於 Keychain。
-• AIChat 串流回覆會立即顯示已送出的問題，並保留多回合工具呼叫與輸出；Thinking 旁的等待指示點也會保持置中。
-• macOS 版 ChatGPT 的 @ 參考選單支援 Work Skills，可按名稱或別名搜尋並插入；準備失敗後重試時會保留 Skill 參考狀態。
-
-本次更新僅適用 macOS。</description><sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion><enclosure url="https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.6/SwiftChat-0.1.0-6-macOS.zip" length="8760224" type="application/octet-stream" sparkle:version="6" sparkle:shortVersionString="0.1.0" sparkle:edSignature="XgkCZoudXuz3ndKZXjwdwInmkYvdL219MirpIKVFcF4VrkeX1ymxALOYi+FoSJ1mGzifbmJTQJPZhy/ty5xODg==" /></item></channel></rss>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0"><channel><title>SwiftChat Alpha</title><link>https://swiftchat.ronniewong.cc</link><description>SwiftChat macOS alpha updates</description><item><title>SwiftChat 0.1.0 (8) Alpha</title><description>思考內容現在以獨立區域即時顯示，與正式回答分開呈現。
+重新開啟對話後，仍可查看已保存的思考內容。
+改善工具多輪對話及取消處理，避免中斷時留下空白回覆。</description><sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion><enclosure url="https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.8/SwiftChat-0.1.0-8-macOS.zip" length="8779465" type="application/octet-stream" sparkle:version="8" sparkle:shortVersionString="0.1.0" sparkle:edSignature="8zhAa+OKS9EdjtWHCNo3PC4ujDJAhpp/9MWIzqMeGg3zv7ikw5zC6vCONprzDazisn/tIuseLQb2xvN9IOwrBw==" /></item></channel></rss>
