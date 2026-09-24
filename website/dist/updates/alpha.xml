@@ -1,2 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"><channel><title>SwiftChat Alpha</title><link>https://swiftchat.ronniewong.cc/</link><description>Signed macOS alpha updates for SwiftChat. The first release is being prepared.</description><language>en</language></channel></rss>
+<?xml version='1.0' encoding='utf-8'?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0"><channel><title>SwiftChat Alpha</title><link>https://swiftchat.ronniewong.cc</link><description>SwiftChat macOS alpha updates</description><item><title>SwiftChat 0.1.0 (2) Alpha</title><description>SwiftChat for macOS — first public alpha.
+
+• A native Mac workspace for AI conversations and ChatGPT Web.
+• Connect supported model services with your own accounts.
+• Preview read-only context from Terminal, TextEdit, Notes and Xcode with Work with Apps.
+• Open ordinary pages in a separate native Browser window.
+• Signed and notarized universal macOS download, with Sparkle updates.
+• ChatGPT Web adapter source, alpha protocol and compatibility fixtures are now public under MIT.
+
+Requires macOS 26 or later. SwiftChat remains closed source; the adapter is separately MIT licensed. ChatGPT integration is unofficial and may be affected by website changes. This alpha may include unfinished behavior; please report issues without private conversation content or credentials.</description><sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion><enclosure url="https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.2/SwiftChat-0.1.0-2-macOS.zip" length="8099452" type="application/octet-stream" sparkle:version="2" sparkle:shortVersionString="0.1.0" sparkle:edSignature="6WSZNAdOWpIP1P0v/dglhkZ4rFulnyqfGwU5m6t0gj8XvKkY6Nr+yjzDKR+8xQ1C3aPCALWKUKio27lszwtrBg==" /></item></channel></rss>
