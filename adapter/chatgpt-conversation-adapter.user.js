@@ -346,7 +346,24 @@
 		});
 		const files = query.trim() ? state.menu.fileLibraryPathSuggestions.filter(item => !item.disabled) : [];
 		const folders = query.trim() ? state.menu.libraryFolderPathSuggestions.filter(item => !item.disabled) : [];
-		return { items: [...plugins.map(item => projectMentionItem(item, "plugin", scope)), ...files.map(item => projectMentionItem(item, "file", scope)), ...folders.map(item => projectMentionItem(item, "folder", scope))] };
+		// Skills have their own website-owned catalogue and alias list, not app
+		// connection metadata. Preserve their skill identity in the existing pill path.
+		const skillItems = state.menu.hazelnutSlashCommands;
+		if (!Array.isArray(skillItems)) throw mentionError("skill-catalog-contract-changed");
+		const skills = skillItems.filter(item => {
+			if (item.meta?.isSkill !== true || item.disabled) return false;
+			if (!Array.isArray(item.showFor)) throw mentionError("skill-command-contract-changed");
+			if (!item.showFor.includes("at_command")) return false;
+			if (item.meta.mention != null && (item.meta.mention.kind !== "skill" || item.meta.mention.representation !== "inline-pill")) throw mentionError("skill-representation-unsupported");
+			if (item.meta.mention == null && !state.view.state.schema.marks.ecosystemMentionMark) throw mentionError("legacy-skill-contract-changed");
+			// The website removes insertText once this skill is selected. That row
+			// toggles selection off; it is not another insertable native reference.
+			if (item.insertText === undefined) return false;
+			if (typeof item.insertText !== "string") throw mentionError("skill-representation-unsupported");
+			if (!Array.isArray(item.matchText) || !item.matchText.every(value => typeof value === "string")) throw mentionError("skill-search-targets-missing");
+			return item.matchText.some(value => value.toLocaleLowerCase().includes(normalized));
+		});
+		return { items: [...plugins.map(item => projectMentionItem(item, "plugin", scope)), ...skills.map(item => projectMentionItem(item, "skill", scope)), ...files.map(item => projectMentionItem(item, "file", scope)), ...folders.map(item => projectMentionItem(item, "folder", scope))] };
 	}
 	async function invalidateMentionCache() {
 		++mentionSearchGeneration;
@@ -415,6 +432,11 @@
 				const pill = makePill(schema.nodes.inline_selection_pill, { mention, mentionId: item.meta.systemHintType ?? item.id, mentionValue: item.insertText, systemHintType: item.meta.systemHintType });
 				if (!pill) throw mentionError("selection-pill-invalid");
 				children.push(pill);
+			} else if (range.saved.candidate.kind === "skill") {
+				const mark = schema.marks.ecosystemMentionMark;
+				if (!mark) throw mentionError("legacy-skill-contract-changed");
+				const keyword = item.insertText.replace(/^@/, "").trimEnd();
+				children.push(schema.text(`@${keyword}`, [mark.create({ id: item.id, keyword, kind: "tool-mention" })]));
 			} else if (range.saved.candidate.kind === "plugin") {
 				// The website's legacy @ path uses a marked text node, not a pill.
 				const mark = schema.marks.ecosystemMentionMark;
@@ -458,6 +480,23 @@
 			return selectedLegacyHints(current).has(id) === selected;
 		}, "legacy-hint-selection-not-confirmed");
 	}
+	function selectedSkillIDs(state) {
+		if (!Array.isArray(state.menu.hazelnutSlashCommands)) throw mentionError("skill-catalog-contract-changed");
+		return new Set(state.menu.hazelnutSlashCommands.filter(item => item.meta?.isSkill === true && item.insertText === undefined).map(item => item.id));
+	}
+	async function setSkillSelected(scope, id, selected) {
+		const state = websiteMentionState();
+		if (state.scope !== scope) throw mentionError("context-changed");
+		if (selectedSkillIDs(state).has(id) === selected) return;
+		const row = state.menu.hazelnutSlashCommands.find(item => item.id === id && item.meta?.isSkill === true);
+		if (!row || row.disabled || typeof row.onSelect !== "function") throw mentionError("skill-no-longer-available");
+		row.onSelect();
+		await waitForMentionState(() => {
+			const current = websiteMentionState();
+			if (current.scope !== scope) throw mentionError("context-changed");
+			return selectedSkillIDs(current).has(id) === selected;
+		}, "skill-selection-not-settled");
+	}
 	async function prepareNativeMentions(text, mentions) {
 		const state = websiteMentionState(), ranges = validateNativeMentions(text, mentions, state.scope);
 		const factory = ranges.some(range => range.saved.item.meta?.mention != null) ? await websiteMentionPillFactory() : null;
@@ -466,6 +505,8 @@
 		const previousDoc = state.view.state.doc, previousFiles = state.store.files$();
 		const legacy = ranges.filter(range => range.saved.candidate.kind === "plugin" && range.saved.item.meta?.mention == null);
 		const previousHints = legacy.length ? selectedLegacyHints(state) : null;
+		const skills = ranges.filter(range => range.saved.candidate.kind === "skill");
+		const previousSkills = skills.length ? selectedSkillIDs(state) : null;
 		async function rollback() {
 			if (websiteMentionState().scope !== state.scope) return;
 			if (previousHints !== null) {
@@ -475,10 +516,18 @@
 			}
 			state.view.dispatch(state.view.state.tr.replaceWith(0, state.view.state.doc.content.size, previousDoc.content));
 			state.store.files$.set(previousFiles);
+			if (previousSkills !== null) {
+				for (const id of selectedSkillIDs(websiteMentionState())) if (!previousSkills.has(id)) await setSkillSelected(state.scope, id, false);
+				for (const id of previousSkills) await setSkillSelected(state.scope, id, true);
+				if (!sameMentionIDs(previousSkills, selectedSkillIDs(websiteMentionState()))) throw mentionError("skill-rollback-mismatch");
+			}
 		}
 		try {
 			state.view.dispatch(state.view.state.tr.replaceWith(0, state.view.state.doc.content.size, doc.content));
 			for (const { saved } of legacy) await setLegacyHintSelected(state.scope, saved.item.meta.systemHintType, true);
+			// Unified pills update website skill state through its document observer;
+			// legacy marks require the website's named selection callback as well.
+			for (const { saved } of skills.filter(range => range.saved.item.meta?.mention == null)) await setSkillSelected(state.scope, saved.item.id, true);
 			const selected = new Set();
 			// Website createDraft/submit calls uF(doc), whose fF/nHt serializers
 			// emit custom_symbol_offsets directly from inline system-hint pills.
@@ -492,6 +541,7 @@
 				if (websiteMentionState().scope !== state.scope) throw mentionError("context-changed");
 				if (!state.view.state.doc.eq(doc)) throw mentionError("prepared-document-changed");
 				if (state.store.chatUploadLimitError$()) throw mentionError("attachment-limit");
+				if (skills.length && !skills.every(({saved}) => selectedSkillIDs(websiteMentionState()).has(saved.item.id))) return false;
 				for (const { saved } of ranges.filter(range => range.saved.candidate.kind === "file")) {
 					const id = saved.item.id.slice("file-library:".length);
 					const file = state.store.files$().find(file => file.fileId === id || file.mountedLibraryFileId === id || file.libraryFileId === id);
@@ -504,7 +554,7 @@
 			return { rollback, attachmentFiles: ranges.filter(range => range.saved.candidate.kind === "file").map(({saved}) => {
                 const id = saved.item.id.slice("file-library:".length);
                 return state.store.files$().find(file => file.fileId === id || file.mountedLibraryFileId === id || file.libraryFileId === id);
-            }), verify: () => websiteMentionState().scope === state.scope && state.view.state.doc.eq(doc) && legacy.every(({saved}) => selectedLegacyHints(websiteMentionState()).has(saved.item.meta.systemHintType)) && ranges.filter(range => range.saved.candidate.kind === "file").every(({ saved }) => {
+            }), verify: () => websiteMentionState().scope === state.scope && state.view.state.doc.eq(doc) && legacy.every(({saved}) => selectedLegacyHints(websiteMentionState()).has(saved.item.meta.systemHintType)) && skills.every(({saved}) => selectedSkillIDs(websiteMentionState()).has(saved.item.id)) && ranges.filter(range => range.saved.candidate.kind === "file").every(({ saved }) => {
 				const id = saved.item.id.slice("file-library:".length);
 				return state.store.files$().some(file => (file.fileId === id || file.mountedLibraryFileId === id || file.libraryFileId === id) && file.status === "ready");
 			}) };

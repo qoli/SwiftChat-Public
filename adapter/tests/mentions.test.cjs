@@ -11,7 +11,7 @@ function fixture() {
     requestAnimationFrame:fn=>setImmediate(fn)});
   vm.runInContext(block,ctx);
   const menu = {librarySearchKey:null,isFileLibrarySearchPending:false,libraryFolderPathSuggestions:[],fileLibraryPathSuggestions:[],
-    gptsAndAppsSlashCommands$:()=>[],onSearchQueryChange(q){menu.librarySearchKey=q?JSON.stringify([q]):null;}};
+    gptsAndAppsSlashCommands$:()=>[],hazelnutSlashCommands:[],onSearchQueryChange(q){menu.librarySearchKey=q?JSON.stringify([q]):null;}};
   const state = {scope:'account-A:conversation-1',attachmentScope:'account-A:conversation-1',menu,store:{files$:()=>[],chatUploadLimitError$:()=>false}};
   ctx.websiteMentionState=()=>state;
   return {ctx,state,menu};
@@ -167,4 +167,84 @@ test('legacy preparation and rollback restore previously selected tool via fresh
   await prepared.rollback();
   assert.equal(legacy.color,undefined);assert.equal(search.color,'selected');assert.equal(view.state.doc.eq(original),true);
   assert.deepEqual(changes,['plugin','plugin','search']);
+});
+
+// Website Work catalogue and pill shape observed 2026-09-24; synthetic identity.
+function skill(id='skill-fixture', title='Linear 開發交接') {
+  return {id,title,insertText:title,secondary:'Development handoff',onSelect(){},
+    matchText:[title,'linear-dev-handoff',id],showFor:['at_command','slash_command'],
+    meta:{isSkill:true,mention:{representation:'inline-pill',kind:'skill'}}};
+}
+test('Work skill catalogue is included for empty, title and alias queries beside connected apps',async()=>{
+  const {ctx,menu}=fixture();
+  menu.gptsAndAppsSlashCommands$=()=>[item('plugin:linear','Linear')];
+  menu.hazelnutSlashCommands=[skill(),{...skill('disabled'),disabled:true},
+    {...skill('slash-only'),showFor:['slash_command']}];
+  for (const query of ['', 'linear', '開發交接', 'linear-dev-handoff']) {
+    const result=await ctx.searchMentions(query);
+    assert.deepEqual(copy(result.items.filter(x=>x.kind==='skill').map(x=>[x.id,x.title])),[['skill-fixture','Linear 開發交接']]);
+  }
+  assert.equal((await ctx.searchMentions('unrelated')).items.length,0);
+});
+test('malformed skill catalogue, representation and matching contracts fail explicitly',async()=>{
+  const {ctx,menu}=fixture();
+  menu.hazelnutSlashCommands=undefined;
+  await assert.rejects(ctx.searchMentions(''),/skill-catalog-contract-changed/);
+  const row=skill();menu.hazelnutSlashCommands=[row];
+  row.meta.mention.kind='system-hint';
+  await assert.rejects(ctx.searchMentions(''),/skill-representation-unsupported/);
+  row.meta.mention.kind='skill';delete row.matchText;
+  await assert.rejects(ctx.searchMentions(''),/skill-search-targets-missing/);
+});
+test('skill selection retains semantic identity through UTF16 document construction and scope changes',async()=>{
+  const {ctx,state,menu}=fixture();menu.hazelnutSlashCommands=[skill()];
+  const candidate=(await ctx.searchMentions('linear-dev-handoff')).items[0];
+  const text='😀 @Linear 開發交接 ',mentions=[{candidate,location:3,length:'@Linear 開發交接'.length}];
+  const ranges=ctx.validateNativeMentions(text,mentions,state.scope);
+  const schema={nodes:{paragraph:{create:(_,children)=>({children})},doc:{create:(_,children)=>({children})},inline_selection_pill:{}},text:text=>({text})};
+  const doc=ctx.buildMentionDocument(text,ranges,schema,(_,v)=>({value:{kind:v.mention.kind,id:v.mentionId,keyword:v.mentionValue}}));
+  assert.deepEqual(copy(doc.children[0].children),[{text:'😀 '},{value:{kind:'skill',id:'skill-fixture',keyword:'Linear 開發交接'}},{text:' '}]);
+  await assert.rejects(ctx.prepareNativeMentions(text,mentions.map(m=>({...m,candidate:{...candidate,payload:{...candidate.payload,documentID:'old'}}}))),/selection-stale/);
+  assert.throws(()=>ctx.validateNativeMentions(text,mentions,'other-account'),/selection-stale/);
+});
+
+test('already selected website skill is not a new insertable result and does not fail app search',async()=>{
+  const {ctx,menu}=fixture();menu.hazelnutSlashCommands=[{...skill(),insertText:undefined}];
+  menu.gptsAndAppsSlashCommands$=()=>[item('linear','Linear')];
+  assert.deepEqual(copy((await ctx.searchMentions('linear')).items.map(x=>x.kind)),['plugin']);
+});
+test('legacy Work skill uses tool-mention mark with skill ID rather than an app hint',async()=>{
+  const {ctx,state,menu}=fixture();const row=skill();delete row.meta.mention;row.insertText='@'+row.title;
+  menu.hazelnutSlashCommands=[row];
+  const schema={nodes:{paragraph:{create:(_,children)=>({children})},doc:{create:(_,children)=>({children})}},marks:{ecosystemMentionMark:{create:attrs=>attrs}},text:(text,marks)=>({text,marks})};
+  state.view={state:{schema}};
+  const candidate=(await ctx.searchMentions('linear')).items[0],text='@'+candidate.title;
+  const ranges=ctx.validateNativeMentions(text,[{candidate,location:0,length:text.length}],state.scope);
+  const doc=ctx.buildMentionDocument(text,ranges,schema,()=>{throw Error('legacy skill must not build a pill');});
+  assert.deepEqual(copy(doc.children[0].children[0]),{text,marks:[{id:'skill-fixture',keyword:'Linear 開發交接',kind:'tool-mention'}]});
+});
+test('legacy skill preparation selects once and rollback restores prior skills and document',async()=>{
+  const {ctx,state,menu}=fixture();const row=skill();delete row.meta.mention;row.insertText='@'+row.title;
+  const prior={...skill('prior','Previous'),insertText:undefined};delete prior.meta.mention;
+  const events=[];
+  for (const item of [row,prior]) item.onSelect=()=>{events.push(item.id);item.insertText=item.insertText===undefined?'@'+item.title:undefined;};
+  menu.hazelnutSlashCommands=[row,prior];
+  const candidate=ctx.projectMentionItem(row,'skill',state.scope),text='@'+row.title;
+  function doc(content){return {content,eq(other){return JSON.stringify(this.content)===JSON.stringify(other.content);}};}
+  const original=doc(['original']);original.content.size=1;
+  const view={state:{doc:original,schema:{},get tr(){return {replaceWith:(_,__,content)=>({content})};}},dispatch(tr){view.state.doc=doc(tr.content);}};
+  const files$=()=>[];files$.set=()=>{};state.view=view;state.store={files$,chatUploadLimitError$:()=>null};
+  ctx.buildMentionDocument=()=>doc(['skill mark']);
+  const prepared=await ctx.prepareNativeMentions(text,[{candidate,location:0,length:text.length}]);
+  assert.equal(prepared.verify(),true);assert.equal(row.insertText,undefined);assert.equal(prior.insertText,undefined);
+  await prepared.rollback();
+  assert.equal(row.insertText,'@'+row.title);assert.equal(prior.insertText,undefined);assert.equal(view.state.doc.eq(original),true);
+  assert.deepEqual(events,['skill-fixture','skill-fixture']);
+  const toggle=row.onSelect;let failOnce=true;
+  row.onSelect=()=>{toggle();if(failOnce){failOnce=false;throw Error('skill callback failed');}};
+  await assert.rejects(ctx.prepareNativeMentions(text,[{candidate,location:0,length:text.length}]),/skill callback failed/);
+  assert.equal(row.insertText,'@'+row.title);assert.equal(prior.insertText,undefined);assert.equal(view.state.doc.eq(original),true);
+  const retry=await ctx.prepareNativeMentions(text,[{candidate,location:0,length:text.length}]);
+  assert.equal(retry.verify(),true);
+  await retry.rollback();
 });

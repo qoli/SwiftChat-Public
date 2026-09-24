@@ -2,15 +2,15 @@
   "schemaVersion": 1,
   "publicProtocol": "0.1.0-alpha.1",
   "adapterVersion": "2.16.9",
-  "sourceRevision": "df0ca4387b9146cc4721589e55a62431837a0fe1",
+  "sourceRevision": "4c0e0686c2c0f1822d3e531803232330667035fb",
   "sourceFilesModified": false,
   "authority": "Private SwiftChat repository; one-way reviewed export",
   "files": [
     {
       "source": "Resources/ConversationFlow/ChatGPT/chatgpt-conversation-adapter.user.js",
       "path": "adapter/chatgpt-conversation-adapter.user.js",
-      "sourceSHA256": "f6617eb2e850ed3551172bd4af158beee580f811ec774d9273122c03de40d6d1",
-      "sha256": "f6617eb2e850ed3551172bd4af158beee580f811ec774d9273122c03de40d6d1"
+      "sourceSHA256": "01811c189431d2c5337f307ddbbdc1518b58ef654a505fca1ae8192f13d768cc",
+      "sha256": "01811c189431d2c5337f307ddbbdc1518b58ef654a505fca1ae8192f13d768cc"
     },
     {
       "source": "Tests/Adapter/app-context.test.cjs",
@@ -39,8 +39,8 @@
     {
       "source": "Tests/Adapter/mentions.test.cjs",
       "path": "adapter/tests/mentions.test.cjs",
-      "sourceSHA256": "895e93b47ee40dcb2de49ebb3371b20c8391531f49dd41c4d9b208489795a17d",
-      "sha256": "ac415054e7911146e5601bde106cc63cef153f6c35d8a22834b395d02e945ce1"
+      "sourceSHA256": "71e3af0a377905a0120e0e7f5079040ee7f1e95f94f798307e45f72423dca0c2",
+      "sha256": "0f6fef277dc006e9cabb6844fb3921bd10acf196fae0317be3a183ab73050274"
     },
     {
       "source": "Tests/Adapter/new-conversation-catalog.test.cjs",
