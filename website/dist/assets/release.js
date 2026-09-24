@@ -16,5 +16,7 @@
       if (!link.href.startsWith('https://github.com/qoli/SwiftChat-Public/releases/')) throw new Error('Invalid release URL');
       changelog.append(title, notes, link);
     }
-  } catch { /* The static page states release availability accurately until a verified release exists. */ }
+  } catch {
+    for (const label of document.querySelectorAll('[data-release-status]')) label.textContent = 'Release details are unavailable. Check GitHub Releases for downloads.';
+  }
 })();
