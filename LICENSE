@@ -1,0 +1,10 @@
+SwiftChat public repository — license scope
+
+The contents of adapter/, including its source, synthetic tests, and export
+manifest, are licensed under the MIT License in adapter/LICENSE.
+
+No license to SwiftChat application binaries, private application source,
+trademarks, branding, screenshots, or website assets is granted by that MIT
+license. All rights to other original repository content are reserved unless
+an individual file provides a different license. Distribution of an application
+binary is not publication of its source code.
