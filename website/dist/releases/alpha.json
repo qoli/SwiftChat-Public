@@ -3,14 +3,14 @@
   "channel": "alpha",
   "platform": "macos",
   "version": "0.1.0",
-  "build": "9",
-  "tag": "v0.1.0-alpha.9",
-  "publishedAt": "2026-09-24T19:38:19.662840Z",
-  "releaseUrl": "https://github.com/qoli/SwiftChat-Public/releases/tag/v0.1.0-alpha.9",
-  "downloadUrl": "https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.9/SwiftChat-0.1.0-9-macOS.zip",
-  "sha256": "ce68d9be37068ea3a339cee7afdc224207ab9594b74a0104a31bda9ffe4ec45e",
-  "length": 8863580,
-  "sparkleEdSignature": "T7yP0jiRgNtDGZ1dksqDAQLY86jQ5w6Lcyq/uVMbQH/HVz9uIWgw67VnafELE2QST/2c8o65IG9ej3clSDNOBw==",
+  "build": "10",
+  "tag": "v0.1.0-alpha.10",
+  "publishedAt": "2026-09-24T20:19:45.478237Z",
+  "releaseUrl": "https://github.com/qoli/SwiftChat-Public/releases/tag/v0.1.0-alpha.10",
+  "downloadUrl": "https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.10/SwiftChat-0.1.0-10-macOS.zip",
+  "sha256": "5d11e4be55cd4a5f9a710c0514df9a151d681833001310746f3fa8b07001010a",
+  "length": 8931416,
+  "sparkleEdSignature": "/ZdQYQETBRaLFHEoTDm5kz6ZuToI8TvpalfdbvqXQYCB3TT47tBI5wn8J3LkNwbKPXeYNmPuAExd/QBZp24dAA==",
   "minimumSystemVersion": "26.0",
-  "notes": "\u652f\u63f4\u5f9e ChatGPT Desktop \u64f7\u53d6\u76ee\u524d\u53ef\u898b\u7684 Codex \u5c0d\u8a71\u5167\u5bb9\u3002\n\u7c21\u5316\u300c\u914d\u5408 App \u4f7f\u7528\u300d\u9078\u64c7\u5668\uff0c\u5167\u5bb9\u6703\u5728\u50b3\u9001\u6642\u81ea\u52d5\u66f4\u65b0\uff0c\u79fb\u9664\u624b\u52d5\u91cd\u65b0\u6574\u7406\u6309\u9215\u3002\n\u81ea\u8a02\u670d\u52d9\u73fe\u5728\u53ef\u4ee5\u4f7f\u7528\u5340\u57df\u7db2\u8def\u7684 HTTP \u4f4d\u5740\u3002"
+  "notes": "\u6539\u5584 AI \u63a8\u7406\u5167\u5bb9\u7684\u4fdd\u5b58\u8207\u91cd\u64ad\uff0c\u91cd\u65b0\u958b\u555f\u5c0d\u8a71\u6642\u53ef\u4fdd\u7559\u7368\u7acb\u7684\u63a8\u7406\u7d00\u9304\u3002\n\u505c\u6b62\u751f\u6210\u6216\u767c\u751f\u932f\u8aa4\u6642\uff0c\u4fdd\u7559\u5df2\u6536\u5230\u7684\u63a8\u7406\u53ca\u5df2\u5b8c\u6210\u7684\u5de5\u5177\u7d00\u9304\uff0c\u907f\u514d\u5c07\u672a\u5b8c\u6210\u7684\u56de\u7b54\u7576\u4f5c\u5b8c\u6574\u56de\u8986\u3002\n\u6301\u7e8c\u652f\u63f4\u820a\u7248\u5c0d\u8a71\u7684\u63a8\u7406\u7d00\u9304\u986f\u793a\u3002"
 }
