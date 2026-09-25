@@ -3,9 +3,9 @@ const assert = require('node:assert/strict');
 const vm = require('node:vm');
 const fs = require('node:fs');
 const {randomUUID} = require('node:crypto');
-const source = fs.readFileSync(require('node:path').join(__dirname, '../chatgpt-conversation-adapter.user.js'), 'utf8');
+const source = fs.readFileSync(require('node:path').join(__dirname, '../chatgpt-app-context-transport.js'), 'utf8');
 const start = source.indexOf('\t// A one-shot context lease');
-const end = source.indexOf('\tfunction installHistoryResponseObserver()', start);
+const end = source.indexOf('\tfunction prependWebAppContext', start);
 assert.ok(start >= 0 && end > start, 'context transport source boundaries must exist');
 const transport = source.slice(start, end);
 const origin = 'https://chatgpt.com';
@@ -38,6 +38,22 @@ function fixture() {
     setMode: value => mode = value, setConversation: value => conversationID = value,
     respond: fn => respond = fn, expire: () => {for (const fn of [...timers]) fn();}};
 }
+
+test('app shell hidden delivery explicitly supplies primary Chat mode only after website confirmation', async () => {
+  const f = fixture(); f.ctx.appShellContractActive = true;
+  const original = body(); delete original.conversation_mode;
+  const lease = f.arm();
+  await f.send(endpoint, {method:'POST', body:JSON.stringify(original)});
+  await lease.promise;
+  assert.equal(JSON.parse(f.calls[0].init.body).conversation_mode.kind, 'primary_assistant');
+  assert.equal(JSON.parse(f.calls[0].init.body).messages.length, 2);
+  for (const mode of ['work', null]) {
+    const g = fixture(); g.ctx.appShellContractActive = true;
+    g.arm(); g.setMode(mode);
+    await assert.rejects(g.send(endpoint, {method:'POST', body:JSON.stringify(original)}), /request-conversation-mismatch/);
+    assert.equal(g.calls.length, 0);
+  }
+});
 
 test('string send prepends hidden context and preserves question, metadata and fetch options', async () => {
   const f = fixture(), lease = f.arm(), original = body();
