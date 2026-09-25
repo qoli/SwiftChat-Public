@@ -1,4 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
-<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0"><channel><title>SwiftChat Alpha</title><link>https://swiftchat.ronniewong.cc</link><description>SwiftChat macOS alpha updates</description><item><title>SwiftChat 0.1.0 (10) Alpha</title><description>改善 AI 推理內容的保存與重播，重新開啟對話時可保留獨立的推理紀錄。
-停止生成或發生錯誤時，保留已收到的推理及已完成的工具紀錄，避免將未完成的回答當作完整回覆。
-持續支援舊版對話的推理紀錄顯示。</description><sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion><enclosure url="https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.10/SwiftChat-0.1.0-10-macOS.zip" length="8931416" type="application/octet-stream" sparkle:version="10" sparkle:shortVersionString="0.1.0" sparkle:edSignature="/ZdQYQETBRaLFHEoTDm5kz6ZuToI8TvpalfdbvqXQYCB3TT47tBI5wn8J3LkNwbKPXeYNmPuAExd/QBZp24dAA==" /></item></channel></rss>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0"><channel><title>SwiftChat Alpha</title><link>https://swiftchat.ronniewong.cc</link><description>SwiftChat macOS alpha updates</description><item><title>SwiftChat 0.1.0 (13) Alpha</title><description>• 在「設定 → Accounts &amp; Services → AIChat Services」可新增自訂 API 服務，支援 OpenAI Chat Completions、OpenAI Responses 與 Anthropic Messages；可設定多個模型、測試連線，並在新對話中選用。服務位址支援 HTTP/HTTPS，API 金鑰會存放於 Keychain。
+• AIChat 會在生成開始時立即顯示已送出的問題，串流期間保留多回合工具呼叫與輸出；推理內容會在可收合的 Reasoning 區域獨立顯示，並在重新開啟對話時保留。
+• ChatGPT 的 Chat/Work 模型與思考選擇會分開保存；選項失效時可重新選擇完整組合。歷史載入失敗時會保留上次資料並標示 Stale，提供 Try Again；macOS 對話內容可繼續捲動，互動選單與狀態提示不會被顯示層隱藏。
+• Work with Apps 可唯讀擷取目前在 ChatGPT Desktop 顯示的 Codex 對話，並在送出前重新整理來源內容。
+
+本次更新僅適用 macOS。
+
+尚未支持 ChatGPT 免費帳號。</description><sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion><enclosure url="https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.13/SwiftChat-0.1.0-13-macOS.zip" length="8943361" type="application/octet-stream" sparkle:version="13" sparkle:shortVersionString="0.1.0" sparkle:edSignature="ZHigKpVMwXGlxisF3lIC/ZzvUM7CLrvI3vn1Yp9pAytJ/E0lwNRRQSMKYqDbNnAiKHyuIr3VW21kQ4N4SH+JCw==" /></item></channel></rss>
