@@ -1,4 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
-<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0"><channel><title>SwiftChat Alpha</title><link>https://swiftchat.ronniewong.cc</link><description>SwiftChat macOS alpha updates</description><item><title>SwiftChat 0.1.0 (14) Alpha</title><description>更新 AI 推理與對話 session 元件，改善生成中止及錯誤後的紀錄保存。
-修正重疊請求的撤回範圍，避免一個請求失敗時移除其他請求的紀錄。
-改善停止生成後的清理等待，確保保存對話前已完成相關串流清理。</description><sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion><enclosure url="https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.14/SwiftChat-0.1.0-14-macOS.zip" length="8962304" type="application/octet-stream" sparkle:version="14" sparkle:shortVersionString="0.1.0" sparkle:edSignature="oyGp4zSQ5mLSrradaksHJBWFWG7jnp97Mg2RUE5Tm51ukYDWI/fmTrnAThO9ICPpWOGvrPzMsx/8r4UqD4NEBA==" /></item></channel></rss>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0"><channel><title>SwiftChat Alpha</title><link>https://swiftchat.ronniewong.cc</link><description>SwiftChat macOS alpha updates</description><item><title>SwiftChat 0.1.0 (15) Alpha</title><description>• ChatGPT 的原生新對話設定更完整：可選擇 Chat／Work、模型與推理程度，設定會保留；已失效的模型或推理選項可在目前對話中重新選擇。
+
+• ChatGPT 歷史在載入失敗時保留最近一次成功的清單，並標示「Stale」及提供「Try Again」。macOS 對話支援延伸滾動至原生工具列後方；訊息樣式與目前閱讀位置會保留，引用及外部連結可交由系統瀏覽器開啟。
+
+• ChatGPT 傳送流程在網站傳送介面於送出前不可用時，會為符合條件的純文字訊息使用頁面內授權的直接傳送路徑；不會在已不確定是否送出的情況下重複傳送，也不會丟棄附件或引用來湊成成功。
+
+• macOS 的「設定 → Accounts &amp; Services → AIChat Services」可加入自訂服務，支援 OpenAI Chat Completions、OpenAI Responses 與 Anthropic Messages；可設定多個模型並使用「Test Connection」，API Key 由 Keychain 保存。儲存後可在新對話的 provider/model 選擇器使用。
+
+• AIChat 對話記錄分開保留推理與答案，並保留已完成的工具記錄；Work with Apps 每次送出前會重新擷取已連接來源，依 Chat／Work 模式使用相應傳送方式，捕捉失敗時保留草稿。</description><sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion><enclosure url="https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.15/SwiftChat-0.1.0-15-macOS.zip" length="8974614" type="application/octet-stream" sparkle:version="15" sparkle:shortVersionString="0.1.0" sparkle:edSignature="1X40b/DlrKqRO2vE1mmbuLPGO/D3PwjLveltb8LtVawetveGfjVtPgSkGrzCG8cSUE0hrs6fUvZygAmTpCNZDw==" /></item></channel></rss>
