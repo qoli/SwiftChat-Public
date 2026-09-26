@@ -92,13 +92,17 @@
       const page = contiguous(stream);hasMore ||= page.hasMore;
       for (const item of page.items) {
         const old = merged.get(item.id);
-        if (old && (old.mode !== item.mode || old.title !== item.title)) return {state:'unsupported', invariant:'app-shell-history:conflicting-stream-item'};
+        if (old && (old.mode !== item.mode || old.title !== item.title || old.updated !== item.updated)) return {state:'unsupported', invariant:'app-shell-history:conflicting-stream-item'};
         merged.set(item.id,item);
       }
     }
     if (![...streams.values()].some(s=>s.pages.has(0))) return {state:'loading'};
     const active = typeof activeID === 'string' ? activeID.toLowerCase() : null;
-    const items = [...merged.values()].sort((a,b)=>a.updated !== null && b.updated !== null ? b.updated-a.updated : 0).map(({id,title})=>({id,title,path:`/c/${id}`,active:id===active}));
+    const items = [...merged.values()].sort((a,b)=>{
+      if (a.updated === null) return b.updated === null ? 0 : 1;
+      if (b.updated === null) return -1;
+      return b.updated-a.updated;
+    }).map(({id,title,updated})=>({id,title,path:`/c/${id}`,active:id===active,updatedAt:updated}));
     return {state:'ready',items,activeConversationID:items.some(i=>i.active)?active:null,hasMore};
   }
   function ingest(responseURL,payload,token = null) {

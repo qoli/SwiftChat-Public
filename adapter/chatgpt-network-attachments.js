@@ -4,20 +4,44 @@
 (() => {
   'use strict';
   const entries = new Map();
-  let options = {}, importing = false;
+  let options = {}, importing = false, observationFrame = null;
   const fail = code => { throw new Error(`network-attachments:${code}`); };
   const changed = () => options.onChange?.();
   const runtime = () => options.runtime ?? window.__SwiftChatWebsiteRuntime;
-  function snapshot() {
-    return [...entries.values()].map(entry => {
-      let status = entry.error ? 'failed' : 'uploading';
-      if (entry.handle && !entry.error) {
-        try { const state = runtime().attachmentState(entry.handle.token); status = state.status === 'error' ? 'failed' : state.status; }
-        catch { status = 'failed'; }
+  function status(entry) {
+    if (entry.error) return 'failed';
+    if (!entry.handle) return 'uploading';
+    try {
+      const value = runtime().attachmentState(entry.handle.token).status;
+      return value === 'error' ? 'failed' : value;
+    } catch { return 'failed'; }
+  }
+  function ensureObservation() {
+    if (observationFrame !== null || ![...entries.values()].some(entry => status(entry) === 'uploading')) return;
+    observationFrame = window.requestAnimationFrame(observe);
+  }
+  function observe() {
+    observationFrame = null;
+    let didChange = false;
+    for (const entry of entries.values()) {
+      const current = status(entry);
+      if (current !== entry.observedStatus) {
+        entry.observedStatus = current;
+        didChange = true;
       }
-      return {id: entry.id, name: entry.name, mimeType: entry.mimeType, size: entry.size, status,
-        ...(status === 'failed' ? {error: 'ChatGPT could not confirm this attachment. Remove it and add it again.'} : {})};
+    }
+    if (didChange) changed();
+    ensureObservation();
+  }
+  function snapshot() {
+    const result = [...entries.values()].map(entry => {
+      const current = status(entry);
+      entry.observedStatus = current;
+      return {id: entry.id, name: entry.name, mimeType: entry.mimeType, size: entry.size, status: current,
+        ...(current === 'failed' ? {error: 'ChatGPT could not confirm this attachment. Remove it and add it again.'} : {})};
     });
+    ensureObservation();
+    return result;
   }
   async function importNativeAttachment(id, name, mimeType, base64) {
     if (importing) fail('import-in-flight');

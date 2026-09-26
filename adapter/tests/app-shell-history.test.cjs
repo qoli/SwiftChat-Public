@@ -23,7 +23,11 @@ function fixture(){
 }
 test('separate Chat and Work offset zero pages merge without collisions and retain only metadata',()=>{
  const {api}=fixture();api.ingest(url(),page([item(1),item(2)]));api.ingest(url('work'),page([item(3,'work')]));
- const s=api.snapshot(id(2));assert.equal(s.items.length,3);assert.equal(s.items[0].id,id(3));assert.equal(s.activeConversationID,id(2));assert.equal(s.hasMore,false);assert.equal(api.modeForID(id(3)),'work');assert.equal(JSON.stringify(s).includes('must not retain'),false);
+ const s=api.snapshot(id(2));assert.equal(s.items.length,3);assert.equal(s.items[0].id,id(3));assert.equal(s.items[0].updatedAt,Date.parse(item(3).update_time));assert.equal(s.activeConversationID,id(2));assert.equal(s.hasMore,false);assert.equal(api.modeForID(id(3)),'work');assert.equal(JSON.stringify(s).includes('must not retain'),false);
+});
+test('missing update timestamps sort after dated rows and retain stable order',()=>{
+ const {api}=fixture();const undated1={...item(1),update_time:null},undated2={...item(2),update_time:null};api.ingest(url(),page([undated1,undated2]));api.ingest(url('work'),page([item(3,'work')]));
+ const s=api.snapshot();assert.deepEqual(Array.from(s.items,value=>value.id),[id(3),id(1),id(2)]);assert.equal(s.items[1].updatedAt,null);assert.equal(s.items[2].updatedAt,null);
 });
 test('noncontiguous pages wait for gaps and page zero refresh only retires its own stream',()=>{
  const {api}=fixture();api.ingest(url(),page([item(1),item(2)],0,6));api.ingest(url('work'),page([item(7,'work')]));api.ingest(url('chat',4),page([item(5),item(6)],4,6));assert.equal(api.snapshot().items.length,3);assert.equal(api.snapshot().hasMore,true);

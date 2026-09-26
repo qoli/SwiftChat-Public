@@ -12,11 +12,13 @@
   const sameModel = (left, right) => left?.slug === right?.slug
     && (left?.versionId ?? null) === (right?.versionId ?? null)
     && (left?.thinkingEffort ?? null) === (right?.thinkingEffort ?? null);
+  const sameSystemHints = (left, right) => Array.isArray(left) && Array.isArray(right)
+    && left.length === right.length && left.every((value, index) => value === right[index]);
 
   function fibers() {
     if (!roots) fail("root-hook-unavailable");
     const current = roots.current();
-    if (current.length !== 1) fail("committed-root-unavailable-or-ambiguous");
+    if (!current.length) fail("committed-root-unavailable");
     const result = [], seen = new Set(), stack = [...current];
     while (stack.length) {
       const fiber = stack.pop();
@@ -73,7 +75,7 @@
       && typeof value.fileAttachmentDisabled === "boolean"
       && typeof value.fileUploadLimitReached === "boolean"
       && typeof value.filesOnly === "boolean"
-      && typeof value.onFilesSelected === "function" && value.onFilesSelected.length === 1);
+      && typeof value.onFilesSelected === "function" && value.onFilesSelected.length === 2);
     if (!profiles.length) fail("upload-profile-unavailable");
     const command = oneDistinct(profiles.map(value => value.onFilesSelected), "upload-command-ambiguous");
     const states = new Set(profiles.map(value => JSON.stringify([
@@ -97,12 +99,37 @@
   }
   function sendBinding(composer) {
     const candidates = composer.props.filter(value => typeof value.onSubmit === "function"
-      && value.onSubmit.length === 5 && typeof value.prompt === "string"
-      && typeof value.canSubmit === "boolean"
+      && typeof value.prompt === "string" && typeof value.canSubmit === "boolean"
       && (value.conversationId ?? null) === composer.conversationID);
-    if (!candidates.length) fail("paid-submit-profile-unavailable");
-    const command = oneDistinct(candidates.map(value => value.onSubmit), "paid-submit-profile-ambiguous");
-    return {profile: "paid-on-submit-5-v1", command};
+    const profiles = [
+      {
+        name: "paid-on-submit-4-v1",
+        arity: 4,
+        invoke(command, text, envelope, timestamp) {
+          return command(text, envelope, undefined, timestamp);
+        }
+      },
+      {
+        name: "paid-on-submit-5-v1",
+        arity: 5,
+        invoke(command, text, envelope, timestamp) {
+          return command(text, envelope, undefined, timestamp, false);
+        }
+      }
+    ].map(profile => ({...profile,
+      candidates: candidates.filter(value => value.onSubmit.length === profile.arity)}))
+      .filter(profile => profile.candidates.length);
+    if (!profiles.length) fail("paid-submit-profile-unavailable");
+    if (profiles.length !== 1) fail("paid-submit-profile-ambiguous");
+    const profile = profiles[0];
+    const command = oneDistinct(profile.candidates.map(value => value.onSubmit),
+      "paid-submit-profile-ambiguous");
+    return {
+      profile: profile.name,
+      invoke(text, envelope, timestamp) {
+        return profile.invoke(command, text, envelope, timestamp);
+      }
+    };
   }
   function context() {
     const binding = composerBinding();
@@ -141,8 +168,9 @@
   }
   async function applyEnvelope(binding, payload) {
     if (!payload.model || typeof payload.model.slug !== "string" || !payload.model.slug) fail("invalid-model");
-    if (!Array.isArray(payload.systemHints) || payload.systemHints.some(value => typeof value !== "string")) fail("invalid-system-hints");
-    if (payload.systemHints.length) fail("paid-system-hint-profile-unverified");
+    if (!Array.isArray(payload.systemHints)
+      || payload.systemHints.some(value => typeof value !== "string" || !value)
+      || new Set(payload.systemHints).size !== payload.systemHints.length) fail("invalid-system-hints");
     if (!sameModel(binding.owner.selectedModel, payload.model)) {
       binding.onModelChange({
         slug: payload.model.slug,
@@ -155,7 +183,37 @@
         return sameModel(current.owner.selectedModel, payload.model) ? current : null;
       }, "model-not-confirmed");
     }
-    return composerBinding();
+    binding = composerBinding();
+    if (!sameSystemHints(binding.owner.selectedSystemHints, payload.systemHints)) {
+      try { binding.onSystemHintsChange([...payload.systemHints]); }
+      catch { fail("system-hints-application-failed"); }
+      binding = await waitFor(() => {
+        const current = composerBinding();
+        if (current.owner.composerController !== binding.owner.composerController
+          || current.mode !== binding.mode || current.conversationID !== binding.conversationID) {
+          fail("submission-context-changed");
+        }
+        return sameSystemHints(current.owner.selectedSystemHints, payload.systemHints) ? current : null;
+      }, "system-hints-not-confirmed");
+    }
+    return binding;
+  }
+
+  async function rollbackSystemHints(binding, previous) {
+    let current;
+    try { current = composerBinding(); }
+    catch { return; }
+    if (current.owner.composerController !== binding.owner.composerController
+      || current.mode !== binding.mode || current.conversationID !== binding.conversationID
+      || sameSystemHints(current.owner.selectedSystemHints, previous)) return;
+    try { current.onSystemHintsChange([...previous]); }
+    catch { fail("system-hints-rollback-failed"); }
+    await waitFor(() => {
+      const changed = composerBinding();
+      if (changed.owner.composerController !== binding.owner.composerController
+        || changed.mode !== binding.mode || changed.conversationID !== binding.conversationID) return true;
+      return sameSystemHints(changed.owner.selectedSystemHints, previous) ? changed : null;
+    }, "system-hints-rollback-failed");
   }
   function checkedAttachments(binding, tokens) {
     if (!Array.isArray(tokens) || new Set(tokens).size !== tokens.length) fail("invalid-attachment-selection");
@@ -247,7 +305,7 @@
     if (descriptor) {
       const id = descriptor.uploadId ?? descriptor.id;
       if (typeof id !== "string" || !id) fail("reference-attachment-identity-unavailable");
-      binding.onAttachmentRemove(id);
+      binding.onAttachmentRemove(id, undefined);
       await waitFor(() => {
         const current = composerBinding();
         if (current.owner.composerController !== binding.owner.composerController
@@ -324,24 +382,30 @@
       || binding.owner.isStreaming === true) fail("submission-blocked");
     if (binding.owner.commentAttachments?.length || binding.owner.selectedTextAttachments?.length
       || binding.owner.targetedReply) fail("unreviewed-website-context");
-    const serializedText = serializeDraft(binding, payload.text, payload.references);
-    if (payload.serializedText !== serializedText) fail("serialized-reference-draft-mismatch");
-    binding = await applyEnvelope(binding, payload);
-    binding = await prepareReferences(binding, payload.references);
-    checkedAttachments(binding, payload.attachmentTokens ?? []);
-    checkedReferences(binding, payload.references);
-    const send = sendBinding(binding);
-    submissionInFlight = true;
+    const previousSystemHints = [...binding.owner.selectedSystemHints];
+    let dispatched = false;
     try {
-      const result = send.command(serializedText, {
+      const serializedText = serializeDraft(binding, payload.text, payload.references);
+      if (payload.serializedText !== serializedText) fail("serialized-reference-draft-mismatch");
+      binding = await applyEnvelope(binding, payload);
+      binding = await prepareReferences(binding, payload.references);
+      checkedAttachments(binding, payload.attachmentTokens ?? []);
+      checkedReferences(binding, payload.references);
+      const send = sendBinding(binding);
+      submissionInFlight = true;
+      dispatched = true;
+      const result = send.invoke(serializedText, {
         model: {...payload.model},
         systemHints: [...payload.systemHints]
-      }, undefined, performance.now(), false);
+      }, performance.now());
       if (!result || typeof result.then !== "function") fail("submit-return-contract-changed");
       if (await result !== true) fail("submit-rejected");
       for (const token of payload.attachmentTokens ?? []) handles.delete(token);
       for (const reference of payload.references) referenceHandles.delete(reference.token);
       return {accepted: true, route: "website-command", profile: send.profile};
+    } catch (error) {
+      if (!dispatched) await rollbackSystemHints(binding, previousSystemHints);
+      throw error;
     } finally { submissionInFlight = false; }
   }
   function stop() {
@@ -387,7 +451,7 @@
       try { current = composerBinding(); }
       catch (error) {
         if (["website-runtime:composer-owner-unavailable",
-          "website-runtime:committed-root-unavailable-or-ambiguous"].includes(error?.message)) return null;
+          "website-runtime:committed-root-unavailable"].includes(error?.message)) return null;
         throw error;
       }
       if (previousPath !== "/"
@@ -404,7 +468,7 @@
     const input = fileInputBinding(binding);
     if (input.profile.fileAttachmentDisabled || input.profile.fileUploadLimitReached) fail("upload-unavailable");
     const before = new Set(binding.owner.attachments);
-    input.command([file]);
+    input.command([file], undefined);
     const descriptor = await waitFor(() => {
       const current = composerBinding();
       if (current.owner.composerController !== binding.owner.composerController
@@ -440,7 +504,7 @@
     if (descriptor) {
       const websiteID = handle.identity.uploadId ?? handle.identity.id;
       if (!websiteID) fail("attachment-identity-unavailable");
-      binding.onAttachmentRemove(websiteID);
+      binding.onAttachmentRemove(websiteID, undefined);
       await waitFor(() => !composerBinding().owner.attachments.some(value => matchesDescriptor(value, handle)), "attachment-removal-unconfirmed");
     }
     handles.delete(token);

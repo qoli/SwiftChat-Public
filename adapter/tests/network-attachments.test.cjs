@@ -4,15 +4,18 @@ const vm = require('node:vm');
 const fs = require('node:fs');
 const source = fs.readFileSync(require('node:path').join(__dirname, '../chatgpt-network-attachments.js'), 'utf8');
 function fixture() {
-  const calls = []; let status = 'uploading';
-  const context = {window: {}, File, Uint8Array, atob, Error}; vm.runInNewContext(source, context);
+  const calls = [], frames = []; let status = 'uploading', changes = 0;
+  const window = {requestAnimationFrame(callback) { frames.push(callback); return frames.length; }};
+  const context = {window, File, Uint8Array, atob, Error}; vm.runInNewContext(source, context);
   const api = context.window.__SwiftChatNetworkAttachments;
   api.configure({runtime: {
     async uploadAttachment(file) { calls.push({upload:file}); return {token: 'local-token'}; },
     attachmentState(token) { calls.push({stateToken:token}); return {status}; },
     async removeAttachment(token) { calls.push({removedToken:token}); }
-  }});
-  return {api, calls, ready() { status = 'ready'; }, error() { status = 'error'; }};
+  }, onChange() { changes += 1; }});
+  return {api, calls, ready() { status = 'ready'; }, error() { status = 'error'; },
+    frame() { assert.ok(frames.length); frames.shift()(); },
+    get frameCount() { return frames.length; }, get changeCount() { return changes; }};
 }
 test('upload registration keeps remote identity behind an opaque local token', async () => {
   const f = fixture(); await f.api.importNativeAttachment('n', 'fixture.txt', 'text/plain', btoa('synthetic'));
@@ -39,4 +42,24 @@ test('raw upload errors never escape and duplicate imports do not reupload', asy
   await assert.rejects(f.api.importNativeAttachment('n', 'f.txt', 'text/plain', btoa('x')), /network-attachments:upload-failed/);
   assert.equal(f.api.snapshot()[0].status, 'failed');
   await assert.rejects(f.api.importNativeAttachment('n', 'f.txt', 'text/plain', btoa('x')), /duplicate-identity/);
+});
+test('hidden upload completion notifies native without a React commit', async () => {
+  const f = fixture(); await f.api.importNativeAttachment('n', 'fixture.txt', 'text/plain', btoa('x'));
+  assert.equal(f.changeCount, 2); assert.equal(f.frameCount, 1);
+  f.frame();
+  assert.equal(f.changeCount, 2, 'Unchanged state must not flood the bridge');
+  assert.equal(f.frameCount, 1);
+  f.ready(); f.frame();
+  assert.equal(f.changeCount, 3); assert.equal(f.api.snapshot()[0].status, 'ready');
+  assert.equal(f.frameCount, 0, 'Observation stops at the terminal state');
+});
+test('hidden upload failure and pending removal stop observation', async () => {
+  const failed = fixture(); await failed.api.importNativeAttachment('n', 'fixture.txt', 'text/plain', btoa('x'));
+  failed.error(); failed.frame();
+  assert.equal(failed.changeCount, 3); assert.equal(failed.api.snapshot()[0].status, 'failed');
+  assert.equal(failed.frameCount, 0);
+
+  const removed = fixture(); await removed.api.importNativeAttachment('n', 'fixture.txt', 'text/plain', btoa('x'));
+  await removed.api.remove('n'); removed.frame();
+  assert.equal(removed.api.snapshot().length, 0); assert.equal(removed.frameCount, 0);
 });

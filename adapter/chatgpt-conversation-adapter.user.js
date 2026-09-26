@@ -4,7 +4,7 @@
   "use strict";
   if (location.hostname !== "chatgpt.com" && !location.hostname.endsWith(".chatgpt.com")) return;
 
-  const ADAPTER_VERSION = "3.2.0";
+  const ADAPTER_VERSION = "3.5.0";
   const documentID = crypto.randomUUID();
   const runtime = window.__SwiftChatWebsiteRuntime;
   const display = window.__SwiftChatConversationDisplay;
@@ -19,6 +19,7 @@
   const requestTemplates = new Map();
   let lastState = "", lastHistory = "", scheduled = false, submitting = false;
   let catalogFailure = null, generation = false, activeRoute = null;
+  let observedPath = location.pathname, matchedAvailablePath = null;
 
   const post = (name, payload) => window.webkit?.messageHandlers?.[name]?.postMessage(payload);
   const fail = code => { throw new Error(`native-adapter:${code}`); };
@@ -27,6 +28,10 @@
   const websiteRouteUnavailable = new Set([
     "website-runtime:paid-submit-profile-unavailable",
     "website-runtime:paid-submit-profile-ambiguous"
+  ]);
+  const recoverableContextFailures = new Set([
+    "website-runtime:committed-root-unavailable",
+    "website-runtime:composer-owner-unavailable"
   ]);
   const boundedFailure = (error, prefix) => {
     const message = typeof error?.message === "string" ? error.message : "";
@@ -105,7 +110,7 @@
           catalogFailure = message;
         }
       } else if (kind === "reference-capabilities") {
-        referencesProjection.ingestCapabilities(payload);
+        referencesProjection.ingestCapabilities(payload, response.url);
       } else if (kind === "history") {
         historyProjection.ingest(response.url, payload, historyToken);
       }
@@ -151,8 +156,20 @@
     }
   };
 
-  function currentContext() { try { return runtime.context(); } catch { return null; } }
+  function currentContext() {
+    try { return {value: runtime.context(), invariant: null}; }
+    catch (error) {
+      return {value: null, invariant: `website-runtime:${boundedFailure(error, "website-runtime")}`};
+    }
+  }
   function modelCatalogContext(mode) { try { return models.contextKey(mode); } catch { return null; } }
+  function runtimeDiagnostics() {
+    try {
+      const value = roots?.diagnostics?.();
+      return Number.isInteger(value?.revision) && value.revision >= 0
+        && Number.isInteger(value?.rootCount) && value.rootCount >= 0 ? value : null;
+    } catch { return null; }
+  }
   function reportHistory() {
     const payload = {...historyProjection.snapshot(activeConversationID()), adapterVersion: ADAPTER_VERSION};
     const serialized = JSON.stringify(payload);
@@ -162,21 +179,40 @@
     }
   }
   function reportCurrentState(force = false) {
-    const context = currentContext();
+    if (observedPath !== location.pathname) {
+      observedPath = location.pathname;
+      matchedAvailablePath = null;
+    }
+    const observedContext = currentContext();
+    const context = observedContext.value;
     const catalogContext = context ? modelCatalogContext(context.mode) : null;
     const view = display.apply();
-    const state = context && catalogContext ? (generation || context.streaming ? "generating" : submitting ? "sending" : "ready") : "loading";
+    let state;
+    if (context && catalogContext) {
+      state = generation || context.streaming ? "generating" : submitting ? "sending" : "ready";
+      if (view.mode === "matched") matchedAvailablePath = location.pathname;
+    } else if (!context && recoverableContextFailures.has(observedContext.invariant)
+      && matchedAvailablePath === location.pathname && view.mode === "matched") {
+      state = "context-unavailable";
+    } else if (!context && !recoverableContextFailures.has(observedContext.invariant)) {
+      state = "unsupported";
+    } else {
+      state = "loading";
+    }
     const invariant = context ? (!catalogContext ? (catalogFailure ?? "network-models:catalog-not-ready") : undefined)
-      : "website-runtime:composer-owner-unavailable";
+      : observedContext.invariant;
+    const rootDiagnostic = runtimeDiagnostics();
     const payload = {
       state,
       documentID,
       adapterVersion: ADAPTER_VERSION,
       displayMode: view.mode,
       conversationPath: location.pathname,
-      conversationMode: context?.mode ?? null,
-      modelContextKey: context && catalogContext ? JSON.stringify([context.mode, context.conversationID, catalogContext]) : null,
-      attachments: attachments.snapshot(),
+      ...(context ? {conversationMode: context.mode, attachments: attachments.snapshot()} : {}),
+      ...(context && catalogContext
+        ? {modelContextKey: JSON.stringify([context.mode, context.conversationID, catalogContext])} : {}),
+      ...(rootDiagnostic ? {runtimeRevision: rootDiagnostic.revision,
+        runtimeRootCount: rootDiagnostic.rootCount} : {}),
       ...(invariant ? {invariant} : {})
     };
     const serialized = JSON.stringify(payload);
@@ -218,7 +254,21 @@
       else if (context.mode !== "chat") fail("conversation-mode-unavailable");
     }
     const resolvedReferences = referencesProjection.resolve(text, references);
-    const serializedText = runtime.serializeReferences(text, resolvedReferences);
+    const libraryReferences = [], pluginSystemHints = [];
+    for (const reference of resolvedReferences) {
+      if (reference?.kind === "plugin") {
+        if (typeof reference.systemHint !== "string" || !reference.systemHint) fail("plugin-reference-invalid");
+        pluginSystemHints.push(reference.systemHint);
+      } else if (reference?.kind === "file" || reference?.kind === "folder") {
+        libraryReferences.push(reference);
+      } else fail("reference-kind-unavailable");
+    }
+    const systemHints = [];
+    for (const hint of [...selection.systemHints, ...pluginSystemHints]) {
+      if (typeof hint !== "string" || !hint) fail("system-hint-invalid");
+      if (!systemHints.includes(hint)) systemHints.push(hint);
+    }
+    const serializedText = runtime.serializeReferences(text, libraryReferences);
     if (payload.appContext && context.mode === "chat") {
       contextLease = contextTransport.arm(serializedText, payload.appContext);
     }
@@ -227,13 +277,15 @@
     submitting = true;
     schedule();
     try {
-      const envelope = {text, serializedText, references: resolvedReferences, attachmentTokens,
-        ...selection, mode: context.mode, conversationID: context.conversationID};
+      const envelope = {text, serializedText, references: libraryReferences, attachmentTokens,
+        model: selection.model, systemHints, mode: context.mode, conversationID: context.conversationID};
       let result;
       try {
         result = await runtime.submit(envelope);
       } catch (websiteError) {
-        if (!websiteRouteUnavailable.has(websiteError?.message)) throw websiteError;
+        const directEligible = !envelope.systemHints.length && !envelope.references.length
+          && !envelope.attachmentTokens.length;
+        if (!websiteRouteUnavailable.has(websiteError?.message) || !directEligible) throw websiteError;
         activeRoute = "direct-network";
         try {
           result = await directConversation.submit(envelope);
@@ -242,7 +294,7 @@
           throw new Error(`native-adapter:send-routes-unavailable;website=${boundedFailure(websiteError, "website-runtime")};direct=${boundedFailure(directError, "direct-network")}`);
         }
       }
-      if (result.route === "direct-network" && context.conversationID === null
+      if (result.route === "direct-network" && activeConversationID() === null
         && typeof result.conversationID === "string") {
         try {
           await runtime.navigate(`/c/${result.conversationID}`);

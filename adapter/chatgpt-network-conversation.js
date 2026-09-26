@@ -406,7 +406,7 @@
     return conversationID;
   }
 
-  function validatePayload(payload) {
+  function validatedPayload(payload) {
     if (!payload || typeof payload.serializedText !== "string" || !payload.serializedText
       || !["chat", "work"].includes(payload.mode)
       || (payload.conversationID !== null && !nonempty(payload.conversationID))
@@ -416,23 +416,29 @@
       || !Array.isArray(payload.attachmentTokens) || payload.attachmentTokens.length) {
       fail("text-envelope-required");
     }
+    const provisional = /^local-chatgpt:[0-9a-f-]+$/i.test(payload.conversationID ?? "");
     const activeID = location.pathname.match(/^\/c\/([0-9a-f-]+)$/i)?.[1] ?? null;
-    if (payload.conversationID === null ? location.pathname !== "/"
-      : activeID?.toLowerCase() !== payload.conversationID.toLowerCase()) {
+    if (location.pathname === "/") {
+      if (payload.conversationID !== null && !provisional) fail("submission-context-mismatch");
+      return payload.conversationID === null ? payload : {...payload, conversationID: null};
+    }
+    if (!activeID || (payload.conversationID !== null && !provisional
+      && activeID.toLowerCase() !== payload.conversationID.toLowerCase())) {
       fail("submission-context-mismatch");
     }
+    return activeID === payload.conversationID ? payload : {...payload, conversationID: activeID};
   }
 
   async function submit(payload) {
     if (deliveryUncertain) fail("delivery-uncertain-reload-before-sending");
     if (active) fail("submission-in-flight");
-    validatePayload(payload);
+    const submission = validatedPayload(payload);
     const controller = new AbortController();
-    active = {controller, conversationID: payload.conversationID, dispatched: false, stopping: false};
+    active = {controller, conversationID: submission.conversationID, dispatched: false, stopping: false};
     onChange();
     try {
       const [parentID, requirementsHeaders] = await Promise.all([
-        parentMessageID(payload.conversationID, controller.signal),
+        parentMessageID(submission.conversationID, controller.signal),
         chatRequirements(controller.signal)
       ]);
       const headers = {
@@ -445,13 +451,13 @@
       active.dispatched = true;
       const response = await sessionRequest("/backend-api/f/conversation", {
         method: "POST", headers, signal: controller.signal,
-        body: JSON.stringify(submissionBody(payload, parentID))
+        body: JSON.stringify(submissionBody(submission, parentID))
       });
       if (!response.ok) {
         const code = await responseErrorCode(response);
         fail(`conversation-http-${response.status}${code ? `-${code.toLowerCase()}` : ""}`);
       }
-      const conversationID = await consumeStream(response, payload.conversationID, value => {
+      const conversationID = await consumeStream(response, submission.conversationID, value => {
         if (active) active.conversationID = value;
       });
       active.conversationID = conversationID;

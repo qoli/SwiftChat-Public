@@ -88,6 +88,17 @@ test('unavailable website command can publish a text envelope through the authen
   assert.deepEqual(sent.body.supported_encodings,['v1']);
 });
 
+test('home route treats a provisional React identity as a new direct conversation', async () => {
+  const f=fixture();
+  const result=await f.api.submit(envelope({
+    conversationID:'local-chatgpt:22222222-2222-4222-8222-222222222222'
+  }));
+  assert.equal(result.conversationID,conversationID);
+  const sent=f.calls.find(call=>call.path==='/backend-api/f/conversation');
+  assert.equal('conversation_id' in sent.body,false);
+  assert.match(sent.body.parent_message_id,/^00000000-0000-4000-8000-/);
+});
+
 test('existing conversation direct sends refetch the current parent before dispatch', async () => {
   const f=fixture(`/c/${conversationID}`);
   const result=await f.api.submit(envelope({conversationID}));
@@ -96,6 +107,28 @@ test('existing conversation direct sends refetch the current parent before dispa
   const sent=f.calls.find(call=>call.path==='/backend-api/f/conversation');
   assert.ok(detail);assert.equal(sent.body.parent_message_id,'parent-message');
   assert.equal(sent.body.conversation_id,conversationID);
+});
+
+test('canonical route replaces a provisional React conversation identity before dispatch', async () => {
+  const f=fixture(`/c/${conversationID}`);
+  const result=await f.api.submit(envelope({conversationID:'local-chatgpt:22222222-2222-4222-8222-222222222222'}));
+  assert.equal(result.conversationID,conversationID);
+  const detail=f.calls.find(call=>call.path.startsWith('/backend-api/conversations/'));
+  const sent=f.calls.find(call=>call.path==='/backend-api/f/conversation');
+  assert.ok(detail);assert.equal(sent.body.parent_message_id,'parent-message');
+  assert.equal(sent.body.conversation_id,conversationID);
+});
+
+test('canonical route replaces a missing React identity but rejects another canonical conversation', async () => {
+  const recovered=fixture(`/c/${conversationID}`);
+  assert.equal((await recovered.api.submit(envelope())).conversationID,conversationID);
+  assert.equal(recovered.calls.find(call=>call.path==='/backend-api/f/conversation').body.conversation_id,conversationID);
+
+  const mismatch=fixture(`/c/${conversationID}`);
+  await assert.rejects(mismatch.api.submit(envelope({
+    conversationID:'22222222-2222-4222-8222-222222222222'
+  })),/direct-network:submission-context-mismatch/);
+  assert.equal(mismatch.calls.length,0);
 });
 
 test('direct fallback refuses attachments and references instead of silently dropping them', async () => {

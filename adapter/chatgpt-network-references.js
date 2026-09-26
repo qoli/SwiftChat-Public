@@ -1,4 +1,4 @@
-// Account-scoped ChatGPT library search and opaque reference projection.
+// Account-scoped ChatGPT Plugin and library search with opaque reference projection.
 // Authorization and remote identity stay in the page; native callers receive
 // only display metadata plus a document-local selection token.
 (() => {
@@ -11,15 +11,20 @@
     filters: {lanes: ["image", "document", "folder"], library_providers: ["native"]}
   };
   let request = null, onChange = () => {}, session = null, sessionFingerprint = null;
+  let accountFingerprint = null;
   let source = structuredClone(defaultSource), generation = 0, pending = null;
   let capabilityFingerprint = null, capabilityPromise = null;
+  let plugins = new Map(), pluginFingerprint = null;
+  let pluginSessionFingerprint = null, pluginPromise = null;
+  let lastSelectionReset = "unavailable";
 
   const fail = code => { throw new Error(`network-references:${code}`); };
   const nonempty = value => typeof value === "string" && value.length > 0;
   const safeStrings = values => Array.isArray(values) && values.length > 0 && values.every(nonempty);
   const endpoint = "/backend-api/global/search";
 
-  function resetScope() {
+  function resetScope(reason) {
+    lastSelectionReset = reason;
     generation += 1;
     pending?.abort();
     pending = null;
@@ -28,6 +33,10 @@
     source = structuredClone(defaultSource);
     capabilityFingerprint = null;
     capabilityPromise = null;
+    plugins = new Map();
+    pluginFingerprint = null;
+    pluginSessionFingerprint = null;
+    pluginPromise = null;
   }
 
   function requestValue(input) {
@@ -49,8 +58,71 @@
     };
   }
 
-  function ingestCapabilities(payload) {
+  function pluginCapabilityResponse(responseURL) {
+    if (typeof responseURL !== "string") return false;
+    try {
+      const url = new URL(responseURL, location.origin);
+      return url.origin === location.origin && url.pathname === "/backend-api/system_hints"
+        && url.searchParams.get("mode") === "plugins"
+        && url.searchParams.get("exclude_logo") === "false"
+        && url.searchParams.get("suggestions") === "true";
+    } catch { return false; }
+  }
+
+  function pluginStrings(value, code) {
+    if (value == null) return [];
+    if (!Array.isArray(value) || value.some(item => !nonempty(item))) fail(code);
+    return value;
+  }
+
+  function ingestPlugins(payload) {
+    const next = new Map();
+    for (const hint of payload.system_hints) {
+      if (hint?.is_plugin !== true || hint.is_connected !== true
+        || hint.hide_from_initial_selection === true) continue;
+      if (!nonempty(hint.system_hint) || !nonempty(hint.name)
+        || hint.can_connect !== false) fail("plugin-schema-changed");
+      const title = hint.name.trim();
+      const shortLabel = hint.short_label == null ? "" : hint.short_label.trim();
+      if (!title || hint.short_label != null && !nonempty(hint.short_label)) fail("plugin-schema-changed");
+      const aliases = pluginStrings(hint.aliases, "plugin-aliases-changed");
+      const invocations = pluginStrings(hint.keyword_invocations, "plugin-keywords-changed");
+      if (next.has(hint.system_hint)) fail("plugin-identity-ambiguous");
+      next.set(hint.system_hint, {
+        systemHint: hint.system_hint,
+        title,
+        subtitle: shortLabel && shortLabel !== title ? shortLabel : "",
+        searchTerms: [...new Set([title, shortLabel, ...aliases, ...invocations]
+          .filter(nonempty).map(value => value.toLocaleLowerCase()))]
+      });
+    }
+    const fingerprint = JSON.stringify([...next.values()]
+      .map(value => ({...value, searchTerms: [...value.searchTerms].sort()}))
+      .sort((left, right) => left.systemHint.localeCompare(right.systemHint)));
+    if (fingerprint === pluginFingerprint) return false;
+    plugins = next;
+    pluginFingerprint = fingerprint;
+    return true;
+  }
+
+  function ingestCapabilities(payload, responseURL = null) {
     if (!Array.isArray(payload?.system_hints)) return false;
+    const pluginResponse = pluginCapabilityResponse(responseURL);
+    let changed = false;
+    if (pluginResponse) {
+      try { changed = ingestPlugins(payload); }
+      catch (error) {
+        const hadPluginState = pluginFingerprint !== null;
+        plugins = new Map();
+        pluginFingerprint = null;
+        pluginSessionFingerprint = null;
+        if (hadPluginState) {
+          onChange();
+        }
+        throw error;
+      }
+    }
+    if (pluginResponse) pluginSessionFingerprint = sessionFingerprint;
     const providers = new Set(source.filters.library_providers);
     const known = ["google_drive", "dropbox", "box", "onedrive", "sharepoint"];
     for (const hint of payload.system_hints) {
@@ -60,13 +132,49 @@
       for (const provider of known) {
         const aliases = provider === "google_drive" ? ["google_drive", "google drive", "gdrive"]
           : [provider];
-        if (aliases.some(alias => identity.includes(alias))) providers.add(provider);
+        if (aliases.some(alias => identity.includes(alias)) && !providers.has(provider)) {
+          providers.add(provider);
+          changed = true;
+        }
       }
     }
     source = {...source, filters: {...source.filters,
       library_providers: [...providers]}};
-    onChange();
+    if (changed) onChange();
     return true;
+  }
+
+  async function loadPluginCapabilities() {
+    if (!sessionFingerprint || pluginSessionFingerprint === sessionFingerprint) return;
+    if (pluginPromise) return pluginPromise;
+    const fingerprint = sessionFingerprint;
+    pluginPromise = (async () => {
+      try {
+        if (typeof request !== "function") fail("transport-unavailable");
+        const capabilityURL = new URL(
+          "/backend-api/system_hints?exclude_logo=false&mode=plugins&suggestions=true",
+          location.origin);
+        const response = await request(new Request(capabilityURL, {
+            method: "GET", headers: new Headers(session.headers),
+            credentials: session.credentials, mode: session.mode, cache: session.cache,
+            redirect: session.redirect, referrer: session.referrer,
+            referrerPolicy: session.referrerPolicy
+          }));
+        if (sessionFingerprint !== fingerprint) fail("capability-superseded");
+        if (!response.ok) fail(`plugin-capability-http-${response.status}`);
+        let body;
+        try { body = await response.json(); }
+        catch { fail("plugin-capability-response-invalid-json"); }
+        if (!ingestCapabilities(body, capabilityURL.href)) fail("plugin-capability-response-changed");
+        pluginSessionFingerprint = fingerprint;
+      } catch (error) {
+        if (error?.message?.startsWith("network-references:")) throw error;
+        fail("plugin-capability-request-failed");
+      } finally {
+        pluginPromise = null;
+      }
+    })();
+    return pluginPromise;
   }
 
   function providerFromConnector(link) {
@@ -134,8 +242,16 @@
     const authorization = observed.headers.get("authorization");
     const account = observed.headers.get("chatgpt-account-id");
     if (!nonempty(authorization) || !nonempty(account)) return false;
+    const authoritativeAccount = pluginCapabilityResponse(url.href);
+    if (accountFingerprint === null || authoritativeAccount) {
+      if (accountFingerprint !== null && accountFingerprint !== account) resetScope("account-changed");
+      accountFingerprint = account;
+    } else if (accountFingerprint !== account) {
+      // The page can issue background requests for another account. Only the
+      // verified Plugin capability request changes the reference scope.
+      return true;
+    }
     const fingerprint = `${authorization}\u0000${account}`;
-    if (sessionFingerprint !== null && sessionFingerprint !== fingerprint) resetScope();
     sessionFingerprint = fingerprint;
     session = {
       headers: new Headers(observed.headers),
@@ -251,6 +367,38 @@
     return candidate;
   }
 
+  function sameCandidate(candidate, saved) {
+    if (!candidate || typeof candidate !== "object"
+      || Object.keys(candidate).sort().join("\u0000") !== "id\u0000kind\u0000payload\u0000subtitle\u0000title"
+      || candidate.id !== saved.id || candidate.kind !== saved.kind
+      || candidate.title !== saved.title || candidate.subtitle !== saved.subtitle) return false;
+    const payload = candidate.payload;
+    return payload && typeof payload === "object"
+      && Object.keys(payload).sort().join("\u0000") === "documentID\u0000selectionKey"
+      && payload.documentID === saved.payload.documentID
+      && payload.selectionKey === saved.payload.selectionKey;
+  }
+
+  function projectPlugins(query) {
+    const normalized = query.toLocaleLowerCase();
+    const items = [];
+    for (const plugin of plugins.values()) {
+      if (normalized && !plugin.searchTerms.some(value => value.includes(normalized))) continue;
+      const candidate = saveCandidate({
+        kind: "plugin",
+        title: plugin.title,
+        subtitle: plugin.subtitle,
+        runtime: {
+          kind: "plugin",
+          systemHint: plugin.systemHint,
+          pluginFingerprint: JSON.stringify([plugin.systemHint, plugin.title, plugin.subtitle])
+        }
+      });
+      if (candidate) items.push(candidate);
+    }
+    return items;
+  }
+
   function verifyResponse(body) {
     if (!Array.isArray(body?.items) || typeof body.partial_results !== "boolean"
       || !Array.isArray(body.source_statuses)
@@ -267,9 +415,15 @@
   async function search(rawQuery, cursor = null) {
     if (typeof rawQuery !== "string") fail("invalid-query");
     const query = rawQuery.trim();
-    if (!query) return {items: [], nextCursor: null};
     if (!sessionFingerprint) fail("authenticated-session-unavailable");
-    await loadCapabilities();
+    if (!query) {
+      if (cursor !== null) fail("cursor-invalid");
+      await loadPluginCapabilities();
+      const items = projectPlugins("");
+      onChange();
+      return {items, nextCursor: null};
+    }
+    await Promise.all([loadPluginCapabilities(), loadCapabilities()]);
     let remoteCursor = null, queryID = crypto.randomUUID(), activeSource = structuredClone(source);
     if (cursor !== null) {
       if (!nonempty(cursor)) fail("cursor-invalid");
@@ -298,7 +452,7 @@
       try { body = await response.json(); }
       catch { fail("search-response-invalid-json"); }
       verifyResponse(body);
-      const seen = new Set(), items = [];
+      const seen = new Set(), items = cursor === null ? projectPlugins(query) : [];
       for (const item of body.items) {
         const remoteKey = `${item?.source_type ?? ""}:${item?.id ?? ""}`;
         if (!nonempty(item?.id) || seen.has(remoteKey)) fail("candidate-ambiguous");
@@ -335,7 +489,14 @@
         || start < end || length <= 0 || start + length > text.length) fail("invalid-range");
       const key = candidate?.payload?.documentID === documentID ? candidate.payload.selectionKey : null;
       const saved = nonempty(key) ? selections.get(key) : null;
-      if (!saved || JSON.stringify(candidate) !== JSON.stringify(saved.candidate)) fail("selection-stale");
+      if (!saved) fail(`selection-stale-${lastSelectionReset}`);
+      if (!sameCandidate(candidate, saved.candidate)) fail("selection-payload-changed");
+      if (saved.runtime.kind === "plugin") {
+        const plugin = plugins.get(saved.runtime.systemHint);
+        if (!plugin || saved.runtime.pluginFingerprint !== JSON.stringify([
+          plugin.systemHint, plugin.title, plugin.subtitle
+        ]) || plugin.title !== saved.candidate.title) fail("selection-stale");
+      }
       if (text.slice(start, start + length) !== `@${saved.candidate.title}`) fail("selection-text-mismatch");
       runtime.push({...saved.runtime, location: start, length});
       end = start + length;
@@ -344,7 +505,7 @@
   }
 
   function invalidate() {
-    resetScope();
+    resetScope("cache-invalidated");
     onChange();
     return true;
   }
@@ -355,6 +516,6 @@
       if (Object.hasOwn(options, "onChange")) onChange = options.onChange ?? (() => {});
     },
     ingestRequest, ingestCapabilities, search, resolve, invalidate,
-    capabilities: Object.freeze({file: true, folder: true})
+    capabilities: Object.freeze({plugin: true, file: true, folder: true})
   });
 })();

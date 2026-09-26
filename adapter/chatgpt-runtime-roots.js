@@ -6,8 +6,20 @@
   const listeners = new Set();
   let revision = 0;
 
+  function rootsFor(rendererID) {
+    let mounted = roots.get(rendererID);
+    if (!mounted) {
+      mounted = new Set();
+      roots.set(rendererID, mounted);
+    }
+    return mounted;
+  }
   function committed(rendererID, root) {
-    roots.set(rendererID, root);
+    const mounted = rootsFor(rendererID);
+    const current = root?.current;
+    const unmounting = current?.memoizedState == null || current.memoizedState.element == null;
+    if (!mounted.has(root) && !unmounting) mounted.add(root);
+    else if (mounted.has(root) && unmounting) mounted.delete(root);
     revision += 1;
     for (const listener of listeners) {
       try { listener(revision); } catch { /* Observation cannot affect React. */ }
@@ -33,6 +45,7 @@
           this.renderers.set(rendererID, renderer);
           return rendererID;
         },
+        getFiberRoots: rootsFor,
         onCommitFiberRoot: committed,
         onCommitFiberUnmount() {},
         onPostCommitFiberRoot() {},
@@ -42,8 +55,17 @@
   }
 
   window.__SwiftChatRuntimeRoots = Object.freeze({
-    current() { return [...roots.values()].map(root => root.current).filter(Boolean); },
+    current() {
+      return [...roots.values()].flatMap(mounted => [...mounted])
+        .map(root => root.current).filter(Boolean);
+    },
     get revision() { return revision; },
+    diagnostics() {
+      return {
+        revision,
+        rootCount: [...roots.values()].reduce((count, mounted) => count + mounted.size, 0)
+      };
+    },
     subscribe(listener) {
       listeners.add(listener);
       return () => listeners.delete(listener);
