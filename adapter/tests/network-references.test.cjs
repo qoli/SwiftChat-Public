@@ -83,6 +83,16 @@ test('search reuses page authorization while projecting only document-local sele
     `chatgpt-library-folder://${encodeURIComponent('native-folder')}/`);
 });
 
+test('observing a Request never consumes the website transport body', async () => {
+  const f=fixture(), request=new Request('https://chatgpt.com/backend-api/f/conversation', {
+    method:'POST',headers:{authorization:'Bearer fixture','chatgpt-account-id':'account'},
+    body:JSON.stringify({messages:[]})
+  });
+  await f.api.ingestRequest(request);
+  assert.equal(request.bodyUsed,false);
+  assert.deepEqual(JSON.parse(await request.text()),{messages:[]});
+});
+
 test('pagination keeps the query identity and remote cursor inside the page module', async () => {
   const f = fixture();
   await authorize(f.api);

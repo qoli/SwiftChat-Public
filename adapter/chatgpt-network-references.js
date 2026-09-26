@@ -125,7 +125,7 @@
 
   async function ingestRequest(input, init) {
     let observed;
-    try { observed = input instanceof Request ? new Request(input, init) : new Request(input, init); }
+    try { observed = input instanceof Request ? new Request(input.clone(), init) : new Request(input, init); }
     catch { return false; }
     let url;
     try { url = new URL(observed.url, location.origin); }

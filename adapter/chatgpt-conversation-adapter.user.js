@@ -4,7 +4,7 @@
   "use strict";
   if (location.hostname !== "chatgpt.com" && !location.hostname.endsWith(".chatgpt.com")) return;
 
-  const ADAPTER_VERSION = "3.1.0";
+  const ADAPTER_VERSION = "3.2.0";
   const documentID = crypto.randomUUID();
   const runtime = window.__SwiftChatWebsiteRuntime;
   const display = window.__SwiftChatConversationDisplay;
@@ -13,6 +13,7 @@
   const attachments = window.__SwiftChatNetworkAttachments;
   const referencesProjection = window.__SwiftChatNetworkReferences;
   const contextTransport = window.__SwiftChatAppContextTransport;
+  const directConversation = window.__SwiftChatNetworkConversation;
   const roots = window.__SwiftChatRuntimeRoots;
   const pageFetch = window.fetch;
   const requestTemplates = new Map();
@@ -23,6 +24,14 @@
   const fail = code => { throw new Error(`native-adapter:${code}`); };
   const activeConversationID = () => location.pathname.match(/^\/c\/([0-9a-f-]+)$/i)?.[1]?.toLowerCase() ?? null;
   const safeRun = run => { try { Promise.resolve(run()).catch(() => {}); } catch {} };
+  const websiteRouteUnavailable = new Set([
+    "website-runtime:paid-submit-profile-unavailable",
+    "website-runtime:paid-submit-profile-ambiguous"
+  ]);
+  const boundedFailure = (error, prefix) => {
+    const message = typeof error?.message === "string" ? error.message : "";
+    return new RegExp(`^${prefix}:[a-z0-9-]+$`).test(message) ? message.slice(prefix.length + 1) : "unknown";
+  };
 
   function endpoint(input) {
     try {
@@ -106,6 +115,7 @@
 
   window.fetch = async function(input, init) {
     const kind = endpoint(input);
+    safeRun(() => directConversation.observeRequest(input, init));
     safeRun(() => referencesProjection.ingestRequest(input, init));
     let historyToken = null;
     let template = null;
@@ -217,11 +227,34 @@
     submitting = true;
     schedule();
     try {
-      const result = await runtime.submit({
-        text, serializedText, references: resolvedReferences, attachmentTokens, ...selection,
-        mode: context.mode, conversationID: context.conversationID
-      });
-      activeRoute = result.route;
+      const envelope = {text, serializedText, references: resolvedReferences, attachmentTokens,
+        ...selection, mode: context.mode, conversationID: context.conversationID};
+      let result;
+      try {
+        result = await runtime.submit(envelope);
+      } catch (websiteError) {
+        if (!websiteRouteUnavailable.has(websiteError?.message)) throw websiteError;
+        activeRoute = "direct-network";
+        try {
+          result = await directConversation.submit(envelope);
+        } catch (directError) {
+          if (!directConversation.active) activeRoute = null;
+          throw new Error(`native-adapter:send-routes-unavailable;website=${boundedFailure(websiteError, "website-runtime")};direct=${boundedFailure(directError, "direct-network")}`);
+        }
+      }
+      if (result.route === "direct-network" && context.conversationID === null
+        && typeof result.conversationID === "string") {
+        try {
+          await runtime.navigate(`/c/${result.conversationID}`);
+          result = {...result, navigationConverged: true};
+        } catch (error) {
+          // The server has already accepted the turn. Report navigation separately
+          // instead of turning a confirmed send into a retryable failure.
+          result = {...result, navigationConverged: false,
+            navigationFailure: boundedFailure(error, "website-runtime")};
+        }
+      }
+      activeRoute = result.route === "direct-network" ? null : result.route;
       if (contextLease) await contextLease.promise;
       attachments.didSubmit(payload.attachmentIDs);
       return result;
@@ -249,6 +282,7 @@
     case "removeAttachment": return attachments.remove(command.id);
     case "send": return operation("conversation.submit", () => submitNativeDraft(command.envelope));
     case "stop":
+      if (activeRoute === "direct-network") return directConversation.stop();
       if (activeRoute && activeRoute !== "website-command") fail("stop-route-mismatch");
       return runtime.stop();
     default: fail("unknown-command");
@@ -259,6 +293,7 @@
   models.configure({onChange: schedule});
   attachments.configure({runtime, onChange: schedule});
   referencesProjection.configure({request: (input, init) => pageFetch.call(window, input, init), onChange: schedule});
+  directConversation.configure({request: (input, init) => window.fetch(input, init), onChange: schedule});
   roots?.subscribe(schedule);
   display.observe(schedule);
   window.addEventListener("popstate", schedule);
