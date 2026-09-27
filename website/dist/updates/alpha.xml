@@ -1,7 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0"><channel><title>SwiftChat Alpha</title><link>https://swiftchat.ronniewong.cc</link><description>SwiftChat macOS alpha updates</description><item><title>SwiftChat 0.1.0 (16) Alpha</title><description>• AIChat 新增 PersistentShell 工具，可在「設定 → Tools」啟用或停用、設定 SSH 主機、複製或安裝 Ed25519 公鑰、確認主機金鑰並測試連線；每個對話使用獨立的 shell 工作階段。
-• 側欄整合 AIChat 與 ChatGPT 對話，按最近更新排序；可用 All、AIChat、ChatGPT 篩選及搜尋，篩選或搜尋不會切換目前對話。設定中的 AIChat Data 可清除本機 AIChat 對話記錄，不影響服務設定、PersistentShell 主機設定或 ChatGPT 對話。
-• ChatGPT 恢復附件上傳，並支援已連線的 Plugins／Apps 與檔案、資料夾引用；網站控制脈絡暫時失聯時，已就緒的對話仍會保留畫面，控制項恢復前會暫停相關操作。
-• 改善 ChatGPT 傳送可靠性：網站傳送控制項在送出前不可用時，無附件或引用的純文字訊息可使用頁面內的已授權傳送路徑；不會在不確定送出後自動重送。外部連結與引用彈窗會交由系統預設瀏覽器開啟。
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0"><channel><title>SwiftChat Alpha</title><link>https://swiftchat.ronniewong.cc</link><description>SwiftChat macOS alpha updates</description><item><title>SwiftChat 0.1.0 (17) Alpha</title><description>• AIChat 新增 PersistentShell 工具，可在「設定 → Tools」啟用或停用、設定 SSH 主機、複製或安裝 Ed25519 公鑰、確認主機金鑰並測試連線；每個對話使用獨立的 shell 工作階段。
+• 側欄整合 AIChat 與 ChatGPT 對話，按最近更新排序；可用 All、AIChat、ChatGPT 篩選及搜尋，並可在「AIChat Data」清除本機 AIChat 對話記錄，不影響服務設定、PersistentShell 主機設定或 ChatGPT 對話。
+• ChatGPT 恢復附件上傳，並支援已連線的 Plugins／Apps 與檔案、資料夾引用；網站控制暫時失聯時，已就緒的對話仍會保留畫面，控制項恢復前會暫停操作。
+• ChatGPT 免費帳戶可使用 Auto 與獨立 Thinking 選項建立及傳送 Chat 對話；Work 與附件不適用。
+• 改善 ChatGPT 傳送與版面可靠性：網站傳送控制項在送出前不可用時，無附件或引用的純文字訊息可使用頁面內已授權的傳送路徑；不會在不確定送出後自動重送，網站底部淡出效果也不再遮住原生輸入列。外部連結會交由系統預設瀏覽器開啟。
 
-本次更新僅適用 macOS。</description><sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion><enclosure url="https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.16/SwiftChat-0.1.0-16-macOS.zip" length="12072736" type="application/octet-stream" sparkle:version="16" sparkle:shortVersionString="0.1.0" sparkle:edSignature="rkwIgdsyYFOxM0IPnJGqKmNjiQAanhtpiAk6r1xdUrxLadoZIkYFXAjeNsLm6algYTjFIN8umYn7JiqWgoEcDg==" /></item></channel></rss>
+本次更新僅適用 macOS。</description><sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion><enclosure url="https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.17/SwiftChat-0.1.0-17-macOS.zip" length="11953048" type="application/octet-stream" sparkle:version="17" sparkle:shortVersionString="0.1.0" sparkle:edSignature="d/PqUcA4bLekZwyx0/R02pVLrYvp1bgF8rekj4yvI4XgSm16LnGHMzEa2HP7RL+WnMCsNfvXpw3sVr6ELrVlAQ==" /></item></channel></rss>
