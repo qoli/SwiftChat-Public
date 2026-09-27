@@ -6,8 +6,8 @@ const {webcrypto} = require('node:crypto');
 const source = fs.readFileSync(require('node:path').join(__dirname, '../chatgpt-conversation-adapter.user.js'), 'utf8');
 
 function fixture(websiteFailure, directFailure = null, navigationFailure = null,
-                 resolvedReferences = null) {
-  const calls=[], envelopes=[], serializedReferences=[], statuses=[], rootListeners=new Set();
+                 resolvedReferences = null, freeEnabled = false) {
+  const calls=[], freeCalls=[], envelopes=[], serializedReferences=[], statuses=[], rootListeners=new Set();
   let contextFailure=null, displayMode='raw';
   const runtime={context:()=>{
     if(contextFailure)throw new Error(contextFailure);
@@ -18,13 +18,27 @@ function fixture(websiteFailure, directFailure = null, navigationFailure = null,
     async submit(envelope){calls.push('website');envelopes.push(envelope);
       if(websiteFailure)throw new Error(websiteFailure);
       return{accepted:true,route:'website-command',profile:'fixture'};},
+    async submitFree(envelope){calls.push('free-website');envelopes.push(envelope);
+      if(websiteFailure)throw new Error(websiteFailure);
+      return{accepted:true,route:'free-website-command',profile:'fixture'};},
     async navigate(path){calls.push(`navigate:${path}`);if(navigationFailure)throw new Error(navigationFailure);return true;},
-    stop:()=>true};
+    stop:()=>true,stopFree:()=>true};
   const direct={active:false,observeRequest(){},configure(){},
     async submit(){calls.push('direct');if(directFailure)throw new Error(directFailure);
       return{accepted:true,route:'direct-network',profile:'fixture',conversationID:'11111111-1111-4111-8111-111111111111'};},
     stop:()=>true};
   const noop=()=>{};
+  const free={selected:freeEnabled,configure:noop,context:()=>({mode:'chat',conversationID:null,streaming:false}),
+    contextKey:()=>"free-catalog",catalog:mode=>{freeCalls.push(`catalog:${mode}`);return{mode,models:[]};},
+    resolve:(_mode,_model,thinking)=>({model:{slug:'auto',versionId:null,thinkingEffort:null},
+      systemHints:thinking?['reason']:[]}),
+    newConversation:async mode=>{freeCalls.push(`start:${mode}`);return true;},
+    setMode:async mode=>{freeCalls.push(`mode:${mode}`);return true;},
+    setThinking:enabled=>{freeCalls.push(`thinking:${enabled}`);return true;},
+    async submit(envelope){freeCalls.push('submit');envelopes.push(envelope);
+      if(directFailure)throw new Error(directFailure);
+      return{accepted:true,route:'free-direct-network',profile:'fixture'};},
+    stop(){freeCalls.push('stop');return true;},ingest:noop};
   const window={
     __SwiftChatWebsiteRuntime:runtime,
     __SwiftChatConversationDisplay:{apply:()=>({mode:displayMode}),observe:noop,setBottomInset:()=>true},
@@ -35,6 +49,7 @@ function fixture(websiteFailure, directFailure = null, navigationFailure = null,
     __SwiftChatAppContextTransport:{prependWork:(text,mentions)=>({text,mentions}),arm:()=>null,
       fetch:(fetchPage,receiver,input,init)=>fetchPage.call(receiver,input,init)},
     __SwiftChatNetworkConversation:direct,
+    __SwiftChatFreeAdapter:free,
     __SwiftChatRuntimeRoots:{revision:1,diagnostics:()=>({revision:1,rootCount:1}),
       subscribe(listener){rootListeners.add(listener);return()=>rootListeners.delete(listener);}},
     fetch:async()=>new Response(null,{status:204}),
@@ -44,7 +59,7 @@ function fixture(websiteFailure, directFailure = null, navigationFailure = null,
   const location={hostname:'chatgpt.com',origin:'https://chatgpt.com',pathname:'/'};
   vm.runInNewContext(source,{window,location,URL,Request,Response,crypto:webcrypto,performance,
     queueMicrotask,setTimeout,clearTimeout});
-  return{adapter:window.__SwiftChatWebAdapter,calls,direct,envelopes,serializedReferences,statuses,location,
+  return{adapter:window.__SwiftChatWebAdapter,calls,freeCalls,direct,envelopes,serializedReferences,statuses,location,
     setContextFailure(value){contextFailure=value;},setDisplayMode(value){displayMode=value;},
     commitRoot(){for(const listener of rootListeners)listener();},
     flush:()=>new Promise(resolve=>queueMicrotask(resolve))};
@@ -154,4 +169,66 @@ test('exhausted fallback reports both bounded route failures', async () => {
   await assert.rejects(f.adapter.perform(command),
     /send-routes-unavailable;website=paid-submit-profile-unavailable;direct=session-template-unavailable/);
   assert.deepEqual(f.calls,['website','direct']);
+});
+
+test('a positively selected Free adapter owns catalog and selection while website submit is primary', async () => {
+  const f=fixture(null,null,null,null,true);
+  await f.flush();
+  assert.equal(f.statuses.at(-1).state,'ready');
+  assert.equal(f.statuses.at(-1).adapterKind,'free');
+  assert.equal(await f.adapter.perform({kind:'setThinking',enabled:true}),true);
+  assert.equal((await f.adapter.perform({kind:'catalog',mode:'chat'})).mode,'chat');
+  assert.equal(await f.adapter.perform({kind:'startConversation',mode:'chat'}),true);
+  assert.equal(await f.adapter.perform({kind:'setMode',mode:'chat'}),true);
+  const result=await f.adapter.perform({kind:'send',envelope:{text:'Fixture',references:[],
+    attachmentIDs:[],model:'auto',thinking:true}});
+  assert.equal(result.route,'free-website-command');
+  assert.deepEqual(f.freeCalls,['thinking:true','catalog:chat','start:chat','mode:chat']);
+  assert.deepEqual(f.calls,['free-website']);
+  assert.deepEqual(Array.from(f.envelopes[0].systemHints),['reason']);
+});
+
+test('Free falls back to its direct network route only when the website hook is unavailable before dispatch', async () => {
+  const f=fixture('website-runtime:free-submit-profile-unavailable',null,null,null,true);
+  const result=await f.adapter.perform({kind:'send',envelope:{text:'Fixture',references:[],
+    attachmentIDs:[],model:'auto',thinking:false}});
+  assert.equal(result.route,'free-direct-network');
+  assert.equal(result.websiteFailure,'free-submit-profile-unavailable');
+  assert.deepEqual(f.calls,['free-website']);assert.deepEqual(f.freeCalls,['submit']);
+});
+
+test('Free falls back to direct network when website context identity rejects before dispatch', async () => {
+  const f=fixture('website-runtime:free-submission-context-mismatch',null,null,null,true);
+  const result=await f.adapter.perform({kind:'send',envelope:{text:'Fixture',references:[],
+    attachmentIDs:[],model:'auto',thinking:false}});
+  assert.equal(result.route,'free-direct-network');
+  assert.equal(result.websiteFailure,'free-submission-context-mismatch');
+  assert.deepEqual(f.calls,['free-website']);assert.deepEqual(f.freeCalls,['submit']);
+});
+
+test('Free reports an unavailable direct fallback without obscuring the website profile failure', async () => {
+  const f=fixture('website-runtime:free-submit-profile-unavailable',
+    'direct-network:session-template-unavailable',null,null,true);
+  await assert.rejects(f.adapter.perform({kind:'send',envelope:{text:'Fixture',references:[],
+    attachmentIDs:[],model:'auto',thinking:false}}),
+    /send-routes-unavailable;website=free-submit-profile-unavailable;direct=session-template-unavailable/);
+  assert.deepEqual(f.calls,['free-website']);assert.deepEqual(f.freeCalls,['submit']);
+});
+
+test('Free never retries through direct network after website invocation or completion became uncertain', async () => {
+  for(const failure of ['website-runtime:free-submit-invocation-failed',
+    'website-runtime:free-submit-return-contract-changed',
+    'website-runtime:free-submit-completion-failed']){
+    const f=fixture(failure,null,null,null,true);
+    await assert.rejects(f.adapter.perform({kind:'send',envelope:{text:'Fixture',references:[],
+      attachmentIDs:[],model:'auto',thinking:false}}),new RegExp(failure.split(':')[1]));
+    assert.deepEqual(f.calls,['free-website']);assert.deepEqual(f.freeCalls,[]);
+  }
+});
+
+test('Free website rejection is not bypassed by the direct route', async () => {
+  const f=fixture('website-runtime:free-submit-not-accepted',null,null,null,true);
+  await assert.rejects(f.adapter.perform({kind:'send',envelope:{text:'Fixture',references:[],
+    attachmentIDs:[],model:'auto',thinking:false}}),/free-submit-not-accepted/);
+  assert.deepEqual(f.calls,['free-website']);assert.deepEqual(f.freeCalls,[]);
 });

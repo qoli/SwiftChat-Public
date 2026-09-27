@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "publicProtocol": "0.1.0-alpha.1",
-  "adapterVersion": "3.5.0",
-  "sourceRevision": "bf3d17beeccb307e6c655228ed8f5000c392b49d",
+  "adapterVersion": "3.7.0",
+  "sourceRevision": "bcca56d72fa40154137dc4ec435f58c84e26119e",
   "sourceFilesModified": false,
   "authority": "Private SwiftChat repository; one-way reviewed export",
   "files": [
@@ -21,14 +21,14 @@
     {
       "source": "Resources/ConversationFlow/ChatGPT/chatgpt-conversation-adapter.user.js",
       "path": "adapter/chatgpt-conversation-adapter.user.js",
-      "sourceSHA256": "5e14fede58232b813e18628c9b0fd6c1748fc15ff1d9c0a42d66fb97fc4922ca",
-      "sha256": "5e14fede58232b813e18628c9b0fd6c1748fc15ff1d9c0a42d66fb97fc4922ca"
+      "sourceSHA256": "50636bd27df39cae85e5cbb1ecf4a30bbf3881d08d20e0aaeb8f4ed602338efa",
+      "sha256": "50636bd27df39cae85e5cbb1ecf4a30bbf3881d08d20e0aaeb8f4ed602338efa"
     },
     {
       "source": "Resources/ConversationFlow/ChatGPT/chatgpt-conversation-display.js",
       "path": "adapter/chatgpt-conversation-display.js",
-      "sourceSHA256": "06cfe6490e80ae008dd67dc207f01f45421fe4571386b44201cb146b74674338",
-      "sha256": "06cfe6490e80ae008dd67dc207f01f45421fe4571386b44201cb146b74674338"
+      "sourceSHA256": "82ed4ffab63a3ea3634e903d23be8be11eb0b0e2acee6fd33d05996ed309a6ab",
+      "sha256": "82ed4ffab63a3ea3634e903d23be8be11eb0b0e2acee6fd33d05996ed309a6ab"
     },
     {
       "source": "Resources/ConversationFlow/ChatGPT/chatgpt-network-attachments.js",
@@ -39,8 +39,8 @@
     {
       "source": "Resources/ConversationFlow/ChatGPT/chatgpt-network-conversation.js",
       "path": "adapter/chatgpt-network-conversation.js",
-      "sourceSHA256": "9fd42c6caf3c53305a6c510a11557eb87d4cfd2b4c68d635f81253a1ff8109f8",
-      "sha256": "9fd42c6caf3c53305a6c510a11557eb87d4cfd2b4c68d635f81253a1ff8109f8"
+      "sourceSHA256": "e184354c64abfb25c12c68714fb53373237ed35b5bad4db3dcc3275e6f7d52c5",
+      "sha256": "e184354c64abfb25c12c68714fb53373237ed35b5bad4db3dcc3275e6f7d52c5"
     },
     {
       "source": "Resources/ConversationFlow/ChatGPT/chatgpt-network-models.js",
@@ -63,8 +63,8 @@
     {
       "source": "Resources/ConversationFlow/ChatGPT/chatgpt-website-runtime.js",
       "path": "adapter/chatgpt-website-runtime.js",
-      "sourceSHA256": "c43d6757d73661ee30f62dc4414dcea050d089967550587bd193299a74383341",
-      "sha256": "c43d6757d73661ee30f62dc4414dcea050d089967550587bd193299a74383341"
+      "sourceSHA256": "65efa1205fa153aa3fa83ec6e4002f253b7370af69b4afff01ee2c144a6e0d01",
+      "sha256": "65efa1205fa153aa3fa83ec6e4002f253b7370af69b4afff01ee2c144a6e0d01"
     },
     {
       "source": "Tests/Adapter/app-context.test.cjs",
@@ -81,14 +81,14 @@
     {
       "source": "Tests/Adapter/conversation-display.test.cjs",
       "path": "adapter/tests/conversation-display.test.cjs",
-      "sourceSHA256": "928170de0be1f3134bef36818c0e1b87541df717e5811d8d848ce5b61ad258c1",
-      "sha256": "ab83866bf6a344410109ed41854f404e5e8e1abe64fe171b0f81e8d68003f345"
+      "sourceSHA256": "b737b263bc75e899c528a557354ae363fddc2d263c0f59f1593103ab862187a2",
+      "sha256": "a6fb4a3993fd7c7c7eae86a600b9f632762fd7976dbc196d25dae3f1f6396a34"
     },
     {
       "source": "Tests/Adapter/conversation-adapter-routing.test.cjs",
       "path": "adapter/tests/conversation-adapter-routing.test.cjs",
-      "sourceSHA256": "1293808e1cea6f45a92471597b92ce8343728c011cab16cf7784d54b9f91f181",
-      "sha256": "d449a6acaaa9cb25175f5f830eaf6ac052e8c05c3f7cf02e8c0922d661b54344"
+      "sourceSHA256": "ef8d33840c3a08e3d04fcd48498f8efe4bf48e62e5215651d902745c364736be",
+      "sha256": "6c8f5502b8ed79204fbe989b9c3b802b4c739393b1753e819cef5b1d25620af6"
     },
     {
       "source": "Tests/Adapter/network-attachments.test.cjs",
@@ -99,8 +99,8 @@
     {
       "source": "Tests/Adapter/network-conversation.test.cjs",
       "path": "adapter/tests/network-conversation.test.cjs",
-      "sourceSHA256": "2d1e397d5c16375ad583de48c4c05added2210fadaf46ba54f4fcecf92adcdf3",
-      "sha256": "430ade1e1c0e3c55ab831bd80c7a83d8faa5f495aa25327c58b05c85823f7e78"
+      "sourceSHA256": "35f693dc628597735b3543f6b57c994a71f5bb285a43610a5e1528b066e6aca6",
+      "sha256": "0119dc07a7f14693cb2e9f9e1839cfe425680ec1cfaaad9f3805140e50acf407"
     },
     {
       "source": "Tests/Adapter/network-models.test.cjs",
@@ -117,8 +117,8 @@
     {
       "source": "Tests/Adapter/website-runtime.test.cjs",
       "path": "adapter/tests/website-runtime.test.cjs",
-      "sourceSHA256": "62965430c90d2c5266b16f336e4bd753a0562c6feab1428a6babade09c85841c",
-      "sha256": "4097b7e3c63aa07218cc7da6d0068f453cfacd94a9e76a75d27d81533b09050d"
+      "sourceSHA256": "9de32aaa0a8e2ad4b373256f0e88b120fc93a21284bfd1c26a4579471936bb60",
+      "sha256": "e6ffd09eedb20b252153854a428690a68506a6dbe9f3915a94315c3712f595cf"
     }
   ]
 }

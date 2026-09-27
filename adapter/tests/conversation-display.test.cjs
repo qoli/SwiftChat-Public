@@ -62,6 +62,7 @@ test('a filtered body sibling is restored when it becomes a semantic live status
 test('native composer inset is applied only through the Display adapter stylesheet',()=>{
  const f=fixture(),n=shell(f);const result=f.api.setBottomInset(137);assert.equal(result.mode,'matched');
  assert.match(f.head.children[0].textContent,/padding-bottom: 137px/);
+ assert.match(f.head.children[0].textContent,/html\[data-swiftchat-display-surface="fixture-scope"\] #thread-bottom-container \{\s*display: none !important;/);
  assert.equal(n.transcript.getAttribute('data-swiftchat-display-transcript'),'fixture-scope');
  assert.throws(()=>f.api.setBottomInset(-1),/invalid-bottom-inset/);
 });
@@ -88,6 +89,14 @@ test('legacy conversation-turn articles use their shared transcript parent, not 
  const f=fixture(),thread=f.body.appendChild(new Element('div',{id:'thread'})),transcript=thread.appendChild(new Element()),bottom=thread.appendChild(new Element('div',{id:'thread-bottom'})),form=bottom.appendChild(new Element('form'));
  transcript.appendChild(new Element('article',{'data-testid':'conversation-turn-0'}));transcript.appendChild(new Element('article',{'data-testid':'conversation-turn-1'}));form.appendChild(new Element('div',{'contenteditable':'true','role':'textbox'}));
  const result=f.api.apply();assert.equal(result.mode,'matched');assert.equal(result.variant,'legacy');assert.equal(result.transcript,transcript);assert.equal(form.parentElement,bottom);
+});
+test('current conversation-turn sections use their shared transcript parent and hide website chrome',()=>{
+ const f=fixture(),thread=f.body.appendChild(new Element('div',{id:'thread'})),transcript=thread.appendChild(new Element()),bottom=thread.appendChild(new Element('div',{id:'thread-bottom'})),form=bottom.appendChild(new Element('form'));
+ const user=transcript.appendChild(new Element('section',{'data-testid':'conversation-turn-1','data-turn':'user'}));
+ const assistant=transcript.appendChild(new Element('section',{'data-testid':'conversation-turn-2','data-turn':'assistant'}));
+ form.appendChild(new Element('div',{'contenteditable':'true','role':'textbox'}));
+ const result=f.api.apply();assert.equal(result.mode,'matched');assert.equal(result.transcript,transcript);
+ assert.equal(hidden(user),false);assert.equal(hidden(assistant),false);assert.equal(hidden(bottom),true);
 });
 test('remounting to a different transcript restores retired nodes and matches the new tree',()=>{
  const f=fixture(),old=shell(f);f.api.apply();old.shell.remove();old.overlay.remove();const next=shell(f);assert.equal(f.api.apply().transcript,next.transcript);assert.equal(old.side.getAttribute('data-swiftchat-display-hidden'),null);assert.equal(old.form.getAttribute('data-swiftchat-display-transport'),null);assert.equal(hidden(next.side),true);f.api.restore();assert.equal(hidden(next.side),false);

@@ -7,7 +7,7 @@
     messageList: "[data-thread-user-message-navigation-content]",
     messageContent: "[data-chatgpt-conversation-selection-target]",
     legacyThread: "#thread",
-    legacyTurn: "article[data-testid^=\"conversation-turn-\"]"
+    legacyTurn: "[data-testid^=\"conversation-turn-\"]"
   });
   const scope = crypto.randomUUID();
   const hiddenAttribute = "data-swiftchat-display-hidden";
@@ -123,6 +123,9 @@
       [${surfaceAttribute}="${scope}"] {
         background: transparent !important;
         --app-shell-main-content-frame-top-offset: 0px !important;
+      }
+      html[${surfaceAttribute}="${scope}"] #thread-bottom-container {
+        display: none !important;
       }
       [${hiddenAttribute}="${scope}"] { display: none !important; }
     `;

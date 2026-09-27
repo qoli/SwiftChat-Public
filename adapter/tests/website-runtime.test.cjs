@@ -109,6 +109,53 @@ function fixture(delayedHome = false, sendArity = 4) {
     sendOwner,stopOwner,modeOwner,router,calls,commit,location,auxiliaryRoot};
 }
 
+function freeFixture(options = {}) {
+  const calls = [], listeners = new Set();
+  const controller = {};
+  const conversation = {id:options.conversationID ?? '11111111-1111-4111-8111-111111111111'};
+  const reason = {systemHint:'reason',name:'Thinking'};
+  const hintOwner = {
+    composerController:controller,conversation,currentModelId:'auto',currentModelConfig:{id:'auto'},
+    availableSystemHints:[reason],activeSystemHintType:options.activeHint ?? null
+  };
+  const removalOwner = {
+    composerController:controller,conversation,currentModelConfig:{id:'auto'},
+    activeSystemHint:hintOwner.activeSystemHintType ? reason : null,
+    onRemoveSystemHint() {
+      calls.push({removeHint:true});
+      hintOwner.activeSystemHintType=null;removalOwner.activeSystemHint=null;commit();
+    }
+  };
+  const submitOwner = {
+    composerController:controller,conversation,structuredInputHost:{},
+    isComposerSubmissionReady:options.ready ?? true,structuredInputMessageId:null,
+    conversationMode:{kind:'primary_assistant'},availableSystemHints:[reason],
+    submitComposer(...args) {
+      calls.push({submit:args});
+      if(options.invocationFailure)throw new Error('fixture invocation');
+      return {accepted:options.accepted ?? true,completion:options.completionFailure
+        ? Promise.reject(new Error('fixture completion'))
+        : Promise.resolve(options.completionResult ?? true)};
+    }
+  };
+  const stopOwner = {composerController:controller,stopEnabled:options.stopEnabled ?? false,
+    onStop(){calls.push({stop:true});stopOwner.stopEnabled=false;commit();}};
+  const root={stateNode:null};root.stateNode={current:root};
+  function commit(){root.child=null;let previous=root;
+    for(const props of [hintOwner,removalOwner,submitOwner,stopOwner]){
+      const fiber={memoizedProps:props,pendingProps:props,return:root};previous.child=fiber;previous=fiber;
+    }
+    for(const listener of listeners)listener();
+  }
+  const window={__SwiftChatRuntimeRoots:{current:()=>[root],subscribe(listener){listeners.add(listener);return()=>listeners.delete(listener);}}};
+  commit();
+  const location={pathname:options.pathname ?? `/c/${conversation.id}`};
+  const context=vm.createContext({window,location,crypto:webcrypto,performance,setTimeout,clearTimeout,Event});
+  vm.runInContext(source,context);
+  return{api:window.__SwiftChatWebsiteRuntime,calls,controller,conversation,hintOwner,removalOwner,
+    submitOwner,stopOwner,commit,root};
+}
+
 test('paid profile applies model state and invokes the four-argument website command exactly once', async () => {
   const f=fixture();
   const result=await f.api.submit({text:'synthetic fixture',serializedText:'synthetic fixture',mode:'chat',conversationID:'local-conversation',
@@ -128,6 +175,91 @@ test('paid profile invokes the observed five-argument website command with an ex
   const send=f.calls.find(call=>call.text==='synthetic fixture');
   assert.equal(typeof send.timestamp,'number');assert.equal(send.background,false);
   assert.equal(send.argumentCount,5);assert.equal(f.calls.filter(call=>call.text).length,1);
+});
+test('Free uses the committed submitComposer text_action hook with explicit dispatch acceptance', async () => {
+  const f=freeFixture();
+  const result=await f.api.submitFree({text:'native Free draft',serializedText:'native Free draft',mode:'chat',
+    conversationID:f.conversation.id,model:{slug:'auto',versionId:null,thinkingEffort:null},
+    systemHints:['reason'],references:[],attachmentTokens:[]});
+  assert.equal(result.accepted,true);assert.equal(result.route,'free-website-command');
+  assert.equal(result.profile,'free-submit-composer-text-action-v1');
+  const [event,draft,options]=f.calls.find(call=>call.submit).submit;
+  assert.equal(event.type,'submit');
+  assert.deepEqual(JSON.parse(JSON.stringify(draft)),{kind:'text_action',text:'native Free draft'});
+  assert.deepEqual(JSON.parse(JSON.stringify(options)),{
+    requireDispatchAcceptance:true,messageMetadataMerge:{submission_mode:'manual_send'},systemHintOverride:'reason'
+  });
+});
+test('Free new conversation accepts the observed WEB provisional React identity on the home route', async () => {
+  const f=freeFixture({
+    pathname:'/',conversationID:'WEB:11111111-1111-4111-8111-111111111111'
+  });
+  const result=await f.api.submitFree({text:'new Free conversation',serializedText:'new Free conversation',mode:'chat',
+    conversationID:null,model:{slug:'auto',versionId:null,thinkingEffort:null},
+    systemHints:[],references:[],attachmentTokens:[]});
+  assert.equal(result.accepted,true);assert.equal(result.route,'free-website-command');
+  assert.equal(f.calls.filter(call=>call.submit).length,1);
+});
+test('Free provisional route normalizes the React WEB identity to the native local identity', async () => {
+  const id='11111111-1111-4111-8111-111111111111';
+  const f=freeFixture({pathname:`/c/WEB:${id}`,conversationID:`WEB:${id}`});
+  const result=await f.api.submitFree({text:'provisional Free conversation',serializedText:'provisional Free conversation',mode:'chat',
+    conversationID:`local-chatgpt:${id}`,model:{slug:'auto',versionId:null,thinkingEffort:null},
+    systemHints:[],references:[],attachmentTokens:[]});
+  assert.equal(result.accepted,true);assert.equal(result.route,'free-website-command');
+  assert.equal(f.calls.filter(call=>call.submit).length,1);
+});
+test('Free canonical route accepts its current composer with a page-local React WEB identity', async () => {
+  const id='11111111-1111-4111-8111-111111111111';
+  const localID='22222222-2222-4222-8222-222222222222';
+  const f=freeFixture({pathname:`/c/${id}`,conversationID:`WEB:${localID}`});
+  const result=await f.api.submitFree({text:'canonical Free conversation',serializedText:'canonical Free conversation',mode:'chat',
+    conversationID:id,model:{slug:'auto',versionId:null,thinkingEffort:null},
+    systemHints:[],references:[],attachmentTokens:[]});
+  assert.equal(result.accepted,true);assert.equal(result.route,'free-website-command');
+  assert.equal(f.calls.filter(call=>call.submit).length,1);
+});
+test('Free rejects a stale canonical React owner on the home route before invoking submitComposer', async () => {
+  const f=freeFixture({pathname:'/'});
+  await assert.rejects(f.api.submitFree({text:'fixture',serializedText:'fixture',mode:'chat',
+    conversationID:null,model:{slug:'auto',versionId:null,thinkingEffort:null},
+    systemHints:[],references:[],attachmentTokens:[]}),/free-submission-context-mismatch/);
+  assert.equal(f.calls.filter(call=>call.submit).length,0);
+});
+test('Free clears an active website hint before a non-Thinking text_action send', async () => {
+  const f=freeFixture({activeHint:'reason'});
+  const result=await f.api.submitFree({text:'without Thinking',serializedText:'without Thinking',mode:'chat',
+    conversationID:f.conversation.id,model:{slug:'auto',versionId:null,thinkingEffort:null},
+    systemHints:[],references:[],attachmentTokens:[]});
+  assert.equal(result.accepted,true);assert.equal(f.hintOwner.activeSystemHintType,null);
+  assert.equal(f.calls[0].removeHint,true);
+  const options=f.calls.find(call=>call.submit).submit[2];
+  assert.equal('systemHintOverride' in options,false);
+});
+test('Free website rejection and post-invocation failures stay distinguishable', async () => {
+  const envelope=f=>({text:'fixture',serializedText:'fixture',mode:'chat',conversationID:f.conversation.id,
+    model:{slug:'auto',versionId:null,thinkingEffort:null},systemHints:['reason'],references:[],attachmentTokens:[]});
+  const rejected=freeFixture({accepted:false});
+  await assert.rejects(rejected.api.submitFree(envelope(rejected)),/free-submit-not-accepted/);
+  assert.equal(rejected.calls.filter(call=>call.submit).length,1);
+
+  const invocation=freeFixture({invocationFailure:true});
+  await assert.rejects(invocation.api.submitFree(envelope(invocation)),/free-submit-invocation-failed/);
+  const completion=freeFixture({completionFailure:true});
+  await assert.rejects(completion.api.submitFree(envelope(completion)),/free-submit-completion-failed/);
+  const incomplete=freeFixture({completionResult:false});
+  await assert.rejects(incomplete.api.submitFree(envelope(incomplete)),/free-submit-completion-rejected/);
+});
+test('Free submit profile changes fail before invoking any send command', async () => {
+  const f=freeFixture();delete f.submitOwner.structuredInputHost;f.commit();
+  await assert.rejects(f.api.submitFree({text:'fixture',serializedText:'fixture',mode:'chat',
+    conversationID:f.conversation.id,model:{slug:'auto',versionId:null,thinkingEffort:null},
+    systemHints:[],references:[],attachmentTokens:[]}),/free-submit-profile-unavailable/);
+  assert.equal(f.calls.filter(call=>call.submit).length,0);
+});
+test('Free stop uses the matching website composer controller', () => {
+  const f=freeFixture({stopEnabled:true});
+  assert.equal(f.api.stopFree(),true);assert.equal(f.calls.filter(call=>call.stop).length,1);
 });
 test('Plugin system hints are applied, confirmed and passed unchanged to the single send command', async () => {
   const f=fixture(), hints=['plugin:fixture-github'];

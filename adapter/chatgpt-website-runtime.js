@@ -131,6 +131,82 @@
       }
     };
   }
+  function freeComposerBinding() {
+    const props = currentProps();
+    const owners = props.filter(value => value.composerController
+      && Object.prototype.hasOwnProperty.call(value, "conversation")
+      && value.currentModelId === "auto" && value.currentModelConfig?.id === "auto"
+      && Array.isArray(value.availableSystemHints)
+      && value.availableSystemHints.filter(hint => hint?.systemHint === "reason").length === 1
+      && Object.prototype.hasOwnProperty.call(value, "activeSystemHintType"));
+    if (!owners.length) fail("free-composer-owner-unavailable");
+    const controller = oneDistinct(owners.map(value => value.composerController),
+      "free-composer-owner-ambiguous");
+    const matches = owners.filter(value => value.composerController === controller);
+    const conversationIDs = new Set(matches.map(value => value.conversation?.id ?? null));
+    if (conversationIDs.size !== 1) fail("free-conversation-identity-ambiguous");
+    const activeHintTypes = new Set(matches.map(value => value.activeSystemHintType ?? null));
+    if (activeHintTypes.size !== 1) fail("free-system-hint-state-ambiguous");
+    const activeSystemHintType = [...activeHintTypes][0];
+    if (activeSystemHintType !== null && typeof activeSystemHintType !== "string") {
+      fail("free-system-hint-state-unavailable");
+    }
+    return {
+      controller,
+      conversationID: [...conversationIDs][0],
+      activeSystemHintType,
+      props
+    };
+  }
+  function freeSendBinding(binding) {
+    const profiles = binding.props.filter(value => value.composerController === binding.controller
+      && (value.conversation?.id ?? null) === binding.conversationID
+      && value.structuredInputHost && typeof value.structuredInputHost === "object"
+      && typeof value.isComposerSubmissionReady === "boolean"
+      && Object.prototype.hasOwnProperty.call(value, "structuredInputMessageId")
+      && value.conversationMode?.kind === "primary_assistant"
+      && Array.isArray(value.availableSystemHints)
+      && value.availableSystemHints.filter(hint => hint?.systemHint === "reason").length === 1
+      && typeof value.submitComposer === "function");
+    if (!profiles.length) fail("free-submit-profile-unavailable");
+    const command = oneDistinct(profiles.map(value => value.submitComposer),
+      "free-submit-profile-ambiguous");
+    const readiness = new Set(profiles.map(value => value.isComposerSubmissionReady));
+    if (readiness.size !== 1) fail("free-submit-profile-ambiguous");
+    if (![...readiness][0]) fail("free-submit-not-ready");
+    return {command, profile: "free-submit-composer-text-action-v1"};
+  }
+  function normalizedFreeConversationID(value) {
+    if (typeof value !== "string") return value === null ? null : undefined;
+    const canonical = value.match(/^([0-9a-f-]+)$/i)?.[1];
+    if (canonical) return canonical.toLowerCase();
+    const provisional = value.match(/^WEB:([0-9a-f-]+)$/i)?.[1];
+    return provisional ? `local-chatgpt:${provisional.toLowerCase()}` : undefined;
+  }
+  function freeSubmissionContextMatches(payloadConversationID, bindingConversationID) {
+    const payloadID = payloadConversationID ?? null;
+    if (location.pathname === "/") {
+      return payloadID === null && /^WEB:[0-9a-f-]+$/i.test(bindingConversationID ?? "");
+    }
+    const canonical = location.pathname.match(/^\/c\/([0-9a-f-]+)$/i)?.[1]?.toLowerCase();
+    if (canonical) {
+      const bindingID = normalizedFreeConversationID(bindingConversationID);
+      return payloadID === canonical
+        && (bindingID === canonical || /^WEB:[0-9a-f-]+$/i.test(bindingConversationID ?? ""));
+    }
+    const provisional = location.pathname.match(/^\/c\/WEB:([0-9a-f-]+)$/i)?.[1]?.toLowerCase();
+    if (!provisional) return false;
+    const expected = `local-chatgpt:${provisional}`;
+    return payloadID === expected && normalizedFreeConversationID(bindingConversationID) === expected;
+  }
+  function freeHintRemovalBinding(binding) {
+    const owners = binding.props.filter(value => value.composerController === binding.controller
+      && (value.conversation?.id ?? null) === binding.conversationID
+      && value.currentModelConfig?.id === "auto" && value.activeSystemHint?.systemHint
+      && typeof value.onRemoveSystemHint === "function" && value.onRemoveSystemHint.length === 0);
+    return oneDistinct(owners.map(value => value.onRemoveSystemHint),
+      "free-hint-removal-profile-unavailable-or-ambiguous");
+  }
   function context() {
     const binding = composerBinding();
     return {
@@ -408,6 +484,64 @@
       throw error;
     } finally { submissionInFlight = false; }
   }
+  async function submitFree(payload) {
+    if (submissionInFlight) fail("submission-in-flight");
+    const validSystemHints = Array.isArray(payload?.systemHints)
+      && (payload.systemHints.length === 0
+        || (payload.systemHints.length === 1 && payload.systemHints[0] === "reason"));
+    if (!payload || typeof payload.text !== "string" || typeof payload.serializedText !== "string"
+      || payload.mode !== "chat"
+      || !Array.isArray(payload.references) || payload.references.length
+      || !Array.isArray(payload.attachmentTokens) || payload.attachmentTokens.length
+      || payload.model?.slug !== "auto" || (payload.model.versionId ?? null) !== null
+      || (payload.model.thinkingEffort ?? null) !== null
+      || !validSystemHints) {
+      fail("invalid-free-submission");
+    }
+    let binding = freeComposerBinding();
+    if (!freeSubmissionContextMatches(payload.conversationID, binding.conversationID)) {
+      fail("free-submission-context-mismatch");
+    }
+    const thinking = payload.systemHints.length === 1;
+    if (!thinking && binding.activeSystemHintType !== null) {
+      const remove = freeHintRemovalBinding(binding);
+      try { remove(); }
+      catch { fail("free-hint-removal-failed"); }
+      binding = await waitFor(() => {
+        const current = freeComposerBinding();
+        if (current.controller !== binding.controller
+          || current.conversationID !== binding.conversationID) fail("free-submission-context-changed");
+        return current.activeSystemHintType === null ? current : null;
+      }, "free-hint-removal-not-confirmed");
+    }
+    const send = freeSendBinding(binding);
+    submissionInFlight = true;
+    try {
+      let result;
+      try {
+        result = send.command(new Event("submit"), {
+          kind: "text_action",
+          text: payload.serializedText
+        }, {
+          requireDispatchAcceptance: true,
+          messageMetadataMerge: {submission_mode: "manual_send"},
+          ...(thinking ? {systemHintOverride: "reason"} : {})
+        });
+      } catch {
+        fail("free-submit-invocation-failed");
+      }
+      if (!result || typeof result.accepted !== "boolean") fail("free-submit-return-contract-changed");
+      if (!result.accepted) fail("free-submit-not-accepted");
+      if (!result.completion || typeof result.completion.then !== "function") {
+        fail("free-submit-return-contract-changed");
+      }
+      let completed;
+      try { completed = await result.completion; }
+      catch { fail("free-submit-completion-failed"); }
+      if (completed !== true) fail("free-submit-completion-rejected");
+      return {accepted: true, route: "free-website-command", profile: send.profile};
+    } finally { submissionInFlight = false; }
+  }
   function stop() {
     const binding = composerBinding();
     if (binding.owner.isStreaming !== true) fail("no-active-generation");
@@ -415,6 +549,16 @@
       && value.stopEnabled === true
       && typeof value.onStop === "function" && value.onStop.length === 0);
     const command = oneDistinct(owners.map(value => value.onStop), "paid-stop-profile-unavailable-or-ambiguous");
+    command();
+    return true;
+  }
+  function stopFree() {
+    const binding = freeComposerBinding();
+    const owners = binding.props.filter(value => value.composerController === binding.controller
+      && value.stopEnabled === true
+      && typeof value.onStop === "function" && value.onStop.length === 0);
+    const command = oneDistinct(owners.map(value => value.onStop),
+      "free-stop-profile-unavailable-or-ambiguous");
     command();
     return true;
   }
@@ -512,7 +656,7 @@
   }
 
   window.__SwiftChatWebsiteRuntime = Object.freeze({
-    context, navigate, newConversation, setMode, submit, stop,
+    context, navigate, newConversation, setMode, submit, submitFree, stop, stopFree,
     serializeReferences(text, references) { return serializeDraft(composerBinding(), text, references); },
     uploadAttachment, attachmentState, removeAttachment
   });

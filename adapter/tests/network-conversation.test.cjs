@@ -19,7 +19,7 @@ const xor = (value, key) => {
 function fixture(pathname = '/') {
   const calls = [];
   let uuid = 0, now = 0;
-  const location = {origin, pathname, search: ''};
+  const location = {origin, href:`${origin}${pathname}`, pathname, search: ''};
   const request = async input => {
     const value = input instanceof Request ? input : new Request(input);
     const url = new URL(value.url);
@@ -37,6 +37,9 @@ function fixture(pathname = '/') {
     }
     if (url.pathname.startsWith('/backend-api/conversations/')) {
       return Response.json({conversation_id:conversationID,current_node:'parent-message'});
+    }
+    if (url.pathname === '/backend-api/f/conversation/prepare') {
+      return Response.json({status:'ok',conduit_token:'fixture-conduit-token'});
     }
     if (url.pathname === '/backend-api/f/conversation') {
       const id = body.conversation_id ?? conversationID;
@@ -175,4 +178,61 @@ test('a new direct generation adopts its streamed identity before stop', async (
   assert.equal(result.conversationID,conversationID);
   const stop=f.calls.find(call=>call.path==='/backend-api/stop_conversation');
   assert.equal(stop.body.conversation_id,conversationID);
+});
+
+test('Free profile sends Auto and the verified reason hint without changing paid fallback', async () => {
+  const f=fixture(), identities=[];
+  f.api.configureFreeSession('free-account','free-access-token');
+  const result=await f.api.submitFree(envelope({
+    model:{slug:'auto',versionId:null,thinkingEffort:null},
+    systemHints:['reason']
+  }), value=>identities.push(value));
+  assert.equal(result.route,'free-direct-network');
+  assert.equal(result.profile,'direct-network-free-text-v1');
+  assert.deepEqual(identities,[conversationID]);
+  const sent=f.calls.find(call=>call.path==='/backend-api/f/conversation');
+  assert.equal(sent.headers['chatgpt-account-id'],'free-account');
+  assert.equal(sent.headers.authorization,'Bearer free-access-token');
+  assert.equal(sent.body.model,'auto');
+  assert.deepEqual(sent.body.system_hints,['reason']);
+  assert.deepEqual(sent.body.conversation_mode,{kind:'primary_assistant'});
+  assert.equal(sent.body.force_parallel_switch,'auto');
+  assert.equal(sent.headers['x-conduit-token'],'fixture-conduit-token');
+  assert.equal(sent.headers['x-openai-target-path'],'/backend-api/f/conversation');
+  const prepared=f.calls.find(call=>call.path==='/backend-api/f/conversation/prepare');
+  assert.equal(prepared.body.client_prepare_state,'none');
+  assert.equal(prepared.body.client_prepare_dispatch,'debounced');
+  assert.equal(prepared.body.client_prepare_source,'composer_editor_state');
+  assert.deepEqual(prepared.body.local_function_names,['local.continue_in_work']);
+  assert.deepEqual(sent.body.local_function_names,['local.continue_in_work']);
+  assert.deepEqual(sent.body.messages[0].metadata,{
+    system_hints:['reason'],serialization_metadata:{custom_symbol_offsets:[]},
+    submission_mode:'manual_send'
+  });
+  assert.deepEqual(sent.body.model_response_contracts,[{
+    id:'photo_upload_action.v1',protocol_version:1,
+    presets:['cap:image','cap:file','placement:end']
+  }]);
+
+  const paid=fixture();
+  await assert.rejects(paid.api.submit(envelope({systemHints:['reason']})),
+    /direct-network:text-envelope-required/);
+  assert.equal(paid.calls.length,0);
+});
+
+test('uncertain Free delivery does not poison the paid direct profile', async () => {
+  const f=fixture();
+  f.api.configureFreeSession('free-account','free-access-token');
+  f.api.configure({request:async input=>{
+    const value=input instanceof Request?input:new Request(input);
+    return new URL(value.url).pathname==='/backend-api/f/conversation'
+      ? new Response('not an event stream',{status:200}) : f.request(input);
+  }});
+  await assert.rejects(f.api.submitFree(envelope({
+    model:{slug:'auto',versionId:null,thinkingEffort:null}
+  })),/direct-network:delivery-uncertain-reload-before-sending/);
+  assert.equal(f.api.freeAvailable,false);
+  assert.equal(f.api.available,true);
+  f.api.configure({request:f.request});
+  assert.equal((await f.api.submit(envelope())).route,'direct-network');
 });

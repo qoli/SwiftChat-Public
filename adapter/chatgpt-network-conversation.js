@@ -1,6 +1,6 @@
-// Direct authenticated text transport for the paid ChatGPT website. The module
-// keeps authorization and integrity material page-local and never reads message
-// content from the website or exposes request credentials to native code.
+// Shared direct authenticated text transport. Paid fallback and the independent
+// Free adapter select explicit request profiles; credentials and message content
+// remain page-local in both cases.
 (() => {
   "use strict";
 
@@ -14,9 +14,9 @@
   ]);
   let request = (input, init) => window.fetch(input, init);
   let onChange = () => {};
-  let template = null;
+  let template = null, freeTemplate = null;
   let active = null;
-  let deliveryUncertain = false;
+  let paidDeliveryUncertain = false, freeDeliveryUncertain = false;
 
   const fail = (code, cause = null) => {
     const error = new Error(`direct-network:${code}`);
@@ -64,22 +64,45 @@
     return true;
   }
 
-  function sessionRequest(path, options = {}) {
-    if (!template) fail("session-template-unavailable");
-    const headers = new Headers(template.headers);
+  function sessionRequest(path, options = {}, session = template) {
+    if (!session) fail("session-template-unavailable");
+    const headers = new Headers(session.headers);
     for (const [name, value] of new Headers(options.headers ?? [])) headers.set(name, value);
     return request(new Request(new URL(path, location.origin), {
       method: options.method ?? "GET",
       headers,
       body: options.body,
       signal: options.signal,
-      credentials: template.credentials,
-      mode: template.mode,
-      redirect: template.redirect,
-      referrer: template.referrer,
-      referrerPolicy: template.referrerPolicy,
+      credentials: session.credentials,
+      mode: session.mode,
+      redirect: session.redirect,
+      referrer: session.referrer,
+      referrerPolicy: session.referrerPolicy,
       cache: options.cache ?? "no-store"
     }));
+  }
+
+  function configureFreeSession(accountID, accessToken = null) {
+    if (accountID === null) {
+      freeTemplate = null;
+      onChange();
+      return true;
+    }
+    if (!nonempty(accountID) || !nonempty(accessToken)) fail("free-authentication-unavailable");
+    freeTemplate = {
+      headers: new Headers({
+        "authorization": `Bearer ${accessToken}`,
+        "chatgpt-account-id": accountID,
+        "oai-language": navigator.language
+      }),
+      credentials: "include",
+      mode: "cors",
+      redirect: "follow",
+      referrer: location.href,
+      referrerPolicy: "strict-origin-when-cross-origin"
+    };
+    onChange();
+    return true;
   }
 
   function fingerprint() {
@@ -263,12 +286,12 @@
     });
   }
 
-  async function chatRequirements(signal) {
+  async function chatRequirements(signal, session) {
     const proofKey = prepareProof();
     const prepare = await sessionRequest("/backend-api/sentinel/chat-requirements/prepare", {
       method: "POST", headers: {"content-type": "application/json"},
       body: JSON.stringify({p: proofKey}), signal
-    });
+    }, session);
     if (!prepare.ok) fail(`requirements-prepare-http-${prepare.status}`);
     let requirements;
     try { requirements = await prepare.json(); }
@@ -287,7 +310,7 @@
         ...(proof ? {proofofwork: proof} : {}),
         ...(turnstile ? {turnstile} : {})
       })
-    });
+    }, session);
     if (!finalize.ok) fail(`requirements-finalize-http-${finalize.status}`);
     let completed;
     try { completed = await finalize.json(); }
@@ -302,11 +325,11 @@
     };
   }
 
-  async function parentMessageID(conversationID, signal) {
+  async function parentMessageID(conversationID, signal, session) {
     if (conversationID === null) return crypto.randomUUID();
     const response = await sessionRequest(
       `/backend-api/conversations/${encodeURIComponent(conversationID)}?num_turns=10&include_has_versions=true`,
-      {signal}
+      {signal}, session
     );
     if (!response.ok) fail(`active-conversation-http-${response.status}`);
     let body;
@@ -317,8 +340,92 @@
     return body.current_node;
   }
 
-  function submissionBody(payload, parentID) {
-    const message = {
+  function freeClientContext(detailed = false) {
+    const notification = globalThis.Notification;
+    const viewport = globalThis.document?.documentElement;
+    return {
+      ...(detailed ? {
+        is_dark_mode: typeof globalThis.matchMedia === "function"
+          && globalThis.matchMedia("(prefers-color-scheme: dark)").matches,
+        time_since_loaded: Math.round(performance.now()),
+        page_height: globalThis.innerHeight ?? viewport?.clientHeight ?? 0,
+        page_width: globalThis.innerWidth ?? viewport?.clientWidth ?? 0,
+        pixel_ratio: globalThis.devicePixelRatio ?? 1,
+        screen_height: globalThis.screen?.height ?? 0,
+        screen_width: globalThis.screen?.width ?? 0
+      } : {}),
+      app_name: "chatgpt.com",
+      has_web_push_capabilities: "PushManager" in globalThis,
+      web_push_notification_permission: typeof notification?.permission === "string"
+        ? notification.permission : "default"
+    };
+  }
+
+  function freeResponseContracts() {
+    return [{
+      id: "photo_upload_action.v1",
+      protocol_version: 1,
+      presets: ["cap:image", "cap:file", "placement:end"]
+    }];
+  }
+
+  function freePrepareBody(payload, parentID) {
+    return {
+      action: "next",
+      ...(payload.conversationID === null ? {} : {conversation_id: payload.conversationID}),
+      parent_message_id: parentID,
+      model: payload.model.slug,
+      client_prepare_state: "none",
+      client_prepare_dispatch: "debounced",
+      client_prepare_source: "composer_editor_state",
+      timezone_offset_min: new Date().getTimezoneOffset(),
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      conversation_mode: {kind: "primary_assistant"},
+      system_hints: [...payload.systemHints],
+      model_response_contracts: freeResponseContracts(),
+      supports_buffering: true,
+      supported_encodings: ["v1"],
+      client_contextual_info: freeClientContext(),
+      local_function_names: ["local.continue_in_work"]
+    };
+  }
+
+  async function prepareFreeConversation(payload, parentID, signal, session) {
+    const path = "/backend-api/f/conversation/prepare";
+    const response = await sessionRequest(path, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-openai-target-path": path,
+        "x-openai-target-route": path,
+        "x-openai-web-frontend": "core_web"
+      },
+      body: JSON.stringify(freePrepareBody(payload, parentID)),
+      signal
+    }, session);
+    if (!response.ok) fail(`conversation-prepare-http-${response.status}`);
+    let body;
+    try { body = await response.json(); }
+    catch { fail("conversation-prepare-invalid-json"); }
+    if (body?.status !== "ok" || !nonempty(body.conduit_token)) {
+      fail("conversation-prepare-contract-changed");
+    }
+    return body.conduit_token;
+  }
+
+  function submissionBody(payload, parentID, profile) {
+    const free = profile === "free-text-v1";
+    const message = free ? {
+      id: crypto.randomUUID(),
+      author: {role: "user"},
+      create_time: Date.now() / 1_000,
+      content: {content_type: "text", parts: [payload.serializedText]},
+      metadata: {
+        system_hints: [...payload.systemHints],
+        serialization_metadata: {custom_symbol_offsets: []},
+        submission_mode: "manual_send"
+      }
+    } : {
       id: crypto.randomUUID(),
       author: {role: "user", name: null, metadata: {}},
       create_time: Date.now() / 1_000,
@@ -333,7 +440,7 @@
     };
     return {
       action: "next",
-      is_do_not_remember: false,
+      ...(free ? {} : {is_do_not_remember: false}),
       model: payload.model.slug,
       parent_message_id: parentID,
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -343,7 +450,19 @@
       client_prepare_state: "none",
       ...(payload.model.thinkingEffort == null ? {} : {thinking_effort: payload.model.thinkingEffort}),
       ...(payload.conversationID === null ? {} : {conversation_id: payload.conversationID}),
-      ...(payload.mode === "work" ? {conversation_origin: "tpp"} : {})
+      ...(payload.mode === "work" ? {conversation_origin: "tpp"} : {}),
+      ...(free ? {
+        conversation_mode: {kind: "primary_assistant"},
+        enable_message_followups: true,
+        force_parallel_switch: "auto",
+        local_function_names: ["local.continue_in_work"],
+        model_response_contracts: freeResponseContracts(),
+        paragen_cot_summary_display_override: "allow",
+        supports_buffering: true,
+        system_hints: [...payload.systemHints],
+        client_contextual_info: freeClientContext(true),
+        client_prepare_state: "success"
+      } : {})
     };
   }
 
@@ -406,16 +525,23 @@
     return conversationID;
   }
 
-  function validatedPayload(payload) {
+  function validatedPayload(payload, profile) {
+    const free = profile === "free-text-v1";
     if (!payload || typeof payload.serializedText !== "string" || !payload.serializedText
       || !["chat", "work"].includes(payload.mode)
       || (payload.conversationID !== null && !nonempty(payload.conversationID))
       || !payload.model || !nonempty(payload.model.slug)
-      || !Array.isArray(payload.systemHints) || payload.systemHints.length
+      || !Array.isArray(payload.systemHints)
+      || payload.systemHints.some(value => !nonempty(value))
+      || new Set(payload.systemHints).size !== payload.systemHints.length
+      || (!free && payload.systemHints.length)
       || !Array.isArray(payload.references) || payload.references.length
       || !Array.isArray(payload.attachmentTokens) || payload.attachmentTokens.length) {
       fail("text-envelope-required");
     }
+    if (free && (payload.mode !== "chat" || payload.model.slug !== "auto"
+      || payload.model.versionId != null || payload.model.thinkingEffort != null
+      || payload.systemHints.some(value => value !== "reason"))) fail("free-envelope-required");
     const provisional = /^local-chatgpt:[0-9a-f-]+$/i.test(payload.conversationID ?? "");
     const activeID = location.pathname.match(/^\/c\/([0-9a-f-]+)$/i)?.[1] ?? null;
     if (location.pathname === "/") {
@@ -429,47 +555,69 @@
     return activeID === payload.conversationID ? payload : {...payload, conversationID: activeID};
   }
 
-  async function submit(payload) {
-    if (deliveryUncertain) fail("delivery-uncertain-reload-before-sending");
+  async function submitProfile(payload, profile, receiveConversationID = () => {}) {
+    if (!["paid-text-v1", "free-text-v1"].includes(profile)) fail("submission-profile-unavailable");
+    const free = profile === "free-text-v1";
+    if (free ? freeDeliveryUncertain : paidDeliveryUncertain) {
+      fail("delivery-uncertain-reload-before-sending");
+    }
     if (active) fail("submission-in-flight");
-    const submission = validatedPayload(payload);
+    const session = free ? freeTemplate : template;
+    if (!session) fail("session-template-unavailable");
+    const submission = validatedPayload(payload, profile);
     const controller = new AbortController();
-    active = {controller, conversationID: submission.conversationID, dispatched: false, stopping: false};
+    active = {controller, conversationID: submission.conversationID, dispatched: false,
+      stopping: false, session};
     onChange();
     try {
-      const [parentID, requirementsHeaders] = await Promise.all([
-        parentMessageID(submission.conversationID, controller.signal),
-        chatRequirements(controller.signal)
+      const parentID = await parentMessageID(submission.conversationID, controller.signal, session);
+      const [requirementsHeaders, conduitToken] = await Promise.all([
+        chatRequirements(controller.signal, session),
+        free ? prepareFreeConversation(submission, parentID, controller.signal, session)
+          : Promise.resolve(null)
       ]);
+      const targetPath = "/backend-api/f/conversation";
       const headers = {
         "accept": "text/event-stream",
         "content-type": "application/json",
         ...requirementsHeaders,
         "x-oai-turn-trace-id": crypto.randomUUID(),
-        "x-openai-web-sse-compression": "identity"
+        "x-openai-web-sse-compression": "identity",
+        ...(free ? {
+          "x-conduit-token": conduitToken,
+          "x-openai-target-path": targetPath,
+          "x-openai-target-route": targetPath,
+          "x-openai-web-frontend": "core_web"
+        } : {})
       };
       active.dispatched = true;
-      const response = await sessionRequest("/backend-api/f/conversation", {
+      const response = await sessionRequest(targetPath, {
         method: "POST", headers, signal: controller.signal,
-        body: JSON.stringify(submissionBody(submission, parentID))
-      });
+        body: JSON.stringify(submissionBody(submission, parentID, profile))
+      }, session);
       if (!response.ok) {
         const code = await responseErrorCode(response);
         fail(`conversation-http-${response.status}${code ? `-${code.toLowerCase()}` : ""}`);
       }
       const conversationID = await consumeStream(response, submission.conversationID, value => {
         if (active) active.conversationID = value;
+        try { receiveConversationID(value); } catch {}
       });
       active.conversationID = conversationID;
-      return {accepted: true, route: "direct-network", profile: "direct-network-text-v1",
+      return {accepted: true,
+        route: profile === "free-text-v1" ? "free-direct-network" : "direct-network",
+        profile: profile === "free-text-v1" ? "direct-network-free-text-v1" : "direct-network-text-v1",
         conversationID};
     } catch (error) {
       if (active?.stopping && nonempty(active.conversationID)) {
-        return {accepted: true, route: "direct-network", profile: "direct-network-text-v1",
+        return {accepted: true,
+          route: profile === "free-text-v1" ? "free-direct-network" : "direct-network",
+          profile: profile === "free-text-v1" ? "direct-network-free-text-v1" : "direct-network-text-v1",
           conversationID: active.conversationID, stopped: true};
       }
       if (active?.dispatched && !/^direct-network:conversation-http-\d+(?:-[a-z0-9_-]+)?$/.test(error?.message ?? "")) {
-        deliveryUncertain = true;
+        if (free) freeDeliveryUncertain = true;
+        else paidDeliveryUncertain = true;
         fail("delivery-uncertain-reload-before-sending");
       }
       if (error?.message?.startsWith("direct-network:")) throw error;
@@ -480,6 +628,14 @@
     }
   }
 
+  function submit(payload) {
+    return submitProfile(payload, "paid-text-v1");
+  }
+
+  function submitFree(payload, receiveConversationID) {
+    return submitProfile(payload, "free-text-v1", receiveConversationID);
+  }
+
   async function stop() {
     if (!active) fail("no-active-generation");
     if (!nonempty(active.conversationID)) fail("stop-identity-unavailable");
@@ -487,7 +643,7 @@
     const response = await sessionRequest("/backend-api/stop_conversation", {
       method: "POST", headers: {"content-type": "application/json"},
       body: JSON.stringify({conversation_id: submission.conversationID, exclude_async_types: []})
-    });
+    }, submission.session);
     if (!response.ok) fail(`stop-http-${response.status}`);
     submission.stopping = true;
     submission.controller.abort();
@@ -500,9 +656,12 @@
       onChange = options.onChange ?? (() => {});
     },
     observeRequest,
-    get available() { return template !== null && !deliveryUncertain; },
+    configureFreeSession,
+    get available() { return template !== null && !paidDeliveryUncertain; },
+    get freeAvailable() { return freeTemplate !== null && !freeDeliveryUncertain; },
     get active() { return active !== null; },
     submit,
+    submitFree,
     stop
   });
 })();
