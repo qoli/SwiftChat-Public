@@ -1,8 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
-<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0"><channel><title>SwiftChat Alpha</title><link>https://swiftchat.ronniewong.cc</link><description>SwiftChat macOS alpha updates</description><item><title>SwiftChat 0.1.0 (17) Alpha</title><description>• AIChat 新增 PersistentShell 工具，可在「設定 → Tools」啟用或停用、設定 SSH 主機、複製或安裝 Ed25519 公鑰、確認主機金鑰並測試連線；每個對話使用獨立的 shell 工作階段。
-• 側欄整合 AIChat 與 ChatGPT 對話，按最近更新排序；可用 All、AIChat、ChatGPT 篩選及搜尋，並可在「AIChat Data」清除本機 AIChat 對話記錄，不影響服務設定、PersistentShell 主機設定或 ChatGPT 對話。
-• ChatGPT 恢復附件上傳，並支援已連線的 Plugins／Apps 與檔案、資料夾引用；網站控制暫時失聯時，已就緒的對話仍會保留畫面，控制項恢復前會暫停操作。
-• ChatGPT 免費帳戶可使用 Auto 與獨立 Thinking 選項建立及傳送 Chat 對話；Work 與附件不適用。
-• 改善 ChatGPT 傳送與版面可靠性：網站傳送控制項在送出前不可用時，無附件或引用的純文字訊息可使用頁面內已授權的傳送路徑；不會在不確定送出後自動重送，網站底部淡出效果也不再遮住原生輸入列。外部連結會交由系統預設瀏覽器開啟。
-
-本次更新僅適用 macOS。</description><sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion><enclosure url="https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.17/SwiftChat-0.1.0-17-macOS.zip" length="11953048" type="application/octet-stream" sparkle:version="17" sparkle:shortVersionString="0.1.0" sparkle:edSignature="d/PqUcA4bLekZwyx0/R02pVLrYvp1bgF8rekj4yvI4XgSm16LnGHMzEa2HP7RL+WnMCsNfvXpw3sVr6ELrVlAQ==" /></item></channel></rss>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0"><channel><title>SwiftChat Alpha</title><link>https://swiftchat.ronniewong.cc</link><description>SwiftChat macOS alpha updates</description><item><title>SwiftChat 0.1.0 (22) Alpha</title><description>• macOS 將 AIChat 與 ChatGPT 整合在同一個原生側邊欄，可依來源篩選、搜尋及開啟對話；ChatGPT 歷史在載入失敗時仍會保留快取並可重試。
+• 付費 ChatGPT 支援 Chat／Work、模型與推理程度選擇，以及圖片、檔案和 Plugins／Library 參考資料；Free 帳戶提供 Auto 與 Thinking 控制。
+• Work with Apps 可連接 Terminal、TextEdit、Notes 和 Xcode，預覽選取內容，並在每次傳送前重新讀取已連接來源。
+• AIChat 可在設定中加入 OpenAI Chat Completions、OpenAI Responses 或 Anthropic Messages 自訂服務，並為每個對話使用獨立的 PersistentShell SSH 工具。
+• AIChat 將推理內容放在可收合的 Reasoning 區段，工具活動也可收合；Inspector 顯示模型上下文容量、最近回覆的 Token 用量及目前工作階段的累積用量。
+• macOS 可從 Window → Browser 開啟原生瀏覽器視窗，並從 SwiftChat → Check for Updates… 檢查更新。</description><sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion><enclosure url="https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.22/SwiftChat-0.1.0-22-macOS.zip" length="12134423" type="application/octet-stream" sparkle:version="22" sparkle:shortVersionString="0.1.0" sparkle:edSignature="cJUKPPBTfN+KpEcwrjiydNAlTG7BoBm3H6lEjWdKr8f5fXsHnsP7P74/zIuA6h4Ihg4hVvUca4uo7yMOg3RpDA==" /></item></channel></rss>
