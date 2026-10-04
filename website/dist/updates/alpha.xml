@@ -1,7 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0"><channel><title>SwiftChat Alpha</title><link>https://swiftchat.ronniewong.cc</link><description>SwiftChat macOS alpha updates</description><item><title>SwiftChat 0.1.0 (22) Alpha</title><description>• macOS 將 AIChat 與 ChatGPT 整合在同一個原生側邊欄，可依來源篩選、搜尋及開啟對話；ChatGPT 歷史在載入失敗時仍會保留快取並可重試。
-• 付費 ChatGPT 支援 Chat／Work、模型與推理程度選擇，以及圖片、檔案和 Plugins／Library 參考資料；Free 帳戶提供 Auto 與 Thinking 控制。
-• Work with Apps 可連接 Terminal、TextEdit、Notes 和 Xcode，預覽選取內容，並在每次傳送前重新讀取已連接來源。
-• AIChat 可在設定中加入 OpenAI Chat Completions、OpenAI Responses 或 Anthropic Messages 自訂服務，並為每個對話使用獨立的 PersistentShell SSH 工具。
-• AIChat 將推理內容放在可收合的 Reasoning 區段，工具活動也可收合；Inspector 顯示模型上下文容量、最近回覆的 Token 用量及目前工作階段的累積用量。
-• macOS 可從 Window → Browser 開啟原生瀏覽器視窗，並從 SwiftChat → Check for Updates… 檢查更新。</description><sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion><enclosure url="https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.22/SwiftChat-0.1.0-22-macOS.zip" length="12134423" type="application/octet-stream" sparkle:version="22" sparkle:shortVersionString="0.1.0" sparkle:edSignature="cJUKPPBTfN+KpEcwrjiydNAlTG7BoBm3H6lEjWdKr8f5fXsHnsP7P74/zIuA6h4Ihg4hVvUca4uo7yMOg3RpDA==" /></item></channel></rss>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0"><channel><title>SwiftChat Alpha</title><link>https://swiftchat.ronniewong.cc</link><description>SwiftChat macOS alpha updates</description><item><title>SwiftChat 0.1.0 (23) Alpha</title><description>• ChatGPT 對話改用應用程式自有的對話畫面，透過 ChatGPT API 收發訊息，不再嵌入整個網頁；原生支援模型與推理程度選擇、附件上傳、@ 參照，以及停止與中斷後恢復。
+• ChatGPT 對話現在完整呈現推理過程、網頁搜尋活動、引用與檔案來源，以及 MCP 等工具呼叫的執行過程。
+• AIChat 與 ChatGPT 共用全新對話介面，支援 Markdown、數學公式與程式碼語法標示；版面對齊 ChatGPT 參考設計，對話寬度隨視窗與側邊欄自動調整。
+• 使用者傳送的附件依 ChatGPT 版面以圖片磚與檔案卡片排列，圖片可直接在對話中放大預覽。
+• ChatGPT 歷史記錄改為本機快取並分批載入：驗證帳號身分後先顯示最近 50 筆，捲動時再載入更多；遠端刪除或封存的對話會正確同步，不會因過期回應而恢復。
+• 設定新增「開發者」分類，可開啟「顯示警告與技術診斷」（預設關閉）並立即套用至所有視窗；隱藏純警告活動時保留目前閱讀位置。
+• AIChat 對話載入失敗時提供原生「重新載入對話」動作，不會重新送出訊息；並修正對話保存與活動圖片顯示問題。</description><sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion><enclosure url="https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.23/SwiftChat-0.1.0-23-macOS.zip" length="14372978" type="application/octet-stream" sparkle:version="23" sparkle:shortVersionString="0.1.0" sparkle:edSignature="0qCUfebyWb9tAyj/M8Gjr6S+RSB+FKtEzY64kTo/MihKeGQrCV1itKNGwexL5T27XH016mJ9UNU9Ref25vCZBQ==" /></item></channel></rss>
