@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0"><channel><title>SwiftChat Alpha</title><link>https://swiftchat.ronniewong.cc</link><description>SwiftChat macOS alpha updates</description><item><title>SwiftChat 0.1.0 (26) Alpha</title><description>- 改進對話內容排版：標題、列表、引言、分隔線、表格與程式碼區塊採用核准的字體與間距，粗體改為半粗體，混合語言段落會依內容自動調整文字方向，程式碼則維持由左至右顯示。
-- ChatGPT 歷史紀錄現在可以手動重新整理，App 回到前景或網路恢復時也會自動追上最新狀態；更新串流中斷後能自動恢復訂閱，讀取失敗時保留現有列表並可重試。
-- 側邊欄的對話篩選器與 ChatGPT 重新整理按鈕移至底部控制列，並改用玻璃材質的大型控制項樣式。
-- 修正 ChatGPT 模型列表改為優先讀取快取：切換對話或目錄在背景更新時不再遺失已選取的模型與推理強度，選項失效時會明確提示並可直接重新載入模型。</description><sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion><enclosure url="https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.26/SwiftChat-0.1.0-26-macOS.zip" length="19746271" type="application/octet-stream" sparkle:version="26" sparkle:shortVersionString="0.1.0" sparkle:edSignature="UhJOa3j0q0cupKmEdXs91UbNlEZCDa0gjjbMuXPCw9JAOVauy8LFbxZZhXmQit+xucrGzw3iYlr3isuN04ynCQ==" /></item></channel></rss>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0"><channel><title>SwiftChat Alpha</title><link>https://swiftchat.ronniewong.cc</link><description>SwiftChat macOS alpha updates</description><item><title>SwiftChat 0.1.0 (27) Alpha</title><description>- ChatGPT 輸入框的 @ 參考選單現在會先顯示本機快取的檔案庫與已連接外掛候選項目，並在背景逐一更新各來源；更新期間保留現有項目、選取狀態與捲動位置，顯示快取內容或本機儲存失敗時會明確提示。
+- 選取的檔案或外掛參考會在送出前重新驗證，已失效的參考會停止送出並保留草稿，不會被當成純文字傳送。
+- ChatGPT 帳號與工作區資訊在身分驗證後可立即還原符合的本機快取，並在背景重新整理；快取不可用時會顯示提示，遠端帳號存取與切換不受影響。
+- 修正 @ 參考選單在尚未選取項目時的方向鍵導覽。
+- 修正側邊欄對話列中來源標籤與標題文字的基線對齊。</description><sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion><enclosure url="https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.27/SwiftChat-0.1.0-27-macOS.zip" length="19783154" type="application/octet-stream" sparkle:version="27" sparkle:shortVersionString="0.1.0" sparkle:edSignature="vdVxHxUl/viOQDb6pdP2FNSgcGPrfhDQZtenutk4SE8oFZgYAiWdO13D+n3NpQqlsS+vwt+zf+GCSQZFh7rEBQ==" /></item></channel></rss>
