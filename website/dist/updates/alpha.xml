@@ -1,6 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0"><channel><title>SwiftChat Alpha</title><link>https://swiftchat.ronniewong.cc</link><description>SwiftChat macOS alpha updates</description><item><title>SwiftChat 0.1.0 (27) Alpha</title><description>- ChatGPT 輸入框的 @ 參考選單現在會先顯示本機快取的檔案庫與已連接外掛候選項目，並在背景逐一更新各來源；更新期間保留現有項目、選取狀態與捲動位置，顯示快取內容或本機儲存失敗時會明確提示。
-- 選取的檔案或外掛參考會在送出前重新驗證，已失效的參考會停止送出並保留草稿，不會被當成純文字傳送。
-- ChatGPT 帳號與工作區資訊在身分驗證後可立即還原符合的本機快取，並在背景重新整理；快取不可用時會顯示提示，遠端帳號存取與切換不受影響。
-- 修正 @ 參考選單在尚未選取項目時的方向鍵導覽。
-- 修正側邊欄對話列中來源標籤與標題文字的基線對齊。</description><sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion><enclosure url="https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.27/SwiftChat-0.1.0-27-macOS.zip" length="19783154" type="application/octet-stream" sparkle:version="27" sparkle:shortVersionString="0.1.0" sparkle:edSignature="vdVxHxUl/viOQDb6pdP2FNSgcGPrfhDQZtenutk4SE8oFZgYAiWdO13D+n3NpQqlsS+vwt+zf+GCSQZFh7rEBQ==" /></item></channel></rss>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0"><channel><title>SwiftChat Alpha</title><link>https://swiftchat.ronniewong.cc</link><description>SwiftChat macOS alpha updates</description><item><title>SwiftChat 0.1.0 (28) Alpha</title><description>- AIChat 對話現在提供 read、write、edit、grep、find、ls 檔案工具，支援工具呼叫的模型可在固定的檔案根目錄中讀寫與搜尋檔案；文字工具結果會保留原始空白與 Markdown 字元如實顯示，圖片結果維持附件呈現。
+- 「檔案」選單新增「Open Filesystem in Finder」指令，可直接在 Finder 開啟檔案工具使用的目錄。
+- 長對話加入自動內容管理：接近模型容量上限時可壓縮較舊的工作記錄，目前任務與附件保持受保護，避免對話因超出容量而失敗；檔案工具錯誤不再終止對話，容量恢復後會正常回傳最終回應。
+- 修正本機 oMLX 服務延續已儲存對話（含文字、檔案工具、圖片與還原歷史）的問題。
+- 手動停止的回應現在會儲存為中斷檢查點，重新開啟對話時不會顯示為已完成。
+- 修正對話畫面出現重複捲動層的問題。
+- 移除設定中的「Tools」頁面與舊的持續終端機（PersistentShell）功能，由上述檔案工具取代。</description><sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion><enclosure url="https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.28/SwiftChat-0.1.0-28-macOS.zip" length="17702129" type="application/octet-stream" sparkle:version="28" sparkle:shortVersionString="0.1.0" sparkle:edSignature="ukttYaLMhXkbnH+M59H7pI95akh2LAbJ/dTnW7CN/JoaC2BdilCvBJPqeTZ6Le5vU3ZB7y8gHNjuhT4z2Xd5Dg==" /></item></channel></rss>
