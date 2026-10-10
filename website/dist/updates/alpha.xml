@@ -1,3 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
-<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0"><channel><title>SwiftChat Alpha</title><link>https://swiftchat.ronniewong.cc</link><description>SwiftChat macOS alpha updates</description><item><title>SwiftChat 0.1.0 (31) Alpha</title><description>- 新增對話匯出：現在可以從工具列的「對話動作」選單，將目前的 AIChat 對話匯出為 JSON 檔案。匯出前會顯示隱私提醒，確認檔案中包含私密的對話與工具資料。
-- 修正上下文長度使用：AIChat 現在依照各供應商模型的實際上下文窗口配置輸入預算，不再一律限制在 32,000 個 token。使用較大上下文窗口的模型時，可保留更長的對話脈絡。</description><sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion><enclosure url="https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.31/SwiftChat-0.1.0-31-macOS.zip" length="17939347" type="application/octet-stream" sparkle:version="31" sparkle:shortVersionString="0.1.0" sparkle:edSignature="mmzCK78yepXo2cXrFVliErt44T/1P3DG1S8LxK/x6P/KJzTi1N4YX4V8xjsbzNVcdv5C8qXgTg1iMIzLPxs6AA==" /></item></channel></rss>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0"><channel><title>SwiftChat Alpha</title><link>https://swiftchat.ronniewong.cc</link><description>SwiftChat macOS alpha updates</description><item><title>SwiftChat 0.1.0 (32) Alpha</title><description>- 瀏覽器導航工具現在會實際等待要求的頁面載入完成，並明確回報成功、失敗、取消或逾時；導航觸發下載時也會正確告知，不再在頁面尚未載入時就回傳。
+- 已提交但仍在載入中的頁面現在可以直接擷取快照，不必等待整個頁面完全靜止。
+- 瀏覽器腳本評估改用直接執行運算式的方式，不再透過動態建構函式執行；JavaScript 語法錯誤會以更清楚的訊息回報。
+- 當工具輸出因過長被截斷時，現在會附上針對該瀏覽器工具的具體恢復建議，例如縮小快照範圍或回傳較小的結果。
+- 瀏覽器工具顯示的網址現在會遮蔽敏感查詢參數的值（例如權杖、金鑰、密碼），避免隱私資訊外洩。
+- 開新分頁時可明確指定 about:blank 來開啟空白分頁。
+- 內容預算提醒新增 25% 的早期提示，提醒階梯現在為 25%、50%、75% 與 90%。
+- 對話的工作上下文檔案現在會保留在投影檔案系統中，不再於每輪結束後刪除，且同一對話使用固定路徑。</description><sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion><enclosure url="https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.32/SwiftChat-0.1.0-32-macOS.zip" length="17958094" type="application/octet-stream" sparkle:version="32" sparkle:shortVersionString="0.1.0" sparkle:edSignature="nGNF0QV8dcmzgjnVDOxmdJUo6QKpcR8BnX1cehlbErPB8xn/qWsglI//twyFXA0u7ou2kMql8IdPn8gfCQJaAg==" /></item></channel></rss>
