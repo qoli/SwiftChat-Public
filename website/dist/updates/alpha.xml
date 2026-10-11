@@ -1,9 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0"><channel><title>SwiftChat Alpha</title><link>https://swiftchat.ronniewong.cc</link><description>SwiftChat macOS alpha updates</description><item><title>SwiftChat 0.1.0 (32) Alpha</title><description>- 瀏覽器導航工具現在會實際等待要求的頁面載入完成，並明確回報成功、失敗、取消或逾時；導航觸發下載時也會正確告知，不再在頁面尚未載入時就回傳。
-- 已提交但仍在載入中的頁面現在可以直接擷取快照，不必等待整個頁面完全靜止。
-- 瀏覽器腳本評估改用直接執行運算式的方式，不再透過動態建構函式執行；JavaScript 語法錯誤會以更清楚的訊息回報。
-- 當工具輸出因過長被截斷時，現在會附上針對該瀏覽器工具的具體恢復建議，例如縮小快照範圍或回傳較小的結果。
-- 瀏覽器工具顯示的網址現在會遮蔽敏感查詢參數的值（例如權杖、金鑰、密碼），避免隱私資訊外洩。
-- 開新分頁時可明確指定 about:blank 來開啟空白分頁。
-- 內容預算提醒新增 25% 的早期提示，提醒階梯現在為 25%、50%、75% 與 90%。
-- 對話的工作上下文檔案現在會保留在投影檔案系統中，不再於每輪結束後刪除，且同一對話使用固定路徑。</description><sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion><enclosure url="https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.32/SwiftChat-0.1.0-32-macOS.zip" length="17958094" type="application/octet-stream" sparkle:version="32" sparkle:shortVersionString="0.1.0" sparkle:edSignature="nGNF0QV8dcmzgjnVDOxmdJUo6QKpcR8BnX1cehlbErPB8xn/qWsglI//twyFXA0u7ou2kMql8IdPn8gfCQJaAg==" /></item></channel></rss>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0"><channel><title>SwiftChat Alpha</title><link>https://swiftchat.ronniewong.cc</link><description>SwiftChat macOS alpha updates</description><item><title>SwiftChat 0.1.0 (35) Alpha</title><description>- 側邊欄的對話列表不再顯示 ChatGPT 歷史紀錄載入中的提示。
+- 在設定中移除自訂服務的模型前,現在會先要求確認,避免誤刪。
+- 自訂服務的模型編輯改為各模型獨立區段呈現,編輯與測試連線時更加穩定。
+- 對話上下文現在以記憶檔案(/memory/)的形式呈現;並修正在模型使用工具期間更新記憶時,已完成的工具回合未被保留而導致更新失敗的問題。</description><sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion><enclosure url="https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.35/SwiftChat-0.1.0-35-macOS.zip" length="17972689" type="application/octet-stream" sparkle:version="35" sparkle:shortVersionString="0.1.0" sparkle:edSignature="Z6bWcRJ0UlfjvoM4eg8ncmLbA9wH52Ib8KXjdX2wHnKOYaYwGX8bPXD9AzScTTnpkz0fF+0Hab3d+Y0xxPE6DA==" /></item></channel></rss>
