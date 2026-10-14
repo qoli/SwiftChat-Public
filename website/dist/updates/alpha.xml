@@ -1,5 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
-<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0"><channel><title>SwiftChat Alpha</title><link>https://swiftchat.ronniewong.cc</link><description>SwiftChat macOS alpha updates</description><item><title>SwiftChat 0.1.0 (35) Alpha</title><description>- 側邊欄的對話列表不再顯示 ChatGPT 歷史紀錄載入中的提示。
-- 在設定中移除自訂服務的模型前,現在會先要求確認,避免誤刪。
-- 自訂服務的模型編輯改為各模型獨立區段呈現,編輯與測試連線時更加穩定。
-- 對話上下文現在以記憶檔案(/memory/)的形式呈現;並修正在模型使用工具期間更新記憶時,已完成的工具回合未被保留而導致更新失敗的問題。</description><sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion><enclosure url="https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.35/SwiftChat-0.1.0-35-macOS.zip" length="17972689" type="application/octet-stream" sparkle:version="35" sparkle:shortVersionString="0.1.0" sparkle:edSignature="Z6bWcRJ0UlfjvoM4eg8ncmLbA9wH52Ib8KXjdX2wHnKOYaYwGX8bPXD9AzScTTnpkz0fF+0Hab3d+Y0xxPE6DA==" /></item></channel></rss>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0"><channel><title>SwiftChat Alpha</title><link>https://swiftchat.ronniewong.cc</link><description>SwiftChat macOS alpha updates</description><item><title>SwiftChat 0.1.0 (37) Alpha</title><description>- ChatGPT 對話中的互動式 Intelligent UI 元件恢復顯示,並改由 App 內建的引擎在本機執行;元件的互動狀態會隨對話保存。
+- AIChat 對話現在能依需求生成互動式介面(例如小工具、計算器、儀表板),互動狀態在重新開啟對話後仍會保留。
+- 瀏覽器視窗的分頁切換改為顯示目前頁面標題的分頁選單,操作更清楚。
+- 側邊欄沒有對話時,改為顯示含圖示與說明的空白狀態畫面。
+- 修正訊息中帶有 $ 的金額(如價格)被誤判為數學公式而顯示異常的問題。
+- 修正 ChatGPT 對話在串流更新期間,目前訊息分支被錯誤切換的問題。
+- 修正 AIChat 對話建立模型時,未套用模型所屬服務通訊協定設定的問題。
+- 修正瀏覽器自動化執行非同步網頁操作時,未等待結果完成就回傳的問題。</description><sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion><enclosure url="https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.37/SwiftChat-0.1.0-37-macOS.zip" length="23930885" type="application/octet-stream" sparkle:version="37" sparkle:shortVersionString="0.1.0" sparkle:edSignature="UNFgpxLNJaKM8Kv9o+D74BcPjIkSZjsejZHEDFSm/JnwrtOrmFptgVBO3YLAR2n+gyi5xw566ygFjkAsicxOAw==" /></item></channel></rss>
