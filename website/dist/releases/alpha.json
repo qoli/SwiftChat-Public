@@ -3,14 +3,14 @@
   "channel": "alpha",
   "platform": "macos",
   "version": "0.1.0",
-  "build": "41",
-  "tag": "v0.1.0-alpha.41",
-  "publishedAt": "2026-10-14T11:18:14.355998Z",
-  "releaseUrl": "https://github.com/qoli/SwiftChat-Public/releases/tag/v0.1.0-alpha.41",
-  "downloadUrl": "https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.41/SwiftChat-0.1.0-41-macOS.zip",
-  "sha256": "38078c5b36183cef0076794b82524560a73acc0fe897432d816c43169c89856b",
-  "length": 24904606,
-  "sparkleEdSignature": "7QgTRxlou1w7UmYgyPfXyDsM4ipRTJ+9DMEcHcMh1NoSgAn+NKdkhqxxlxbH6yXRXfJTa5TAsWICMYer1j/iDA==",
+  "build": "42",
+  "tag": "v0.1.0-alpha.42",
+  "publishedAt": "2026-10-15T00:40:16.491021Z",
+  "releaseUrl": "https://github.com/qoli/SwiftChat-Public/releases/tag/v0.1.0-alpha.42",
+  "downloadUrl": "https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.42/SwiftChat-0.1.0-42-macOS.zip",
+  "sha256": "09077da88c2167ce656d8e21ed293b283c5b359dd0a6ed5e7da90f9e3febf837",
+  "length": 24904707,
+  "sparkleEdSignature": "nasLkAVBxJjkb+dkOrNGnfURFn/FkRp+8PvE0Zai5V/Zr9FaSb/VFraI8/dsVtG2/HT0gIFVKhNlu69QMMczDA==",
   "minimumSystemVersion": "26.0",
-  "notes": "\u8a2d\u5b9a\u4e2d\u65b0\u589e\u300cPrompts\u300d\u9762\u677f\uff1a\u53ef\u6aa2\u8996\u5167\u5efa\u7684 Harness \u8207\u5de5\u5177\u6307\u793a\uff0c\u4e26\u81ea\u8a02\u300cIntelligent UI\u300d\u884c\u70ba\u6307\u793a\u8207\u300c\u500b\u4eba\u6307\u793a\u300d\uff0c\u5132\u5b58\u5f8c\u5957\u7528\u65bc AI \u5c0d\u8a71\u3002\nmacOS \u7684\u8a2d\u5b9a\u8996\u7a97\u73fe\u5728\u53ef\u4ee5\u8abf\u6574\u5927\u5c0f\u3002\n\u5c0d\u8a71\u6372\u52d5\u66f4\u6d41\u66a2\uff1a\u64f7\u53d6\u6372\u52d5\u9328\u9ede\u6642\u7565\u904e\u96b1\u85cf\u8207\u6536\u5408\u7684\u8a0a\u606f\uff0c\u6e1b\u5c11\u4e0d\u5fc5\u8981\u7684\u6392\u7248\u904b\u7b97\u3002\nIntelligent UI\uff08\u4e92\u52d5\u4ecb\u9762\uff09\u6548\u80fd\u8207\u7a69\u5b9a\u6027\u6539\u5584\uff1a\u8996\u7a97\u6e2c\u91cf\u6539\u70ba\u6279\u6b21\u66f4\u65b0\uff0c\u6d6e\u52d5\u63a7\u5236\u9805\u76f4\u63a5\u66f4\u65b0\u800c\u4e0d\u518d\u89f8\u767c\u5408\u6210 resize \u4e8b\u4ef6\uff0c\u4e26\u4fdd\u7559\u6372\u52d5\u4f4d\u7f6e\u3001iframe \u8b58\u5225\u8207\u4e92\u52d5\u72c0\u614b\u3002"
+  "notes": "- \u8abf\u6574\u5c0d\u8a71\u8f38\u5165\u6846\u9ad8\u5ea6\u6642\uff0c\u4e0d\u518d\u91cd\u65b0\u8655\u7406\u6574\u6bb5\u5c0d\u8a71\u5167\u5bb9\uff0c\u6e1b\u5c11\u591a\u9918\u7684\u7e6a\u88fd\u5de5\u4f5c\u3002\n- \u5c0d\u8a71\u4e2d\u96e2\u958b\u756b\u9762\u7bc4\u570d\u7684\u5167\u5bb9\u6703\u66ab\u505c\u7e6a\u88fd\u4ee5\u964d\u4f4e\u8cc7\u6e90\u4f7f\u7528\uff1b\u539f\u6709\u5167\u5bb9\u8207\u7248\u9762\u9ad8\u5ea6\u6703\u4fdd\u7559\uff0c\u56de\u5230\u756b\u9762\u7bc4\u570d\u6642\u53ef\u7e7c\u7e8c\u986f\u793a\u3002"
 }
