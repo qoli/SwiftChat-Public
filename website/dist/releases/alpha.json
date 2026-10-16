@@ -3,14 +3,14 @@
   "channel": "alpha",
   "platform": "macos",
   "version": "0.1.0",
-  "build": "48",
-  "tag": "v0.1.0-alpha.48",
-  "publishedAt": "2026-10-16T18:23:29.721112Z",
-  "releaseUrl": "https://github.com/qoli/SwiftChat-Public/releases/tag/v0.1.0-alpha.48",
-  "downloadUrl": "https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.48/SwiftChat-0.1.0-48-macOS.zip",
-  "sha256": "b26274116588ddb90399af670bceeda882db0dff5b96f61bb1587e4e9a0f7390",
-  "length": 26784806,
-  "sparkleEdSignature": "Btc1H7OlYqXQhtY1/eXH6AS/TGdKnbUSzYZaQlsvaOC3jdvpnCEXU9dP2LJq4UET+z4Lb/3yaS74zG+C1M2IDg==",
+  "build": "49",
+  "tag": "v0.1.0-alpha.49",
+  "publishedAt": "2026-10-16T19:41:37.487447Z",
+  "releaseUrl": "https://github.com/qoli/SwiftChat-Public/releases/tag/v0.1.0-alpha.49",
+  "downloadUrl": "https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.49/SwiftChat-0.1.0-49-macOS.zip",
+  "sha256": "5144eeda18208e76c0e36dbe80c620cd1e4e7246458612da2bb4ea8d599437b2",
+  "length": 26828415,
+  "sparkleEdSignature": "88AfGgrWTo28uvWs9xdGzVZ74HrLP0Bgnlc1XZWKJQFOG74a0DBT6wiX9BKDAyw7doFfTlGbeTPwLoN+cxLFAw==",
   "minimumSystemVersion": "26.0",
-  "notes": "\u6a21\u578b\u7684\u63a8\u7406\uff08\u601d\u8003\u904e\u7a0b\uff09\u5167\u5bb9\u6539\u4ee5\u7d14\u6587\u5b57\u986f\u793a\uff0c\u4e0d\u518d\u5957\u7528 Markdown \u6392\u7248\uff0c\u63d0\u5347\u986f\u793a\u7684\u6548\u80fd\u8207\u6d41\u66a2\u5ea6\u3002"
+  "notes": "\u4fee\u6b63\u63a8\u7406\u5f37\u5ea6\u7684\u9078\u64c7\u4e0d\u6703\u4fdd\u5b58\u7684\u554f\u984c\uff1a\u8f38\u5165\u5340\u9078\u64c7\u7684\u63a8\u7406\uff08\u601d\u8003\uff09\u5f37\u5ea6\u73fe\u5728\u6703\u4f9d\u5c0d\u8a71\u4fdd\u5b58\uff0c\u91cd\u65b0\u958b\u555f\u5c0d\u8a71\u6642\u81ea\u52d5\u9084\u539f\u3002\n\u63d0\u5347\u4e32\u6d41\u56de\u8986\u4e2d\u5716\u7247\u7684\u986f\u793a\u6548\u80fd\uff1a\u91cd\u7528\u672a\u8b8a\u66f4\u7684\u5716\u7247\u5167\u5bb9\u4e26\u6e1b\u5c11\u591a\u9918\u7684\u4ecb\u9762\u66f4\u65b0\uff0c\u8b93\u542b\u5716\u7247\u7684\u56de\u61c9\u986f\u793a\u66f4\u6d41\u66a2\u3002"
 }
