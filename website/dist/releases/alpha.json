@@ -3,14 +3,14 @@
   "channel": "alpha",
   "platform": "macos",
   "version": "0.1.0",
-  "build": "50",
-  "tag": "v0.1.0-alpha.50",
-  "publishedAt": "2026-10-16T20:56:54.860421Z",
-  "releaseUrl": "https://github.com/qoli/SwiftChat-Public/releases/tag/v0.1.0-alpha.50",
-  "downloadUrl": "https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.50/SwiftChat-0.1.0-50-macOS.zip",
-  "sha256": "1db302fcf04c460f537e57c188d5ea3fce39fd471a1708efa369fb0cf6860ec3",
-  "length": 26906337,
-  "sparkleEdSignature": "yqG36B7CSn4OD6MW26x+1kRLPJzr2d+pSxptGrVckmB5/XPz8C7VLvv4jq7fW7gVDHow6Y5L/HtvsG2M9018Ag==",
+  "build": "51",
+  "tag": "v0.1.0-alpha.51",
+  "publishedAt": "2026-10-17T06:17:48.319525Z",
+  "releaseUrl": "https://github.com/qoli/SwiftChat-Public/releases/tag/v0.1.0-alpha.51",
+  "downloadUrl": "https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.51/SwiftChat-0.1.0-51-macOS.zip",
+  "sha256": "01a48b331094b6fd4edb39b68140de9e8dd18f48046d5b380d4bf5c08d1ec2cc",
+  "length": 26906915,
+  "sparkleEdSignature": "mCNs6U1h1r6aTdohw87M9ZK6FDnyb903p0AJB4Id8WESrbozVsvSQ4uHkPBMCTMGPq/DaFOoU8q7XqwqoY6qBQ==",
   "minimumSystemVersion": "26.0",
-  "notes": "- \u4fee\u6b63\u4e92\u52d5\u5f0f\u56de\u61c9\u5728\u986f\u793a\u6587\u4ef6\u88ab\u66ff\u63db\u5f8c\u9023\u7dda\u4e2d\u65b7\u3001\u505c\u6b62\u66f4\u65b0\u7684\u554f\u984c\uff1b\u73fe\u5728\u6703\u81ea\u52d5\u91cd\u65b0\u9023\u7dda\uff0c\u4e26\u5728\u91cd\u65b0\u521d\u59cb\u5316\u6642\u9084\u539f\u5148\u524d\u7684\u4e92\u52d5\u72c0\u614b\u3002"
+  "notes": "- \u4fee\u5fa9 ChatGPT \u5c0d\u8a71\u4e2d\u7684\u96fb\u5b50\u90f5\u4ef6\u8349\u7a3f\u8207\u5beb\u4f5c\u5340\u584a\u7121\u6cd5\u986f\u793a\u7684\u554f\u984c:\u73fe\u5728\u6703\u4ee5\u5c08\u5c6c\u5361\u7247\u5448\u73fe\u4e3b\u65e8\u8207\u5167\u6587,\u4e26\u53ef\u76f4\u63a5\u8907\u88fd\u3002\n- \u4fee\u6b63\u7a0b\u5f0f\u78bc\u5340\u584a\u8907\u88fd\u6309\u9215\u7684\u72c0\u614b\u986f\u793a,\u8907\u88fd\u67d0\u4e00\u5340\u584a\u5f8c\u4e0d\u6703\u518d\u8b93\u5176\u4ed6\u5340\u584a\u7684\u6309\u9215\u540c\u6642\u986f\u793a\u70ba\u5df2\u8907\u88fd\u3002"
 }
