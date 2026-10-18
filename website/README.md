@@ -27,3 +27,9 @@ The landing page's `chat-window.png` and `accounts-window.png` are the original
 transparent product images supplied in the SwiftChat Figma file on October 18,
 2026 (file `XLP9OJJoBUdUvCOXpUZMlV`, nodes `1:68` and `1:71`). They are stored
 locally and composed with CSS; the site does not depend on temporary Figma URLs.
+
+The transparent header mark uses the original `Message`, `Message lines`, and
+`Reply` SVG assets from the same Figma file (nodes `1:49`, `1:51`, and `1:54`,
+inside `1:48`). `brand-message.svg`, `brand-lines.svg`, and `brand-reply.svg` are
+stored without modification and composed at the original layer offsets in an
+SVG viewport. The mark has no rectangular app-icon background.

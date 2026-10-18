@@ -1,0 +1,8 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Reply">
+<foreignObject x="437" y="468" width="417" height="335.178"><div xmlns="http://www.w3.org/1999/xhtml" style="backdrop-filter:blur(3px);clip-path:url(#bgblur_0_0_7_clip_path);height:100%;width:100%"></div></foreignObject><path id="Vector" data-figma-bg-blur-radius="6" d="M528 474H762C820 474 848 507 848 567V656C848 698 833 718 805 731C792 737 790 744 794 756L801 780C805 794 795 802 782 794L716 753C704 745 696 743 681 743H531C473 743 443 712 443 655V562C443 504 473 474 528 474Z" fill="#DEF2FF" fill-opacity="0.85"/>
+</g>
+<defs>
+<clipPath id="bgblur_0_0_7_clip_path" transform="translate(-437 -468)"><path d="M528 474H762C820 474 848 507 848 567V656C848 698 833 718 805 731C792 737 790 744 794 756L801 780C805 794 795 802 782 794L716 753C704 745 696 743 681 743H531C473 743 443 712 443 655V562C443 504 473 474 528 474Z"/>
+</clipPath></defs>
+</svg>

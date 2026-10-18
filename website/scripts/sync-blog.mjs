@@ -98,7 +98,7 @@ function shell({ title, summary, canonicalUrl, url = canonicalUrl, type = "websi
 <link rel="icon" href="/assets/icon.png"><link rel="stylesheet" href="${stylesheet}">
 <script type="application/ld+json">${JSON.stringify(schema).replaceAll("<", "\\u003c")}</script>
 </head><body><a class="skip" href="#main">Skip to content</a>
-<header><a class="brand" href="/"><img src="/assets/icon.png" alt="" width="44" height="44">SwiftChat</a>
+<header><a class="brand" href="/"><svg class="brand-icon" width="44" height="44" viewBox="0 0 1024 1024" aria-hidden="true" focusable="false"><image href="/assets/brand-message.svg" width="1024" height="1024"/><image href="/assets/brand-lines.svg" x="38" y="-23" width="1024" height="1024"/><image href="/assets/brand-reply.svg" width="1024" height="1024"/></svg>SwiftChat</a>
 <nav aria-label="Main navigation"><a href="/blog/" aria-current="page">Blog</a><a href="/changelog.html">Changelog</a><a href="https://github.com/qoli/SwiftChat-Public">GitHub</a><a href="/support.html">Support</a><a href="/privacy.html">Privacy</a></nav></header>
 <main id="main" class="document blog">${main}</main>
 <footer><span>© 2026 Ronnie Wong · Made for Mac.</span><span>Independent software. Not affiliated with OpenAI.</span></footer>
