@@ -12,6 +12,9 @@ async function fixture(t) {
   const outputRoot = path.join(root, "dist");
   await mkdir(path.join(sourceRoot, "content/blog-assets/post"), { recursive: true });
   await mkdir(path.join(outputRoot, "releases"), { recursive: true });
+  await mkdir(path.join(outputRoot, "assets"), { recursive: true });
+  await writeFile(path.join(outputRoot, "assets/site.css"), "body{color:#14171a}");
+  await writeFile(path.join(outputRoot, "index.html"), '<link rel="stylesheet" href="assets/site.css">');
   await writeFile(path.join(sourceRoot, "content/blog-assets/post/screenshot.png"), "image fixture");
   await writeFile(path.join(outputRoot, "releases/alpha.json"), "release fixture");
   const mirror = {
@@ -43,6 +46,7 @@ test("routes only public subsite targets and preserves canonical ownership, nest
   const seed = JSON.parse(await read("content/blog.seed.json"));
   assert.deepEqual(seed.posts.map((post) => post.id), ["mirror", "owned"]);
   const article = await read("blog/native-chat-abcd1234/index.html");
+  assert.match(article, /href="\/assets\/site.css\?v=[a-f0-9]{12}"/);
   assert.match(article, /rel="canonical" href="https:\/\/ronniewong.cc\/blog\/native-chat-abcd1234\/"/);
   assert.match(article, /RonnieCC 原文/);
   assert.match(article, /Notion 原稿/);
@@ -59,6 +63,19 @@ test("routes only public subsite targets and preserves canonical ownership, nest
   assert.doesNotMatch(sitemap, /native-chat-abcd1234|old-chat/);
   assert.match(await read("blog/old-chat/index.html"), /noindex,follow/);
   assert.equal(await read("releases/alpha.json"), "release fixture");
+});
+
+test("a style change updates the cache version on existing pages and Blog articles", async (t) => {
+  const options = await fixture(t);
+  await syncBlog(options);
+  const articlePath = path.join(options.outputRoot, "blog/native-chat-abcd1234/index.html");
+  const version = (html) => html.match(/site.css\?v=([a-f0-9]{12})/)[1];
+  const previous = version(await readFile(articlePath, "utf8"));
+  await writeFile(path.join(options.outputRoot, "assets/site.css"), "body{color:#1265df}");
+  await syncBlog(options);
+  const current = version(await readFile(articlePath, "utf8"));
+  assert.notEqual(current, previous);
+  assert.equal(version(await readFile(path.join(options.outputRoot, "index.html"), "utf8")), current);
 });
 
 test("a missing source asset fails before replacing the published mirror", async (t) => {

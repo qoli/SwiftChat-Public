@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-import { copyFile, mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
+import { copyFile, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
@@ -86,7 +87,7 @@ function renderBlocks(blocks = []) {
   return result.join("\n");
 }
 
-function shell({ title, summary, canonicalUrl, url = canonicalUrl, type = "website", main, schema }) {
+function shell({ title, summary, canonicalUrl, url = canonicalUrl, type = "website", main, schema, stylesheet }) {
   return `<!doctype html>
 <html lang="zh-Hant"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -94,7 +95,7 @@ function shell({ title, summary, canonicalUrl, url = canonicalUrl, type = "websi
 <meta name="description" content="${escapeHtml(summary)}"><link rel="canonical" href="${escapeHtml(canonicalUrl)}">
 <meta property="og:title" content="${escapeHtml(title)}"><meta property="og:description" content="${escapeHtml(summary)}">
 <meta property="og:type" content="${type}"><meta property="og:url" content="${escapeHtml(url)}">
-<link rel="icon" href="/assets/icon.png"><link rel="stylesheet" href="/assets/site.css">
+<link rel="icon" href="/assets/icon.png"><link rel="stylesheet" href="${stylesheet}">
 <script type="application/ld+json">${JSON.stringify(schema).replaceAll("<", "\\u003c")}</script>
 </head><body><a class="skip" href="#main">Skip to content</a>
 <header><a class="brand" href="/"><img src="/assets/icon.png" alt="" width="44" height="44">SwiftChat</a>
@@ -105,19 +106,19 @@ function shell({ title, summary, canonicalUrl, url = canonicalUrl, type = "websi
 `;
 }
 
-function renderIndex(posts) {
+function renderIndex(posts, stylesheet) {
   const summary = "關於 SwiftChat 的開發、功能與使用方式。";
   return shell({
-    title: "Blog — SwiftChat", summary, canonicalUrl: `${siteUrl}/blog/`,
+    title: "Blog — SwiftChat", summary, canonicalUrl: `${siteUrl}/blog/`, stylesheet,
     schema: { "@context": "https://schema.org", "@type": "Blog", name: "SwiftChat Blog", url: `${siteUrl}/blog/`, description: summary },
     main: `<div class="blog-heading"><p class="eyebrow">SwiftChat Blog</p><h1>在 Mac 上，聊得更順手。</h1><p class="lede">${summary}</p></div>
 <section aria-label="Articles">${posts.length ? posts.map((post) => `<article class="blog-post"><a href="${encodeURIComponent(post.slug)}/"><time datetime="${escapeHtml(postDate(post))}">${escapeHtml(postDate(post))}</time><h2>${escapeHtml(post.title)}</h2><p>${escapeHtml(description(post))}</p><span class="blog-read">閱讀文章 →</span></a></article>`).join("\n") : "<p>新文章即將登場。</p>"}</section>`,
   });
 }
 
-function renderArticle(post) {
+function renderArticle(post, stylesheet) {
   return shell({
-    title: `${post.title} — SwiftChat Blog`, summary: description(post), canonicalUrl: canonical(post), url: postUrl(post), type: "article",
+    title: `${post.title} — SwiftChat Blog`, summary: description(post), canonicalUrl: canonical(post), url: postUrl(post), type: "article", stylesheet,
     schema: {
       "@context": "https://schema.org", "@type": "BlogPosting", headline: post.title, description: description(post),
       url: postUrl(post), mainEntityOfPage: canonical(post), isBasedOn: canonical(post),
@@ -150,6 +151,8 @@ export async function syncBlog({ sourceRoot, sourceFile = path.join(sourceRoot, 
   const assets = new Set();
   for (const post of posts) collectAssets(post.content?.blocks, assets);
   for (const asset of assets) await readFile(path.join(sourceRoot, asset));
+  const stylesheetVersion = createHash("sha256").update(await readFile(path.join(outputRoot, "assets/site.css"))).digest("hex").slice(0, 12);
+  const stylesheet = `/assets/site.css?v=${stylesheetVersion}`;
 
   const blogRoot = path.join(outputRoot, "blog");
   await rm(blogRoot, { recursive: true, force: true });
@@ -164,11 +167,11 @@ export async function syncBlog({ sourceRoot, sourceFile = path.join(sourceRoot, 
   await writeFile(path.join(outputRoot, "content/blog.seed.json"), `${JSON.stringify({
     source: { repo: "RonnieCC", path: "content/blog.seed.json", subsite: "swiftchat", contractVersion: source.contractVersion, generatedAt: source.generatedAt }, posts,
   }, null, 2)}\n`);
-  await writeFile(path.join(blogRoot, "index.html"), renderIndex(posts));
+  await writeFile(path.join(blogRoot, "index.html"), renderIndex(posts, stylesheet));
   for (const post of posts) {
     const articleRoot = path.join(blogRoot, post.slug);
     await mkdir(articleRoot, { recursive: true });
-    await writeFile(path.join(articleRoot, "index.html"), renderArticle(post));
+    await writeFile(path.join(articleRoot, "index.html"), renderArticle(post, stylesheet));
     for (const legacy of post.legacySlugs || []) {
       if (legacy === post.slug) continue;
       const legacyRoot = path.join(blogRoot, legacy);
@@ -179,6 +182,13 @@ export async function syncBlog({ sourceRoot, sourceFile = path.join(sourceRoot, 
   const urls = ["/", "/privacy.html", "/support.html", "/changelog.html", "/blog/"].map((route) => `${siteUrl}${route}`);
   urls.push(...posts.filter((post) => canonical(post) === postUrl(post)).map(postUrl));
   await writeFile(path.join(outputRoot, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((url) => `<url><loc>${escapeHtml(url)}</loc></url>`).join("\n")}\n</urlset>\n`);
+  for (const entry of await readdir(outputRoot, { withFileTypes: true })) {
+    if (!entry.isFile() || !entry.name.endsWith(".html")) continue;
+    const file = path.join(outputRoot, entry.name);
+    const html = await readFile(file, "utf8");
+    const updated = html.replace(/href="(\/?assets\/site\.css)(?:\?[^"]*)?"/g, `href="$1?v=${stylesheetVersion}"`);
+    if (updated !== html) await writeFile(file, updated);
+  }
   console.log(`Selected ${posts.length}/${source.posts.length} RonnieCC posts for SwiftChat; copied ${assets.size} assets.`);
   return { posts: posts.length, assets: assets.size };
 }
