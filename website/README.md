@@ -22,3 +22,8 @@ synthetic Kyoto itinerary conversation; `context.png` previews a purpose-made
 TextEdit note; no personal chat history is shown. `icon.png` is exported from the
 compiled app icon. Screenshots and branding are not covered by the adapter MIT
 license. `browser.png` shows the public SwiftChat homepage inside the native Browser.
+
+The landing page's `chat-window.png` and `accounts-window.png` are the original
+transparent product images supplied in the SwiftChat Figma file on October 18,
+2026 (file `XLP9OJJoBUdUvCOXpUZMlV`, nodes `1:68` and `1:71`). They are stored
+locally and composed with CSS; the site does not depend on temporary Figma URLs.
