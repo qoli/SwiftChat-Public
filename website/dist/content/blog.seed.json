@@ -1,0 +1,844 @@
+{
+  "source": {
+    "repo": "RonnieCC",
+    "path": "content/blog.seed.json",
+    "subsite": "swiftchat",
+    "contractVersion": 1,
+    "generatedAt": "2026-10-18T08:42:46.292Z"
+  },
+  "posts": [
+    {
+      "id": "3fdc1b36c40181918fb0f53680b97cd5",
+      "slug": "swiftchat-mac-ai-chat-3fdc1b36",
+      "seoSlug": "swiftchat-mac-ai-chat",
+      "legacySlugs": [
+        "swiftchat-讓-chatgpt-在-mac-上聊得更順手-3fdc1b36"
+      ],
+      "title": "SwiftChat：讓 ChatGPT 在 Mac 上聊得更順手",
+      "tag": "AI,macOS,Product",
+      "writtenDate": "2026-10-18",
+      "year": "2026",
+      "public": true,
+      "subsites": [
+        "swiftchat"
+      ],
+      "publishTargets": [
+        "ronniecc",
+        "swiftchat"
+      ],
+      "canonical": {
+        "site": "ronniecc",
+        "url": "https://ronniewong.cc/blog/swiftchat-mac-ai-chat-3fdc1b36/"
+      },
+      "notionUrl": "https://www.notion.so/qoli/swiftchat-%E8%AE%93-chatgpt-%E5%9C%A8-mac-%E4%B8%8A%E8%81%8A%E5%BE%97%E6%9B%B4%E9%A0%86%E6%89%8B-3fdc1b36c40181918fb0f53680b97cd5?v=e90c1b36c401831d99bf08f10dcbae9b&source=copy_link",
+      "createdTime": "2026-10-18T08:13:14.959Z",
+      "lastEditedTime": "2026-10-18T08:34:35.231Z",
+      "content": {
+        "source": "notion-v3-page-blocks",
+        "syncedAt": "2026-10-18T08:37:07.066Z",
+        "blocks": [
+          {
+            "id": "3fdc1b36c40180e8b534e061c3b1cfa2",
+            "type": "image",
+            "richText": [
+              {
+                "text": "telegram.png",
+                "annotations": [],
+                "href": ""
+              }
+            ],
+            "plainText": "telegram.png",
+            "caption": [],
+            "language": "",
+            "source": "attachment:16221658-0cbf-4715-a2b8-d2dde8923ff7:telegram.png",
+            "assetPath": "content/blog-assets/3fdc1b36c40181918fb0f53680b97cd5/3fdc1b36c40180e8b534e061c3b1cfa2-telegram.png",
+            "tableColumns": [],
+            "tableHasColumnHeader": false,
+            "tableHasRowHeader": false,
+            "tableCells": {},
+            "children": []
+          },
+          {
+            "id": "3fdc1b36c40180d78b32f1d5f3db48af",
+            "type": "sub_header",
+            "richText": [
+              {
+                "text": "我為何寫了 SwiftChat",
+                "annotations": [],
+                "href": ""
+              }
+            ],
+            "plainText": "我為何寫了 SwiftChat",
+            "caption": [],
+            "language": "",
+            "source": "",
+            "assetPath": "",
+            "tableColumns": [],
+            "tableHasColumnHeader": false,
+            "tableHasRowHeader": false,
+            "tableCells": {},
+            "children": []
+          },
+          {
+            "id": "3fdc1b36c4018092a735e6a9fa7f5705",
+            "type": "text",
+            "richText": [
+              {
+                "text": "因為 ChatGPT Classic 進入不維護狀態了。我的原始工作風格被打斷了。",
+                "annotations": [],
+                "href": ""
+              }
+            ],
+            "plainText": "因為 ChatGPT Classic 進入不維護狀態了。我的原始工作風格被打斷了。",
+            "caption": [],
+            "language": "",
+            "source": "",
+            "assetPath": "",
+            "tableColumns": [],
+            "tableHasColumnHeader": false,
+            "tableHasRowHeader": false,
+            "tableCells": {},
+            "children": []
+          },
+          {
+            "id": "741559815e68470488b27329c742895c",
+            "type": "text",
+            "richText": [
+              {
+                "text": "SwiftChat 是我正在開發的 macOS AI 聊天應用。它把 ChatGPT Web、其他模型服務和 Mac 的原生操作介面放在一起，讓你整理對話、寫問題，也能帶入其他 app 裡正在處理的文字。",
+                "annotations": [],
+                "href": ""
+              }
+            ],
+            "plainText": "SwiftChat 是我正在開發的 macOS AI 聊天應用。它把 ChatGPT Web、其他模型服務和 Mac 的原生操作介面放在一起，讓你整理對話、寫問題，也能帶入其他 app 裡正在處理的文字。",
+            "caption": [],
+            "language": "",
+            "source": "",
+            "assetPath": "",
+            "tableColumns": [],
+            "tableHasColumnHeader": false,
+            "tableHasRowHeader": false,
+            "tableCells": {},
+            "children": []
+          },
+          {
+            "id": "3fdc1b36c40180af82e0d9b0c6255037",
+            "type": "sub_header",
+            "richText": [
+              {
+                "text": "為何不用 ChatGPT Web ",
+                "annotations": [],
+                "href": ""
+              }
+            ],
+            "plainText": "為何不用 ChatGPT Web ",
+            "caption": [],
+            "language": "",
+            "source": "",
+            "assetPath": "",
+            "tableColumns": [],
+            "tableHasColumnHeader": false,
+            "tableHasRowHeader": false,
+            "tableCells": {},
+            "children": []
+          },
+          {
+            "id": "3fdc1b36c401804990d3eb5fa333948e",
+            "type": "text",
+            "richText": [
+              {
+                "text": "ChatGPT Web 做得一塌糊塗。而且，我需要一個迷你的窗口，傳統的 ChatGPT Client 體驗。",
+                "annotations": [],
+                "href": ""
+              }
+            ],
+            "plainText": "ChatGPT Web 做得一塌糊塗。而且，我需要一個迷你的窗口，傳統的 ChatGPT Client 體驗。",
+            "caption": [],
+            "language": "",
+            "source": "",
+            "assetPath": "",
+            "tableColumns": [],
+            "tableHasColumnHeader": false,
+            "tableHasRowHeader": false,
+            "tableCells": {},
+            "children": []
+          },
+          {
+            "id": "3fdc1b36c401808e9a21c18b2e6f1870",
+            "type": "text",
+            "richText": [
+              {
+                "text": "所以，我只能自己寫一個。",
+                "annotations": [],
+                "href": ""
+              }
+            ],
+            "plainText": "所以，我只能自己寫一個。",
+            "caption": [],
+            "language": "",
+            "source": "",
+            "assetPath": "",
+            "tableColumns": [],
+            "tableHasColumnHeader": false,
+            "tableHasRowHeader": false,
+            "tableCells": {},
+            "children": []
+          },
+          {
+            "id": "0b1fd440034f4e17b1d48bf26a2cb641",
+            "type": "sub_header",
+            "richText": [
+              {
+                "text": "輸入框支持什麼？",
+                "annotations": [],
+                "href": ""
+              }
+            ],
+            "plainText": "輸入框支持什麼？",
+            "caption": [],
+            "language": "",
+            "source": "",
+            "assetPath": "",
+            "tableColumns": [],
+            "tableHasColumnHeader": false,
+            "tableHasRowHeader": false,
+            "tableCells": {},
+            "children": []
+          },
+          {
+            "id": "3fdc1b36c40180b1bffac0393f87e31d",
+            "type": "text",
+            "richText": [
+              {
+                "text": "輸入框支持：",
+                "annotations": [],
+                "href": ""
+              }
+            ],
+            "plainText": "輸入框支持：",
+            "caption": [],
+            "language": "",
+            "source": "",
+            "assetPath": "",
+            "tableColumns": [],
+            "tableHasColumnHeader": false,
+            "tableHasRowHeader": false,
+            "tableCells": {},
+            "children": []
+          },
+          {
+            "id": "3fdc1b36c40180e193e4fd3154558b95",
+            "type": "numbered_list",
+            "richText": [
+              {
+                "text": "@ 符號引用內容；",
+                "annotations": [],
+                "href": ""
+              }
+            ],
+            "plainText": "@ 符號引用內容；",
+            "caption": [],
+            "language": "",
+            "source": "",
+            "assetPath": "",
+            "tableColumns": [],
+            "tableHasColumnHeader": false,
+            "tableHasRowHeader": false,
+            "tableCells": {},
+            "children": []
+          },
+          {
+            "id": "3fdc1b36c4018042a4d9d2642a81463f",
+            "type": "numbered_list",
+            "richText": [
+              {
+                "text": "Shift-Enter 換行；",
+                "annotations": [],
+                "href": ""
+              }
+            ],
+            "plainText": "Shift-Enter 換行；",
+            "caption": [],
+            "language": "",
+            "source": "",
+            "assetPath": "",
+            "tableColumns": [],
+            "tableHasColumnHeader": false,
+            "tableHasRowHeader": false,
+            "tableCells": {},
+            "children": []
+          },
+          {
+            "id": "3fdc1b36c401800ca93defadcd3bf2b4",
+            "type": "numbered_list",
+            "richText": [
+              {
+                "text": "Enter 送出。",
+                "annotations": [],
+                "href": ""
+              }
+            ],
+            "plainText": "Enter 送出。",
+            "caption": [],
+            "language": "",
+            "source": "",
+            "assetPath": "",
+            "tableColumns": [],
+            "tableHasColumnHeader": false,
+            "tableHasRowHeader": false,
+            "tableCells": {},
+            "children": []
+          },
+          {
+            "id": "3fdc1b36c40180b092d5fc27122bb68d",
+            "type": "numbered_list",
+            "richText": [
+              {
+                "text": "附件和 Hidden message（Work with apps）",
+                "annotations": [],
+                "href": ""
+              }
+            ],
+            "plainText": "附件和 Hidden message（Work with apps）",
+            "caption": [],
+            "language": "",
+            "source": "",
+            "assetPath": "",
+            "tableColumns": [],
+            "tableHasColumnHeader": false,
+            "tableHasRowHeader": false,
+            "tableCells": {},
+            "children": []
+          },
+          {
+            "id": "c74fc63dc98e48419e547a3a9e9bed56",
+            "type": "sub_header",
+            "richText": [
+              {
+                "text": "用 ChatGPT，或接上自己的模型服務",
+                "annotations": [],
+                "href": ""
+              }
+            ],
+            "plainText": "用 ChatGPT，或接上自己的模型服務",
+            "caption": [],
+            "language": "",
+            "source": "",
+            "assetPath": "",
+            "tableColumns": [],
+            "tableHasColumnHeader": false,
+            "tableHasRowHeader": false,
+            "tableCells": {},
+            "children": []
+          },
+          {
+            "id": "fe9020887f4348aabec1785335f16824",
+            "type": "text",
+            "richText": [
+              {
+                "text": "SwiftChat 提供兩種使用方式。",
+                "annotations": [],
+                "href": ""
+              }
+            ],
+            "plainText": "SwiftChat 提供兩種使用方式。",
+            "caption": [],
+            "language": "",
+            "source": "",
+            "assetPath": "",
+            "tableColumns": [],
+            "tableHasColumnHeader": false,
+            "tableHasRowHeader": false,
+            "tableCells": {},
+            "children": []
+          },
+          {
+            "id": "bde75cfd8fcf4ed4b152488b7a2e86a7",
+            "type": "text",
+            "richText": [
+              {
+                "text": "ChatGPT",
+                "annotations": [
+                  "b"
+                ],
+                "href": ""
+              },
+              {
+                "text": " 使用你原本的 ChatGPT 帳號。安裝後，在設定的 Accounts & Services 選擇 Sign In to ChatGPT，即可開啟網站登入介面。這條路徑不需要另外填 API Key，帳號與訂閱仍由 ChatGPT 管理，對話歷史也由 ChatGPT 網站保存。",
+                "annotations": [],
+                "href": ""
+              }
+            ],
+            "plainText": "ChatGPT 使用你原本的 ChatGPT 帳號。安裝後，在設定的 Accounts & Services 選擇 Sign In to ChatGPT，即可開啟網站登入介面。這條路徑不需要另外填 API Key，帳號與訂閱仍由 ChatGPT 管理，對話歷史也由 ChatGPT 網站保存。",
+            "caption": [],
+            "language": "",
+            "source": "",
+            "assetPath": "",
+            "tableColumns": [],
+            "tableHasColumnHeader": false,
+            "tableHasRowHeader": false,
+            "tableCells": {},
+            "children": []
+          },
+          {
+            "id": "4b2b5d288a0d46fca76522cd7251f690",
+            "type": "text",
+            "richText": [
+              {
+                "text": "AIChat",
+                "annotations": [
+                  "b"
+                ],
+                "href": ""
+              },
+              {
+                "text": " 用來連接其他受支援的模型服務。如果你有自己的 API 服務，可以新增自訂服務，填入 Base URL、API Key 和模型資料。目前自訂服務可選 OpenAI Chat Completions、OpenAI Responses 或 Anthropic Messages 格式。",
+                "annotations": [],
+                "href": ""
+              }
+            ],
+            "plainText": "AIChat 用來連接其他受支援的模型服務。如果你有自己的 API 服務，可以新增自訂服務，填入 Base URL、API Key 和模型資料。目前自訂服務可選 OpenAI Chat Completions、OpenAI Responses 或 Anthropic Messages 格式。",
+            "caption": [],
+            "language": "",
+            "source": "",
+            "assetPath": "",
+            "tableColumns": [],
+            "tableHasColumnHeader": false,
+            "tableHasRowHeader": false,
+            "tableCells": {},
+            "children": []
+          },
+          {
+            "id": "028f2b9aa2f3483291946e907f283176",
+            "type": "text",
+            "richText": [
+              {
+                "text": "AIChat 的對話記錄保存在本機，服務憑證存入 macOS Keychain；發送的訊息與附件則交給你選擇的服務處理。ChatGPT 帳號登入和 AIChat 的服務設定分開管理。",
+                "annotations": [],
+                "href": ""
+              }
+            ],
+            "plainText": "AIChat 的對話記錄保存在本機，服務憑證存入 macOS Keychain；發送的訊息與附件則交給你選擇的服務處理。ChatGPT 帳號登入和 AIChat 的服務設定分開管理。",
+            "caption": [],
+            "language": "",
+            "source": "",
+            "assetPath": "",
+            "tableColumns": [],
+            "tableHasColumnHeader": false,
+            "tableHasRowHeader": false,
+            "tableCells": {},
+            "children": []
+          },
+          {
+            "id": "5ba5254cd3e049798c9257a6d0a2b6ad",
+            "type": "sub_header",
+            "richText": [
+              {
+                "text": "特色功能",
+                "annotations": [],
+                "href": ""
+              }
+            ],
+            "plainText": "特色功能",
+            "caption": [],
+            "language": "",
+            "source": "",
+            "assetPath": "",
+            "tableColumns": [],
+            "tableHasColumnHeader": false,
+            "tableHasRowHeader": false,
+            "tableCells": {},
+            "children": []
+          },
+          {
+            "id": "3fdc1b36c40180c094c1c4202b4b1624",
+            "type": "sub_sub_header",
+            "richText": [
+              {
+                "text": "work with apps",
+                "annotations": [],
+                "href": ""
+              }
+            ],
+            "plainText": "work with apps",
+            "caption": [],
+            "language": "",
+            "source": "",
+            "assetPath": "",
+            "tableColumns": [],
+            "tableHasColumnHeader": false,
+            "tableHasRowHeader": false,
+            "tableCells": {},
+            "children": []
+          },
+          {
+            "id": "3fdc1b36c401809b9e18d2aaf817fed4",
+            "type": "text",
+            "richText": [
+              {
+                "text": "Work with Apps 可以把其他 app 裡的文字帶進對話，當作 AI 回答問題的參考資料。目前可連接 Safari 的目前分頁、Terminal、TextEdit、Notes、Xcode，以及 Codex 對話摘錄和 macOS 原生版 Telegram 的近期聊天文字。",
+                "annotations": [],
+                "href": ""
+              }
+            ],
+            "plainText": "Work with Apps 可以把其他 app 裡的文字帶進對話，當作 AI 回答問題的參考資料。目前可連接 Safari 的目前分頁、Terminal、TextEdit、Notes、Xcode，以及 Codex 對話摘錄和 macOS 原生版 Telegram 的近期聊天文字。",
+            "caption": [],
+            "language": "",
+            "source": "",
+            "assetPath": "",
+            "tableColumns": [],
+            "tableHasColumnHeader": false,
+            "tableHasRowHeader": false,
+            "tableCells": {},
+            "children": []
+          },
+          {
+            "id": "8759f8e42861431e8ad8b4c981b36de7",
+            "type": "text",
+            "richText": [
+              {
+                "text": "例如，你可以連接 Telegram，請 AI 整理最近討論的重點和待辦；也可以帶入 Terminal 的錯誤輸出，接著追問原因。來源可以預覽並選擇可用的擷取範圍，送出前會再讀取一次，輸入框則保留你自己寫的問題。",
+                "annotations": [],
+                "href": ""
+              }
+            ],
+            "plainText": "例如，你可以連接 Telegram，請 AI 整理最近討論的重點和待辦；也可以帶入 Terminal 的錯誤輸出，接著追問原因。來源可以預覽並選擇可用的擷取範圍，送出前會再讀取一次，輸入框則保留你自己寫的問題。",
+            "caption": [],
+            "language": "",
+            "source": "",
+            "assetPath": "",
+            "tableColumns": [],
+            "tableHasColumnHeader": false,
+            "tableHasRowHeader": false,
+            "tableCells": {},
+            "children": []
+          },
+          {
+            "id": "f08dfe3891554abba11bb10f975c4795",
+            "type": "text",
+            "richText": [
+              {
+                "text": "這些附帶文字會傳給目前選擇的 AI 服務，並可能留在對話歷史裡。Telegram 以本機已同步的快取訊息為準，媒體檔案不會一併讀取；Terminal 等來源需要「輔助使用」權限，Safari 另需要「自動化」權限及允許 Apple Events 執行 JavaScript。",
+                "annotations": [],
+                "href": ""
+              }
+            ],
+            "plainText": "這些附帶文字會傳給目前選擇的 AI 服務，並可能留在對話歷史裡。Telegram 以本機已同步的快取訊息為準，媒體檔案不會一併讀取；Terminal 等來源需要「輔助使用」權限，Safari 另需要「自動化」權限及允許 Apple Events 執行 JavaScript。",
+            "caption": [],
+            "language": "",
+            "source": "",
+            "assetPath": "",
+            "tableColumns": [],
+            "tableHasColumnHeader": false,
+            "tableHasRowHeader": false,
+            "tableCells": {},
+            "children": []
+          },
+          {
+            "id": "3fdc1b36c401807694c6dc8a7421485c",
+            "type": "sub_sub_header",
+            "richText": [
+              {
+                "text": "CLM Harness",
+                "annotations": [],
+                "href": ""
+              }
+            ],
+            "plainText": "CLM Harness",
+            "caption": [],
+            "language": "",
+            "source": "",
+            "assetPath": "",
+            "tableColumns": [],
+            "tableHasColumnHeader": false,
+            "tableHasRowHeader": false,
+            "tableCells": {},
+            "children": []
+          },
+          {
+            "id": "3fdc1b36c40180b8869ddf81dbdfd581",
+            "type": "text",
+            "richText": [
+              {
+                "text": "CLM Harness 是 AIChat 的任務執行與上下文管理層。模型可以在 SwiftChat 提供的工作目錄中搜尋、讀寫檔案，搭配瀏覽器工具分步處理任務；需要時，也可以在對話裡生成計算器、比較介面等互動內容。",
+                "annotations": [],
+                "href": ""
+              }
+            ],
+            "plainText": "CLM Harness 是 AIChat 的任務執行與上下文管理層。模型可以在 SwiftChat 提供的工作目錄中搜尋、讀寫檔案，搭配瀏覽器工具分步處理任務；需要時，也可以在對話裡生成計算器、比較介面等互動內容。",
+            "caption": [],
+            "language": "",
+            "source": "",
+            "assetPath": "",
+            "tableColumns": [],
+            "tableHasColumnHeader": false,
+            "tableHasRowHeader": false,
+            "tableCells": {},
+            "children": []
+          },
+          {
+            "id": "3fdc1b36c4018011abbcde2becbd06ad",
+            "type": "text",
+            "richText": [
+              {
+                "text": "當長對話累積了大量工具輸出，模型可以整理自己的工作上下文，把過時的過程改寫成摘要，保留繼續任務需要的資料。SwiftChat 會提供上下文用量估算與容量提醒，整理後的版本用於後續模型請求；原始對話與完整工具結果仍會保留。",
+                "annotations": [],
+                "href": ""
+              }
+            ],
+            "plainText": "當長對話累積了大量工具輸出，模型可以整理自己的工作上下文，把過時的過程改寫成摘要，保留繼續任務需要的資料。SwiftChat 會提供上下文用量估算與容量提醒，整理後的版本用於後續模型請求；原始對話與完整工具結果仍會保留。",
+            "caption": [],
+            "language": "",
+            "source": "",
+            "assetPath": "",
+            "tableColumns": [],
+            "tableHasColumnHeader": false,
+            "tableHasRowHeader": false,
+            "tableCells": {},
+            "children": []
+          },
+          {
+            "id": "3fdc1b36c40180a5b4c8e11ef1581bf4",
+            "type": "text",
+            "richText": [
+              {
+                "text": "這項能力用在 AIChat，所選模型需要支援工具呼叫，並提供上下文容量與最大輸出長度資訊。",
+                "annotations": [],
+                "href": ""
+              }
+            ],
+            "plainText": "這項能力用在 AIChat，所選模型需要支援工具呼叫，並提供上下文容量與最大輸出長度資訊。",
+            "caption": [],
+            "language": "",
+            "source": "",
+            "assetPath": "",
+            "tableColumns": [],
+            "tableHasColumnHeader": false,
+            "tableHasRowHeader": false,
+            "tableCells": {},
+            "children": []
+          },
+          {
+            "id": "8aa1218603164f178fbe443b6ffb7a7f",
+            "type": "sub_sub_header",
+            "richText": [
+              {
+                "text": "In-app Browser",
+                "annotations": [],
+                "href": ""
+              }
+            ],
+            "plainText": "In-app Browser",
+            "caption": [],
+            "language": "",
+            "source": "",
+            "assetPath": "",
+            "tableColumns": [],
+            "tableHasColumnHeader": false,
+            "tableHasRowHeader": false,
+            "tableCells": {},
+            "children": []
+          },
+          {
+            "id": "3f09c3325e5c42958956203d4f3ebc40",
+            "type": "text",
+            "richText": [
+              {
+                "text": "SwiftChat 內建多分頁瀏覽器，可以在獨立視窗中開啟網頁，和聊天視窗並排使用，方便一邊查資料、一邊繼續對話。",
+                "annotations": [],
+                "href": ""
+              }
+            ],
+            "plainText": "SwiftChat 內建多分頁瀏覽器，可以在獨立視窗中開啟網頁，和聊天視窗並排使用，方便一邊查資料、一邊繼續對話。",
+            "caption": [],
+            "language": "",
+            "source": "",
+            "assetPath": "",
+            "tableColumns": [],
+            "tableHasColumnHeader": false,
+            "tableHasRowHeader": false,
+            "tableCells": {},
+            "children": []
+          },
+          {
+            "id": "aa7b7afeab3e4953a8728f567c9faf3c",
+            "type": "text",
+            "richText": [
+              {
+                "text": "在 AIChat 中，支援工具呼叫的模型還能操作這個瀏覽器：開啟或切換分頁、讀取頁面、點擊連結、填入文字，以及取得頁面截圖。你看到的頁面，就是模型正在操作的頁面。例如請 AI 打開幾個產品頁，讀取規格後整理比較；工具取得的頁面文字和截圖會進入目前對話的上下文。",
+                "annotations": [],
+                "href": ""
+              }
+            ],
+            "plainText": "在 AIChat 中，支援工具呼叫的模型還能操作這個瀏覽器：開啟或切換分頁、讀取頁面、點擊連結、填入文字，以及取得頁面截圖。你看到的頁面，就是模型正在操作的頁面。例如請 AI 打開幾個產品頁，讀取規格後整理比較；工具取得的頁面文字和截圖會進入目前對話的上下文。",
+            "caption": [],
+            "language": "",
+            "source": "",
+            "assetPath": "",
+            "tableColumns": [],
+            "tableHasColumnHeader": false,
+            "tableHasRowHeader": false,
+            "tableCells": {},
+            "children": []
+          },
+          {
+            "id": "ee9ee60353a841ddb9f0fb90c51516d9",
+            "type": "sub_header",
+            "richText": [
+              {
+                "text": "下載 macOS Alpha",
+                "annotations": [],
+                "href": ""
+              }
+            ],
+            "plainText": "下載 macOS Alpha",
+            "caption": [],
+            "language": "",
+            "source": "",
+            "assetPath": "",
+            "tableColumns": [],
+            "tableHasColumnHeader": false,
+            "tableHasRowHeader": false,
+            "tableCells": {},
+            "children": []
+          },
+          {
+            "id": "98684649ea82432e99230d208b61ac75",
+            "type": "text",
+            "richText": [
+              {
+                "text": "SwiftChat 目前提供 macOS Alpha 下載，需要 ",
+                "annotations": [],
+                "href": ""
+              },
+              {
+                "text": "macOS 26 或以上版本",
+                "annotations": [
+                  "b"
+                ],
+                "href": ""
+              },
+              {
+                "text": "。Alpha 還在持續調整，暫時沒有定價計劃。ChatGPT 或其他模型服務本身的費用，仍依你使用的帳號與方案計算。",
+                "annotations": [],
+                "href": ""
+              }
+            ],
+            "plainText": "SwiftChat 目前提供 macOS Alpha 下載，需要 macOS 26 或以上版本。Alpha 還在持續調整，暫時沒有定價計劃。ChatGPT 或其他模型服務本身的費用，仍依你使用的帳號與方案計算。",
+            "caption": [],
+            "language": "",
+            "source": "",
+            "assetPath": "",
+            "tableColumns": [],
+            "tableHasColumnHeader": false,
+            "tableHasRowHeader": false,
+            "tableCells": {},
+            "children": []
+          },
+          {
+            "id": "361bba3ca9ef4a4da0698f47c2b0489f",
+            "type": "text",
+            "richText": [
+              {
+                "text": "SwiftChat 是獨立開發的應用，與 OpenAI 沒有隸屬關係。應用本體目前閉源，ChatGPT Web adapter 則以 MIT 授權公開，可以查看它的",
+                "annotations": [],
+                "href": ""
+              },
+              {
+                "text": "整合實作",
+                "annotations": [
+                  "a"
+                ],
+                "href": "https://github.com/qoli/SwiftChat-Public/tree/main/adapter"
+              },
+              {
+                "text": "。",
+                "annotations": [],
+                "href": ""
+              }
+            ],
+            "plainText": "SwiftChat 是獨立開發的應用，與 OpenAI 沒有隸屬關係。應用本體目前閉源，ChatGPT Web adapter 則以 MIT 授權公開，可以查看它的整合實作。",
+            "caption": [],
+            "language": "",
+            "source": "",
+            "assetPath": "",
+            "tableColumns": [],
+            "tableHasColumnHeader": false,
+            "tableHasRowHeader": false,
+            "tableCells": {},
+            "children": []
+          },
+          {
+            "id": "c898b655849b4398aed43220ba73ef8c",
+            "type": "bulleted_list",
+            "richText": [
+              {
+                "text": "SwiftChat 官網",
+                "annotations": [
+                  "a"
+                ],
+                "href": "https://swiftchat.ronniewong.cc/"
+              }
+            ],
+            "plainText": "SwiftChat 官網",
+            "caption": [],
+            "language": "",
+            "source": "",
+            "assetPath": "",
+            "tableColumns": [],
+            "tableHasColumnHeader": false,
+            "tableHasRowHeader": false,
+            "tableCells": {},
+            "children": []
+          },
+          {
+            "id": "5089cf211091474c93ed43400e1559ef",
+            "type": "bulleted_list",
+            "richText": [
+              {
+                "text": "下載與版本記錄",
+                "annotations": [
+                  "a"
+                ],
+                "href": "https://github.com/qoli/SwiftChat-Public/releases"
+              }
+            ],
+            "plainText": "下載與版本記錄",
+            "caption": [],
+            "language": "",
+            "source": "",
+            "assetPath": "",
+            "tableColumns": [],
+            "tableHasColumnHeader": false,
+            "tableHasRowHeader": false,
+            "tableCells": {},
+            "children": []
+          },
+          {
+            "id": "984955c87d5a47a583e3a4febbe4e389",
+            "type": "bulleted_list",
+            "richText": [
+              {
+                "text": "回報問題與提供回饋",
+                "annotations": [
+                  "a"
+                ],
+                "href": "https://github.com/qoli/SwiftChat-Public/issues"
+              }
+            ],
+            "plainText": "回報問題與提供回饋",
+            "caption": [],
+            "language": "",
+            "source": "",
+            "assetPath": "",
+            "tableColumns": [],
+            "tableHasColumnHeader": false,
+            "tableHasRowHeader": false,
+            "tableCells": {},
+            "children": []
+          }
+        ]
+      }
+    }
+  ]
+}

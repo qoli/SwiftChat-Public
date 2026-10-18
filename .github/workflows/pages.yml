@@ -19,6 +19,19 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: qoli/RonnieCC
+          path: .ronniecc-source
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify Blog generation
+        run: node --test website/scripts/sync-blog.test.mjs
+      - name: Sync SwiftChat Blog
+        env:
+          RONNIECC_REPO: ${{ github.workspace }}/.ronniecc-source
+        run: node website/scripts/sync-blog.mjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

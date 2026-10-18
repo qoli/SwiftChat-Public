@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light"><title>SwiftChat：讓 ChatGPT 在 Mac 上聊得更順手 — SwiftChat Blog</title>
+<meta name="description" content="因為 ChatGPT Classic 進入不維護狀態了。我的原始工作風格被打斷了。"><link rel="canonical" href="https://ronniewong.cc/blog/swiftchat-mac-ai-chat-3fdc1b36/">
+<meta property="og:title" content="SwiftChat：讓 ChatGPT 在 Mac 上聊得更順手 — SwiftChat Blog"><meta property="og:description" content="因為 ChatGPT Classic 進入不維護狀態了。我的原始工作風格被打斷了。">
+<meta property="og:type" content="article"><meta property="og:url" content="https://swiftchat.ronniewong.cc/blog/swiftchat-mac-ai-chat-3fdc1b36/">
+<link rel="icon" href="/assets/icon.png"><link rel="stylesheet" href="/assets/site.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"SwiftChat：讓 ChatGPT 在 Mac 上聊得更順手","description":"因為 ChatGPT Classic 進入不維護狀態了。我的原始工作風格被打斷了。","url":"https://swiftchat.ronniewong.cc/blog/swiftchat-mac-ai-chat-3fdc1b36/","mainEntityOfPage":"https://ronniewong.cc/blog/swiftchat-mac-ai-chat-3fdc1b36/","isBasedOn":"https://ronniewong.cc/blog/swiftchat-mac-ai-chat-3fdc1b36/","datePublished":"2026-10-18","dateModified":"2026-10-18T08:34:35.231Z","author":{"@type":"Person","name":"Ronnie Wong","url":"https://ronniewong.cc"}}</script>
+</head><body><a class="skip" href="#main">Skip to content</a>
+<header><a class="brand" href="/"><img src="/assets/icon.png" alt="" width="44" height="44">SwiftChat</a>
+<nav aria-label="Main navigation"><a href="/blog/" aria-current="page">Blog</a><a href="/changelog.html">Changelog</a><a href="https://github.com/qoli/SwiftChat-Public">GitHub</a><a href="/support.html">Support</a><a href="/privacy.html">Privacy</a></nav></header>
+<main id="main" class="document blog"><article><div class="blog-heading"><a class="blog-back" href="/blog/">← SwiftChat Blog</a><h1>SwiftChat：讓 ChatGPT 在 Mac 上聊得更順手</h1><p class="blog-meta"><time datetime="2026-10-18">2026-10-18</time> · AI,macOS,Product</p></div>
+<div class="blog-prose"><figure class="blog-media"><img src="/content/blog-assets/3fdc1b36c40181918fb0f53680b97cd5/3fdc1b36c40180e8b534e061c3b1cfa2-telegram.png" alt="telegram.png" loading="lazy"></figure>
+<h3>我為何寫了 SwiftChat</h3>
+<p>因為 ChatGPT Classic 進入不維護狀態了。我的原始工作風格被打斷了。</p>
+<p>SwiftChat 是我正在開發的 macOS AI 聊天應用。它把 ChatGPT Web、其他模型服務和 Mac 的原生操作介面放在一起，讓你整理對話、寫問題，也能帶入其他 app 裡正在處理的文字。</p>
+<h3>為何不用 ChatGPT Web </h3>
+<p>ChatGPT Web 做得一塌糊塗。而且，我需要一個迷你的窗口，傳統的 ChatGPT Client 體驗。</p>
+<p>所以，我只能自己寫一個。</p>
+<h3>輸入框支持什麼？</h3>
+<p>輸入框支持：</p>
+<ol><li>@ 符號引用內容；</li><li>Shift-Enter 換行；</li><li>Enter 送出。</li><li>附件和 Hidden message（Work with apps）</li></ol>
+<h3>用 ChatGPT，或接上自己的模型服務</h3>
+<p>SwiftChat 提供兩種使用方式。</p>
+<p><strong>ChatGPT</strong> 使用你原本的 ChatGPT 帳號。安裝後，在設定的 Accounts &amp; Services 選擇 Sign In to ChatGPT，即可開啟網站登入介面。這條路徑不需要另外填 API Key，帳號與訂閱仍由 ChatGPT 管理，對話歷史也由 ChatGPT 網站保存。</p>
+<p><strong>AIChat</strong> 用來連接其他受支援的模型服務。如果你有自己的 API 服務，可以新增自訂服務，填入 Base URL、API Key 和模型資料。目前自訂服務可選 OpenAI Chat Completions、OpenAI Responses 或 Anthropic Messages 格式。</p>
+<p>AIChat 的對話記錄保存在本機，服務憑證存入 macOS Keychain；發送的訊息與附件則交給你選擇的服務處理。ChatGPT 帳號登入和 AIChat 的服務設定分開管理。</p>
+<h3>特色功能</h3>
+<h4>work with apps</h4>
+<p>Work with Apps 可以把其他 app 裡的文字帶進對話，當作 AI 回答問題的參考資料。目前可連接 Safari 的目前分頁、Terminal、TextEdit、Notes、Xcode，以及 Codex 對話摘錄和 macOS 原生版 Telegram 的近期聊天文字。</p>
+<p>例如，你可以連接 Telegram，請 AI 整理最近討論的重點和待辦；也可以帶入 Terminal 的錯誤輸出，接著追問原因。來源可以預覽並選擇可用的擷取範圍，送出前會再讀取一次，輸入框則保留你自己寫的問題。</p>
+<p>這些附帶文字會傳給目前選擇的 AI 服務，並可能留在對話歷史裡。Telegram 以本機已同步的快取訊息為準，媒體檔案不會一併讀取；Terminal 等來源需要「輔助使用」權限，Safari 另需要「自動化」權限及允許 Apple Events 執行 JavaScript。</p>
+<h4>CLM Harness</h4>
+<p>CLM Harness 是 AIChat 的任務執行與上下文管理層。模型可以在 SwiftChat 提供的工作目錄中搜尋、讀寫檔案，搭配瀏覽器工具分步處理任務；需要時，也可以在對話裡生成計算器、比較介面等互動內容。</p>
+<p>當長對話累積了大量工具輸出，模型可以整理自己的工作上下文，把過時的過程改寫成摘要，保留繼續任務需要的資料。SwiftChat 會提供上下文用量估算與容量提醒，整理後的版本用於後續模型請求；原始對話與完整工具結果仍會保留。</p>
+<p>這項能力用在 AIChat，所選模型需要支援工具呼叫，並提供上下文容量與最大輸出長度資訊。</p>
+<h4>In-app Browser</h4>
+<p>SwiftChat 內建多分頁瀏覽器，可以在獨立視窗中開啟網頁，和聊天視窗並排使用，方便一邊查資料、一邊繼續對話。</p>
+<p>在 AIChat 中，支援工具呼叫的模型還能操作這個瀏覽器：開啟或切換分頁、讀取頁面、點擊連結、填入文字，以及取得頁面截圖。你看到的頁面，就是模型正在操作的頁面。例如請 AI 打開幾個產品頁，讀取規格後整理比較；工具取得的頁面文字和截圖會進入目前對話的上下文。</p>
+<h3>下載 macOS Alpha</h3>
+<p>SwiftChat 目前提供 macOS Alpha 下載，需要 <strong>macOS 26 或以上版本</strong>。Alpha 還在持續調整，暫時沒有定價計劃。ChatGPT 或其他模型服務本身的費用，仍依你使用的帳號與方案計算。</p>
+<p>SwiftChat 是獨立開發的應用，與 OpenAI 沒有隸屬關係。應用本體目前閉源，ChatGPT Web adapter 則以 MIT 授權公開，可以查看它的<a href="https://github.com/qoli/SwiftChat-Public/tree/main/adapter">整合實作</a>。</p>
+<ul><li><a href="https://swiftchat.ronniewong.cc/">SwiftChat 官網</a></li><li><a href="https://github.com/qoli/SwiftChat-Public/releases">下載與版本記錄</a></li><li><a href="https://github.com/qoli/SwiftChat-Public/issues">回報問題與提供回饋</a></li></ul></div>
+<div class="blog-source"><a href="https://ronniewong.cc/blog/swiftchat-mac-ai-chat-3fdc1b36/">RonnieCC 原文</a><a href="https://www.notion.so/qoli/swiftchat-%E8%AE%93-chatgpt-%E5%9C%A8-mac-%E4%B8%8A%E8%81%8A%E5%BE%97%E6%9B%B4%E9%A0%86%E6%89%8B-3fdc1b36c40181918fb0f53680b97cd5?v=e90c1b36c401831d99bf08f10dcbae9b&amp;source=copy_link">Notion 原稿</a></div></article></main>
+<footer><span>© 2026 Ronnie Wong · Made for Mac.</span><span>Independent software. Not affiliated with OpenAI.</span></footer>
+</body></html>
