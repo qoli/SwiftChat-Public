@@ -3,14 +3,14 @@
   "channel": "alpha",
   "platform": "macos",
   "version": "0.1.0",
-  "build": "51",
-  "tag": "v0.1.0-alpha.51",
-  "publishedAt": "2026-10-17T06:17:48.319525Z",
-  "releaseUrl": "https://github.com/qoli/SwiftChat-Public/releases/tag/v0.1.0-alpha.51",
-  "downloadUrl": "https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.51/SwiftChat-0.1.0-51-macOS.zip",
-  "sha256": "01a48b331094b6fd4edb39b68140de9e8dd18f48046d5b380d4bf5c08d1ec2cc",
-  "length": 26906915,
-  "sparkleEdSignature": "mCNs6U1h1r6aTdohw87M9ZK6FDnyb903p0AJB4Id8WESrbozVsvSQ4uHkPBMCTMGPq/DaFOoU8q7XqwqoY6qBQ==",
+  "build": "52",
+  "tag": "v0.1.0-alpha.52",
+  "publishedAt": "2026-10-18T07:43:27.936920Z",
+  "releaseUrl": "https://github.com/qoli/SwiftChat-Public/releases/tag/v0.1.0-alpha.52",
+  "downloadUrl": "https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.52/SwiftChat-0.1.0-52-macOS.zip",
+  "sha256": "1917f23b42fd84615026a84e0ebfad940bc76241acef22a4aa1c10651c79245e",
+  "length": 26907378,
+  "sparkleEdSignature": "CeFpkZ6i/q77my1ep7uU2govHej+CvcDsLGWza/7rrK9ZKTvKtGDPDpsYnGEb7pPNQGJw8D12ekTGMhC8TfcDg==",
   "minimumSystemVersion": "26.0",
-  "notes": "- \u4fee\u5fa9 ChatGPT \u5c0d\u8a71\u4e2d\u7684\u96fb\u5b50\u90f5\u4ef6\u8349\u7a3f\u8207\u5beb\u4f5c\u5340\u584a\u7121\u6cd5\u986f\u793a\u7684\u554f\u984c:\u73fe\u5728\u6703\u4ee5\u5c08\u5c6c\u5361\u7247\u5448\u73fe\u4e3b\u65e8\u8207\u5167\u6587,\u4e26\u53ef\u76f4\u63a5\u8907\u88fd\u3002\n- \u4fee\u6b63\u7a0b\u5f0f\u78bc\u5340\u584a\u8907\u88fd\u6309\u9215\u7684\u72c0\u614b\u986f\u793a,\u8907\u88fd\u67d0\u4e00\u5340\u584a\u5f8c\u4e0d\u6703\u518d\u8b93\u5176\u4ed6\u5340\u584a\u7684\u6309\u9215\u540c\u6642\u986f\u793a\u70ba\u5df2\u8907\u88fd\u3002"
+  "notes": "- \u4fee\u6b63 ChatGPT \u5c0d\u8a71\u4e2d,\u7e7c\u7e8c\u7522\u751f\u7684\u56de\u7b54\u5167\u5bb9\u53ef\u80fd\u51fa\u73fe\u5728\u601d\u8003\u904e\u7a0b\u4e0a\u65b9\u7684\u554f\u984c,\u73fe\u5728\u5f8c\u7e8c\u8f38\u51fa\u6703\u6b63\u78ba\u986f\u793a\u5728\u601d\u8003\u5167\u5bb9\u4e4b\u4e0b\u3002"
 }
