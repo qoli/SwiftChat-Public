@@ -1,5 +1,7 @@
 # SwiftChat
 
+![SwiftChat app overview](website/dist/assets/telegram.png)
+
 SwiftChat is a native Mac app for AI conversations, ChatGPT Web, browsing, and
 read-only context from other apps. This repository is its public distribution
 and collaboration home. Public distribution currently targets **macOS only**.
