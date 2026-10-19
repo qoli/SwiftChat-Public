@@ -3,14 +3,14 @@
   "channel": "alpha",
   "platform": "macos",
   "version": "0.1.0",
-  "build": "53",
-  "tag": "v0.1.0-alpha.53",
-  "publishedAt": "2026-10-19T19:48:38.690836Z",
-  "releaseUrl": "https://github.com/qoli/SwiftChat-Public/releases/tag/v0.1.0-alpha.53",
-  "downloadUrl": "https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.53/SwiftChat-0.1.0-53-macOS.zip",
-  "sha256": "e2205b4df0e654bd2ccd3f973f32907c4779e8fb1776faed818cae544e6cc123",
-  "length": 27027982,
-  "sparkleEdSignature": "RlJlXwQ/hwUR1ozUkRYxSWXcIArz1z96mu6+iUBwr7cGryUx8OGzsEZnsK3tfRvkJEZS6F4U/49EDEo8idePDw==",
+  "build": "54",
+  "tag": "v0.1.0-alpha.54",
+  "publishedAt": "2026-10-19T22:42:41.165825Z",
+  "releaseUrl": "https://github.com/qoli/SwiftChat-Public/releases/tag/v0.1.0-alpha.54",
+  "downloadUrl": "https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.54/SwiftChat-0.1.0-54-macOS.zip",
+  "sha256": "ad3206122590d0255de02f7b12cc758906bc51314487ef508e91a5bc47a60fa4",
+  "length": 27027878,
+  "sparkleEdSignature": "MxBfWEtmd2l7F/dzegbIIQ1/ig9qi/VcHkCLPeILLlBzQqMVcT6NaqlQSdLBwL6tQ9K8Wa6VNBMFQ6nvvxVfBQ==",
   "minimumSystemVersion": "26.0",
-  "notes": "- \u8a2d\u5b9a\u65b0\u589e\u300cBrowser\u300d\u9801\u9762\uff0c\u53ef\u9078\u64c7\u700f\u89bd\u5668\u6a21\u5f0f\uff08\u300cCDP \u512a\u5148\u300d\u6216\u300c\u53ea\u7528\u5167\u7f6e\u700f\u89bd\u5668\u300d\uff09\u3001\u8a2d\u5b9a\u5916\u90e8\u700f\u89bd\u5668\u7684 CDP \u4f4d\u5740\u4e26\u6e2c\u8a66\u9023\u7dda\uff0c\u4e5f\u80fd\u67e5\u770b\u6700\u8fd1\u4e00\u6b21\u700f\u89bd\u5668\u4efb\u52d9\u7684\u72c0\u614b\u3002\n- AI \u5c0d\u8a71\u7684\u700f\u89bd\u5668\u5de5\u5177\u73fe\u5728\u53ef\u64cd\u4f5c\u5916\u90e8 Chromium \u700f\u89bd\u5668\uff0c\u5206\u9801\u7ba1\u7406\u3001\u5c0e\u89bd\u3001\u5feb\u7167\u3001\u9ede\u64ca\u3001\u8f38\u5165\u3001\u6309\u9375\u3001\u7b49\u5f85\u3001\u57f7\u884c JavaScript \u8207\u622a\u5716\u90fd\u8207\u5167\u7f6e\u700f\u89bd\u5668\u4e00\u81f4\uff1b\u5916\u90e8\u700f\u89bd\u5668\u9700\u5148\u958b\u555f\u9060\u7aef\u5075\u932f\u3002\n- \u8a2d\u5b9a\u6703\u5728\u4e0b\u4e00\u500b\u700f\u89bd\u5668\u4efb\u52d9\u751f\u6548\u3002\u9078\u64c7\u300cCDP \u512a\u5148\u300d\u6642\uff0c\u53ea\u6709\u4efb\u52d9\u958b\u59cb\u7684\u9996\u6b21\u9023\u7dda\u5931\u6557\u624d\u6703\u6539\u7528\u5167\u7f6e\u700f\u89bd\u5668\uff0c\u9023\u7dda\u4e2d\u65b7\u6216\u52d5\u4f5c\u5931\u6557\u4e0d\u6703\u4e2d\u9014\u66f4\u63db\u700f\u89bd\u5668\u3002\n- \u5de5\u5177\u8f38\u51fa\u6703\u6a19\u793a\u76ee\u524d\u4f7f\u7528\u7684\u700f\u89bd\u5668\u3002\u4f7f\u7528 CDP \u6642\u9700\u5148\u9078\u53d6\u65e2\u6709\u5206\u9801\uff0c\u672a\u9078\u53d6\u5206\u9801\u5c31\u5c0e\u89bd\u6703\u958b\u555f\u65b0\u5206\u9801\u3002"
+  "notes": "\u4fee\u6b63 macOS \u4e0a\u700f\u89bd x.com \u6642\uff0c\u5207\u63db\u9801\u9762\u53ef\u80fd\u56e0\u524d\u4e00\u500b\u9801\u9762\u4ecd\u5728\u5feb\u53d6\u800c\u5361\u4f4f\u7684\u554f\u984c\u3002"
 }
