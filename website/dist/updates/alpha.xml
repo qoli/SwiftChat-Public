@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0"><channel><title>SwiftChat Alpha</title><link>https://swiftchat.ronniewong.cc</link><description>SwiftChat macOS alpha updates</description><item><title>SwiftChat 0.1.0 (58) Alpha</title><description>- 回應過程中的思考與工具活動會顯示目前進度，例如正在執行哪個工具，等待時更容易掌握狀態。
-- 收合的活動標題會帶出最新的思考或工具內容，過長時以省略方式顯示。
-- 同一個工具呼叫的請求與結果合併在同一則活動中，不再分成兩筆出現。
-- 工具活動會標示成功、已收到結果或已完成等狀態。
-- 活動中的思考段落改為各自可展開的項目，方便個別查看內容。</description><sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion><enclosure url="https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.58/SwiftChat-0.1.0-58-macOS.zip" length="27048269" type="application/octet-stream" sparkle:version="58" sparkle:shortVersionString="0.1.0" sparkle:edSignature="TPNnYCn+KcXvLPCjdpqrC1AtSUyKFN3+VTYLyX5CMaeXf2ITKv5Xj5D66E/ob658gnqNImk1W+7bKT6UQTC4Aw==" /></item></channel></rss>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0"><channel><title>SwiftChat Alpha</title><link>https://swiftchat.ronniewong.cc</link><description>SwiftChat macOS alpha updates</description><item><title>SwiftChat 0.1.0 (59) Alpha</title><description>- ChatGPT Desktop 無法自動確認目前顯示的 Codex 對話時，可改從本機對話清單手動選擇要帶入的對話。
+- 選擇視窗可依名稱或對話 ID 搜尋，也可直接貼上 Codex 對話連結找到該對話；同名對話會同時顯示各自的 ID 以利區分。
+- 手動選擇會持續套用，切換回自動跟隨可見對話後才恢復自動偵測。
+- 對話清單可重新整理；載入失敗或查無結果時會顯示提示，已選的對話若不在清單中則提示重新選擇。
+- 帶入的上下文會標示為手動選擇的 Codex 對話，並附上對話 ID。</description><sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion><enclosure url="https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.59/SwiftChat-0.1.0-59-macOS.zip" length="27121197" type="application/octet-stream" sparkle:version="59" sparkle:shortVersionString="0.1.0" sparkle:edSignature="5lcvdhqspfMaO4/YMp+jVXN6Qni4XMhtM7ZOKLq4bvuK8qyWkMkhwzA1ZKDIuVYL9xBidHm73dnNjUSHMnlJDw==" /></item></channel></rss>
