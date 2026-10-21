@@ -1,7 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0"><channel><title>SwiftChat Alpha</title><link>https://swiftchat.ronniewong.cc</link><description>SwiftChat macOS alpha updates</description><item><title>SwiftChat 0.1.0 (57) Alpha</title><description>- 應用程式選單新增 Developer Website、SwiftChat Website 與 Feedback on GitHub，可直接開啟開發者網站、SwiftChat 網站與問題回報頁面。此選單項目僅在 macOS 提供。
-- ChatGPT 與 AIChat 的對話介面在思考中、處理狀態或工具狀態變更時，改以平順的文字轉換呈現，不再瞬間跳換。
-- 生成中的回覆只讓新出現的文字淡入，已經顯示的內容維持不動。
-- 活動、推理與工具區塊的展開與收合改為動畫過渡，內容較長時也能平順展開。
-- 上述動態效果期間會保留目前的閱讀位置，不會被帶回對話底部。
-- 這些效果遵循 macOS 的「減少動態效果」設定；開啟設定或在動畫途中變更時，會立即以無動畫方式呈現。</description><sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion><enclosure url="https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.57/SwiftChat-0.1.0-57-macOS.zip" length="27046787" type="application/octet-stream" sparkle:version="57" sparkle:shortVersionString="0.1.0" sparkle:edSignature="h5r3U6C163b0wGX+1IKizicyBgXY7Iy/3RrdDtha3uXgd0gWi9jUmD3LRVM1J65FyAuhpI/mKGAM9yy0wIGVDQ==" /></item></channel></rss>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0"><channel><title>SwiftChat Alpha</title><link>https://swiftchat.ronniewong.cc</link><description>SwiftChat macOS alpha updates</description><item><title>SwiftChat 0.1.0 (58) Alpha</title><description>- 回應過程中的思考與工具活動會顯示目前進度，例如正在執行哪個工具，等待時更容易掌握狀態。
+- 收合的活動標題會帶出最新的思考或工具內容，過長時以省略方式顯示。
+- 同一個工具呼叫的請求與結果合併在同一則活動中，不再分成兩筆出現。
+- 工具活動會標示成功、已收到結果或已完成等狀態。
+- 活動中的思考段落改為各自可展開的項目，方便個別查看內容。</description><sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion><enclosure url="https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.58/SwiftChat-0.1.0-58-macOS.zip" length="27048269" type="application/octet-stream" sparkle:version="58" sparkle:shortVersionString="0.1.0" sparkle:edSignature="TPNnYCn+KcXvLPCjdpqrC1AtSUyKFN3+VTYLyX5CMaeXf2ITKv5Xj5D66E/ob658gnqNImk1W+7bKT6UQTC4Aw==" /></item></channel></rss>
