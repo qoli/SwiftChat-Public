@@ -21,6 +21,7 @@ async function fixture(t) {
     id: "mirror", title: 'Chat <script> & "Mac"', slug: "native-chat-abcd1234", legacySlugs: ["old-chat"],
     writtenDate: "2026-10-18", tag: "AI, macOS", subsites: ["SwiftChat"],
     notionUrl: "https://www.notion.so/mirror",
+    socialImage: { url: "https://ronniewong.cc/social/blog/native-chat-abcd1234-test.png", width: 1200, height: 630, alt: 'Chat <script> & "Mac" — Ronnie Wong' },
     content: { blocks: [
       { type: "text", plainText: "Native conversations", richText: [{ text: "Native conversations", annotations: ["b"] }] },
       { type: "numbered_list", richText: [{ text: "Context" }], children: [
@@ -53,6 +54,9 @@ test("routes only public subsite targets and preserves canonical ownership, nest
   assert.match(article, /<strong>Native conversations<\/strong>/);
   assert.match(article, /Chat &lt;script&gt; &amp; &quot;Mac&quot;/);
   assert.match(article, /src="\/content\/blog-assets\/post\/screenshot.png"/);
+  assert.match(article, /property="og:image" content="https:\/\/ronniewong.cc\/social\/blog\/native-chat-abcd1234-test.png"/);
+  assert.match(article, /name="twitter:image" content="https:\/\/ronniewong.cc\/social\/blog\/native-chat-abcd1234-test.png"/);
+  assert.match(article, /property="og:image:alt" content="Chat &lt;script&gt; &amp; &quot;Mac&quot; — Ronnie Wong"/);
   assert.equal(await read("content/blog-assets/post/screenshot.png"), "image fixture");
   const index = await read("blog/index.html");
   assert.match(index, /href="native-chat-abcd1234\/"/);
@@ -97,4 +101,15 @@ test("removing a subsite selection removes stale articles and assets", async (t)
   await assert.rejects(readFile(path.join(options.outputRoot, "blog/native-chat-abcd1234/index.html")), { code: "ENOENT" });
   await assert.rejects(readFile(path.join(options.outputRoot, "content/blog-assets/post/screenshot.png")), { code: "ENOENT" });
   assert.match(await readFile(path.join(options.outputRoot, "blog/index.html"), "utf8"), /新文章即將登場/);
+});
+
+test("missing canonical social metadata fails before replacing the usable mirror", async (t) => {
+  const options = await fixture(t);
+  await syncBlog(options);
+  const index = path.join(options.outputRoot, "blog/index.html");
+  const previous = await readFile(index, "utf8");
+  delete options.source.posts[0].socialImage;
+  await writeFile(options.sourceFile, JSON.stringify(options.source));
+  await assert.rejects(syncBlog(options), /Missing RonnieCC socialImage metadata/);
+  assert.equal(await readFile(index, "utf8"), previous);
 });

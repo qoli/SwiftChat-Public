@@ -2,6 +2,7 @@
 import { createHash } from "node:crypto";
 import { copyFile, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
+import socialImages from "../content/social-images.json" with { type: "json" };
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const websiteRoot = fileURLToPath(new URL("../", import.meta.url));
@@ -87,7 +88,7 @@ function renderBlocks(blocks = []) {
   return result.join("\n");
 }
 
-function shell({ title, summary, canonicalUrl, url = canonicalUrl, type = "website", main, schema, stylesheet }) {
+function shell({ title, summary, canonicalUrl, url = canonicalUrl, type = "website", main, schema, stylesheet, image = socialImages["/blog/"] }) {
   return `<!doctype html>
 <html lang="zh-Hant"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -95,6 +96,11 @@ function shell({ title, summary, canonicalUrl, url = canonicalUrl, type = "websi
 <meta name="description" content="${escapeHtml(summary)}"><link rel="canonical" href="${escapeHtml(canonicalUrl)}">
 <meta property="og:title" content="${escapeHtml(title)}"><meta property="og:description" content="${escapeHtml(summary)}">
 <meta property="og:type" content="${type}"><meta property="og:url" content="${escapeHtml(url)}">
+<meta property="og:site_name" content="SwiftChat">
+<meta property="og:image" content="${escapeHtml(image.url)}"><meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="${image.width}"><meta property="og:image:height" content="${image.height}"><meta property="og:image:alt" content="${escapeHtml(image.alt)}">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${escapeHtml(title)}"><meta name="twitter:description" content="${escapeHtml(summary)}">
+<meta name="twitter:image" content="${escapeHtml(image.url)}"><meta name="twitter:image:alt" content="${escapeHtml(image.alt)}">
 <link rel="icon" href="/assets/icon.png"><link rel="stylesheet" href="${stylesheet}">
 <script type="application/ld+json">${JSON.stringify(schema).replaceAll("<", "\\u003c")}</script>
 </head><body><a class="skip" href="#main">Skip to content</a>
@@ -119,6 +125,7 @@ function renderIndex(posts, stylesheet) {
 function renderArticle(post, stylesheet) {
   return shell({
     title: `${post.title} — SwiftChat Blog`, summary: description(post), canonicalUrl: canonical(post), url: postUrl(post), type: "article", stylesheet,
+    image: post.socialImage,
     schema: {
       "@context": "https://schema.org", "@type": "BlogPosting", headline: post.title, description: description(post),
       url: postUrl(post), mainEntityOfPage: canonical(post), isBasedOn: canonical(post),
@@ -149,6 +156,9 @@ export async function syncBlog({ sourceRoot, sourceFile = path.join(sourceRoot, 
     [...(post.subsites || []), ...(post.publishTargets || [])].some((target) => normalize(target) === "swiftchat"))
     .sort((a, b) => postDate(b).localeCompare(postDate(a)));
   const assets = new Set();
+  for (const post of posts) {
+    if (!post.socialImage) throw new Error(`Missing RonnieCC socialImage metadata for ${post.slug}; refresh the canonical Blog contract first.`);
+  }
   for (const post of posts) collectAssets(post.content?.blocks, assets);
   for (const asset of assets) await readFile(path.join(sourceRoot, asset));
   const stylesheetVersion = createHash("sha256").update(await readFile(path.join(outputRoot, "assets/site.css"))).digest("hex").slice(0, 12);

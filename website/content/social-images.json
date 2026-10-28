@@ -1,0 +1,32 @@
+{
+  "/": {
+    "url": "https://swiftchat.ronniewong.cc/social/home-bc2653e8928d.png",
+    "width": 1200,
+    "height": 630,
+    "alt": "A little window. A better conversation. — SwiftChat"
+  },
+  "/blog/": {
+    "url": "https://swiftchat.ronniewong.cc/social/blog-a49764f2b1a7.png",
+    "width": 1200,
+    "height": 630,
+    "alt": "在 Mac 上， 聊得更順手。 — SwiftChat"
+  },
+  "/changelog.html": {
+    "url": "https://swiftchat.ronniewong.cc/social/changelog-86872cf48a36.png",
+    "width": 1200,
+    "height": 630,
+    "alt": "What’s new in SwiftChat. — SwiftChat"
+  },
+  "/support.html": {
+    "url": "https://swiftchat.ronniewong.cc/social/support-a789928e70e2.png",
+    "width": 1200,
+    "height": 630,
+    "alt": "A little help with SwiftChat. — SwiftChat"
+  },
+  "/privacy.html": {
+    "url": "https://swiftchat.ronniewong.cc/social/privacy-6488f68b890b.png",
+    "width": 1200,
+    "height": 630,
+    "alt": "Your conversations. Your choices. — SwiftChat"
+  }
+}

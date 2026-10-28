@@ -1,0 +1,11 @@
+{
+  "siteUrl": "https://swiftchat.ronniewong.cc",
+  "brand": "SwiftChat",
+  "pages": {
+    "/": { "key": "home", "eyebrow": "Made for Mac", "title": "A little window.\nA better conversation.", "description": "ChatGPT and your own AI services.", "artwork": "assets/chat-window.png" },
+    "/blog/": { "key": "blog", "eyebrow": "Blog", "title": "在 Mac 上，\n聊得更順手。", "description": "SwiftChat 的開發、功能與使用筆記。" },
+    "/changelog.html": { "key": "changelog", "eyebrow": "Changelog", "title": "What’s new\nin SwiftChat.", "description": "macOS alpha releases and version notes." },
+    "/support.html": { "key": "support", "eyebrow": "Support", "title": "A little help\nwith SwiftChat.", "description": "Installation, AI services and everyday use." },
+    "/privacy.html": { "key": "privacy", "eyebrow": "Privacy", "title": "Your conversations.\nYour choices.", "description": "How SwiftChat handles accounts, context and data." }
+  }
+}

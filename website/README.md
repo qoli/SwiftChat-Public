@@ -14,6 +14,28 @@ Do not hand-edit release metadata or replace a published archive.
 The first-release placeholder has an empty valid RSS feed and no alpha JSON.
 Downloads are enabled only when verified release metadata exists.
 
+## Social previews
+
+Home, Blog, Changelog, Support and Privacy each declare a 1200 × 630 cover with
+matching Open Graph/X metadata. The homepage uses the existing transparent
+`chat-window.png`, with a short product headline. Blog articles consume RonnieCC's
+`socialImage` contract, preserving the same article cover across mirrors.
+
+Editable fixed-page copy lives in `content/social-cards.json`, with route/image
+metadata in `content/social-images.json`. PNG and outlined SVG outputs are tracked
+under `dist/social/`, so ordinary Pages deployment remains buildless. To regenerate,
+install the locked dependencies in the sibling RonnieCC checkout, then run from
+this website directory:
+
+```sh
+node ../../RonnieCC/scripts/render-social-cards.mjs content/social-cards.json dist content/social-images.json
+node ../../RonnieCC/scripts/apply-static-social-meta.mjs content/social-cards.json content/social-images.json dist
+```
+
+Deploy RonnieCC's article covers before dependent Blog mirrors. Run
+`node --test website/scripts/sync-blog.test.mjs` from the repository root after
+changing the Blog generator.
+
 ## Screenshot provenance
 
 Screenshots were captured from the actual macOS SwiftChat build with Sparkle

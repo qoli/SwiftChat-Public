@@ -4,7 +4,7 @@
     "path": "content/blog.seed.json",
     "subsite": "swiftchat",
     "contractVersion": 1,
-    "generatedAt": "2026-10-18T08:42:46.292Z"
+    "generatedAt": "2026-10-28T18:15:03.644Z"
   },
   "posts": [
     {
@@ -33,9 +33,15 @@
       "notionUrl": "https://www.notion.so/qoli/swiftchat-%E8%AE%93-chatgpt-%E5%9C%A8-mac-%E4%B8%8A%E8%81%8A%E5%BE%97%E6%9B%B4%E9%A0%86%E6%89%8B-3fdc1b36c40181918fb0f53680b97cd5?v=e90c1b36c401831d99bf08f10dcbae9b&source=copy_link",
       "createdTime": "2026-10-18T08:13:14.959Z",
       "lastEditedTime": "2026-10-18T08:34:35.231Z",
+      "socialImage": {
+        "url": "https://ronniewong.cc/social/blog/swiftchat-mac-ai-chat-3fdc1b36-8e35bb9817bc.png",
+        "width": 1200,
+        "height": 630,
+        "alt": "SwiftChat：讓 ChatGPT 在 Mac 上聊得更順手 — Ronnie Wong"
+      },
       "content": {
         "source": "notion-v3-page-blocks",
-        "syncedAt": "2026-10-18T08:37:07.066Z",
+        "syncedAt": "2026-10-28T18:09:46.165Z",
         "blocks": [
           {
             "id": "3fdc1b36c40180e8b534e061c3b1cfa2",
