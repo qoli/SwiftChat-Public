@@ -3,14 +3,14 @@
   "channel": "alpha",
   "platform": "macos",
   "version": "0.1.0",
-  "build": "59",
-  "tag": "v0.1.0-alpha.59",
-  "publishedAt": "2026-10-21T18:53:40.034486Z",
-  "releaseUrl": "https://github.com/qoli/SwiftChat-Public/releases/tag/v0.1.0-alpha.59",
-  "downloadUrl": "https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.59/SwiftChat-0.1.0-59-macOS.zip",
-  "sha256": "b17cae0fd79980541026a211a2b07dececf2a53fe3ab1504902abeaa3f60f332",
-  "length": 27121197,
-  "sparkleEdSignature": "5lcvdhqspfMaO4/YMp+jVXN6Qni4XMhtM7ZOKLq4bvuK8qyWkMkhwzA1ZKDIuVYL9xBidHm73dnNjUSHMnlJDw==",
+  "build": "60",
+  "tag": "v0.1.0-alpha.60",
+  "publishedAt": "2026-10-28T16:41:24.387561Z",
+  "releaseUrl": "https://github.com/qoli/SwiftChat-Public/releases/tag/v0.1.0-alpha.60",
+  "downloadUrl": "https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.60/SwiftChat-0.1.0-60-macOS.zip",
+  "sha256": "819c617a4af03e8abd26ae372c709dd743d6e1cc6381f4da4786bcbfe54d170b",
+  "length": 27210070,
+  "sparkleEdSignature": "1RvNv/cwUNuOFbUXXOqBR8ZrYk1sM0prYx2LNKIwwmLhqFX3eXUEXDXfKmgfmNEArruWszzsusLUN1lu3DZeDA==",
   "minimumSystemVersion": "26.0",
-  "notes": "- ChatGPT Desktop \u7121\u6cd5\u81ea\u52d5\u78ba\u8a8d\u76ee\u524d\u986f\u793a\u7684 Codex \u5c0d\u8a71\u6642\uff0c\u53ef\u6539\u5f9e\u672c\u6a5f\u5c0d\u8a71\u6e05\u55ae\u624b\u52d5\u9078\u64c7\u8981\u5e36\u5165\u7684\u5c0d\u8a71\u3002\n- \u9078\u64c7\u8996\u7a97\u53ef\u4f9d\u540d\u7a31\u6216\u5c0d\u8a71 ID \u641c\u5c0b\uff0c\u4e5f\u53ef\u76f4\u63a5\u8cbc\u4e0a Codex \u5c0d\u8a71\u9023\u7d50\u627e\u5230\u8a72\u5c0d\u8a71\uff1b\u540c\u540d\u5c0d\u8a71\u6703\u540c\u6642\u986f\u793a\u5404\u81ea\u7684 ID \u4ee5\u5229\u5340\u5206\u3002\n- \u624b\u52d5\u9078\u64c7\u6703\u6301\u7e8c\u5957\u7528\uff0c\u5207\u63db\u56de\u81ea\u52d5\u8ddf\u96a8\u53ef\u898b\u5c0d\u8a71\u5f8c\u624d\u6062\u5fa9\u81ea\u52d5\u5075\u6e2c\u3002\n- \u5c0d\u8a71\u6e05\u55ae\u53ef\u91cd\u65b0\u6574\u7406\uff1b\u8f09\u5165\u5931\u6557\u6216\u67e5\u7121\u7d50\u679c\u6642\u6703\u986f\u793a\u63d0\u793a\uff0c\u5df2\u9078\u7684\u5c0d\u8a71\u82e5\u4e0d\u5728\u6e05\u55ae\u4e2d\u5247\u63d0\u793a\u91cd\u65b0\u9078\u64c7\u3002\n- \u5e36\u5165\u7684\u4e0a\u4e0b\u6587\u6703\u6a19\u793a\u70ba\u624b\u52d5\u9078\u64c7\u7684 Codex \u5c0d\u8a71\uff0c\u4e26\u9644\u4e0a\u5c0d\u8a71 ID\u3002"
+  "notes": "- Telegram \u4e0a\u4e0b\u6587\u6703\u8b80\u53d6\u672c\u6a5f\u5feb\u53d6\u5716\u7247\u7684\u6587\u5b57\uff0c\u4e26\u6a19\u793a\u70ba OCR \u8fa8\u8b58\u7d50\u679c\uff0c\u8207\u8a0a\u606f\u539f\u6587\u5206\u958b\u5448\u73fe\u3002\n- \u6587\u5b57\u8fa8\u8b58\u5728\u88dd\u7f6e\u7aef\u9032\u884c\uff0c\u7d50\u679c\u53ef\u80fd\u6709\u8fa8\u8b58\u8aa4\u5dee\uff1b\u672a\u5feb\u53d6\u6216\u7121\u6cd5\u8fa8\u8b58\u7684\u5716\u7247\u6703\u53e6\u5916\u6a19\u793a\uff0c\u5176\u4ed6\u5a92\u9ad4\u4ecd\u4ee5\u4f54\u4f4d\u6587\u5b57\u8868\u793a\u3002\n- \u6539\u5584 Telegram \u5716\u7247\u6587\u5b57\u8fa8\u8b58\u7684\u7b49\u5f85\u6642\u9593\uff0c\u91cd\u8907\u8b80\u53d6\u540c\u4e00\u5f35\u5716\u7247\u6642\u6703\u6cbf\u7528\u5148\u524d\u7684\u8fa8\u8b58\u7d50\u679c\u3002"
 }

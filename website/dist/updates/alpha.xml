@@ -1,6 +1,4 @@
 <?xml version='1.0' encoding='utf-8'?>
-<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0"><channel><title>SwiftChat Alpha</title><link>https://swiftchat.ronniewong.cc</link><description>SwiftChat macOS alpha updates</description><item><title>SwiftChat 0.1.0 (59) Alpha</title><description>- ChatGPT Desktop 無法自動確認目前顯示的 Codex 對話時，可改從本機對話清單手動選擇要帶入的對話。
-- 選擇視窗可依名稱或對話 ID 搜尋，也可直接貼上 Codex 對話連結找到該對話；同名對話會同時顯示各自的 ID 以利區分。
-- 手動選擇會持續套用，切換回自動跟隨可見對話後才恢復自動偵測。
-- 對話清單可重新整理；載入失敗或查無結果時會顯示提示，已選的對話若不在清單中則提示重新選擇。
-- 帶入的上下文會標示為手動選擇的 Codex 對話，並附上對話 ID。</description><sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion><enclosure url="https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.59/SwiftChat-0.1.0-59-macOS.zip" length="27121197" type="application/octet-stream" sparkle:version="59" sparkle:shortVersionString="0.1.0" sparkle:edSignature="5lcvdhqspfMaO4/YMp+jVXN6Qni4XMhtM7ZOKLq4bvuK8qyWkMkhwzA1ZKDIuVYL9xBidHm73dnNjUSHMnlJDw==" /></item></channel></rss>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0"><channel><title>SwiftChat Alpha</title><link>https://swiftchat.ronniewong.cc</link><description>SwiftChat macOS alpha updates</description><item><title>SwiftChat 0.1.0 (60) Alpha</title><description>- Telegram 上下文會讀取本機快取圖片的文字，並標示為 OCR 辨識結果，與訊息原文分開呈現。
+- 文字辨識在裝置端進行，結果可能有辨識誤差；未快取或無法辨識的圖片會另外標示，其他媒體仍以佔位文字表示。
+- 改善 Telegram 圖片文字辨識的等待時間，重複讀取同一張圖片時會沿用先前的辨識結果。</description><sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion><enclosure url="https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.60/SwiftChat-0.1.0-60-macOS.zip" length="27210070" type="application/octet-stream" sparkle:version="60" sparkle:shortVersionString="0.1.0" sparkle:edSignature="1RvNv/cwUNuOFbUXXOqBR8ZrYk1sM0prYx2LNKIwwmLhqFX3eXUEXDXfKmgfmNEArruWszzsusLUN1lu3DZeDA==" /></item></channel></rss>
