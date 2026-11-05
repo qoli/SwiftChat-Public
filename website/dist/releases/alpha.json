@@ -3,14 +3,14 @@
   "channel": "alpha",
   "platform": "macos",
   "version": "0.1.0",
-  "build": "60",
-  "tag": "v0.1.0-alpha.60",
-  "publishedAt": "2026-10-28T16:41:24.387561Z",
-  "releaseUrl": "https://github.com/qoli/SwiftChat-Public/releases/tag/v0.1.0-alpha.60",
-  "downloadUrl": "https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.60/SwiftChat-0.1.0-60-macOS.zip",
-  "sha256": "819c617a4af03e8abd26ae372c709dd743d6e1cc6381f4da4786bcbfe54d170b",
-  "length": 27210070,
-  "sparkleEdSignature": "1RvNv/cwUNuOFbUXXOqBR8ZrYk1sM0prYx2LNKIwwmLhqFX3eXUEXDXfKmgfmNEArruWszzsusLUN1lu3DZeDA==",
+  "build": "61",
+  "tag": "v0.1.0-alpha.61",
+  "publishedAt": "2026-11-05T18:59:53.430397Z",
+  "releaseUrl": "https://github.com/qoli/SwiftChat-Public/releases/tag/v0.1.0-alpha.61",
+  "downloadUrl": "https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.61/SwiftChat-0.1.0-61-macOS.zip",
+  "sha256": "d3f978e74101500f1ef0648f9747bd99f7fa12d804fb48da7fa2af600014cbcb",
+  "length": 29131894,
+  "sparkleEdSignature": "rLA77HwzKe0jztUzNLD7fqkwHYxtkD/kxIlZHFln35gq7DtyQkgFlB6Cfs2tY9J3cLzCMEldTC7oarUyzqrvAw==",
   "minimumSystemVersion": "26.0",
-  "notes": "- Telegram \u4e0a\u4e0b\u6587\u6703\u8b80\u53d6\u672c\u6a5f\u5feb\u53d6\u5716\u7247\u7684\u6587\u5b57\uff0c\u4e26\u6a19\u793a\u70ba OCR \u8fa8\u8b58\u7d50\u679c\uff0c\u8207\u8a0a\u606f\u539f\u6587\u5206\u958b\u5448\u73fe\u3002\n- \u6587\u5b57\u8fa8\u8b58\u5728\u88dd\u7f6e\u7aef\u9032\u884c\uff0c\u7d50\u679c\u53ef\u80fd\u6709\u8fa8\u8b58\u8aa4\u5dee\uff1b\u672a\u5feb\u53d6\u6216\u7121\u6cd5\u8fa8\u8b58\u7684\u5716\u7247\u6703\u53e6\u5916\u6a19\u793a\uff0c\u5176\u4ed6\u5a92\u9ad4\u4ecd\u4ee5\u4f54\u4f4d\u6587\u5b57\u8868\u793a\u3002\n- \u6539\u5584 Telegram \u5716\u7247\u6587\u5b57\u8fa8\u8b58\u7684\u7b49\u5f85\u6642\u9593\uff0c\u91cd\u8907\u8b80\u53d6\u540c\u4e00\u5f35\u5716\u7247\u6642\u6703\u6cbf\u7528\u5148\u524d\u7684\u8fa8\u8b58\u7d50\u679c\u3002"
+  "notes": "- \u52a9\u7406\u73fe\u5728\u53ef\u4ee5\u900f\u904e\u5c0d\u8a71\u4e2d\u7684\u6a94\u6848\u5de5\u5177\u67e5\u627e\u5df2\u5132\u5b58\u7684\u5c0d\u8a71\uff0c\u8b80\u53d6\u76f8\u95dc\u5167\u5bb9\u5f8c\u56de\u7b54\uff1b\u5df2\u5132\u5b58\u7684\u5c0d\u8a71\u70ba\u552f\u8b80\uff0c\u4e0d\u6703\u88ab\u4fee\u6539\u3002\n- \u767b\u5165\u63d0\u4f9b\u8005\u5e33\u865f\u6642\uff0c\u82e5\u6d41\u7a0b\u8981\u6c42\u9078\u64c7\u9805\u76ee\u6216\u78ba\u8a8d\u8cc7\u8a0a\uff0c\u6388\u6b0a\u5217\u6703\u986f\u793a\u53ef\u9078\u9805\u76ee\u6216\u8aaa\u660e\u9023\u7d50\uff0c\u78ba\u8a8d\u5f8c\u5373\u53ef\u7e7c\u7e8c\u3002\n- \u5de5\u5177\u56de\u5408\u4e0d\u518d\u8981\u6c42\u5148\u8f38\u51fa\u63a8\u7406\u5167\u5bb9\uff0c\u6a21\u578b\u53ef\u4ee5\u76f4\u63a5\u547c\u53eb\u5de5\u5177\u3002\n- \u4e32\u6d41\u56de\u8986\u7684\u6587\u5b57\u6de1\u5165\u4e0d\u518d\u88ab\u5f8c\u7e8c\u66f4\u65b0\u6253\u65b7\uff0c\u6703\u4f9d\u539f\u672c\u9032\u5ea6\u5b8c\u6210\u3002\n- \u6539\u5584\u9577\u56de\u8986\u4e32\u6d41\u8207\u647a\u758a\u601d\u8003\u5167\u5bb9\u6642\u7684\u4ecb\u9762\u5361\u9813\u3002"
 }
