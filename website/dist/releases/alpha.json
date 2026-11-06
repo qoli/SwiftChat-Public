@@ -3,14 +3,14 @@
   "channel": "alpha",
   "platform": "macos",
   "version": "0.1.0",
-  "build": "61",
-  "tag": "v0.1.0-alpha.61",
-  "publishedAt": "2026-11-05T18:59:53.430397Z",
-  "releaseUrl": "https://github.com/qoli/SwiftChat-Public/releases/tag/v0.1.0-alpha.61",
-  "downloadUrl": "https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.61/SwiftChat-0.1.0-61-macOS.zip",
-  "sha256": "d3f978e74101500f1ef0648f9747bd99f7fa12d804fb48da7fa2af600014cbcb",
-  "length": 29131894,
-  "sparkleEdSignature": "rLA77HwzKe0jztUzNLD7fqkwHYxtkD/kxIlZHFln35gq7DtyQkgFlB6Cfs2tY9J3cLzCMEldTC7oarUyzqrvAw==",
+  "build": "62",
+  "tag": "v0.1.0-alpha.62",
+  "publishedAt": "2026-11-06T21:58:56.734418Z",
+  "releaseUrl": "https://github.com/qoli/SwiftChat-Public/releases/tag/v0.1.0-alpha.62",
+  "downloadUrl": "https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.62/SwiftChat-0.1.0-62-macOS.zip",
+  "sha256": "45abe8f9cb8f4053f347d00ed6562dbc6c053885da423eb807b22393a696357f",
+  "length": 29173519,
+  "sparkleEdSignature": "wLlrcsRbFmYLKY48gH0QCQ6hCDf+sjMuUueQZEnfwRW9m+3cp5zffPAlKwNXzRTqWROE5dPGzBDNS93ZjO2TDQ==",
   "minimumSystemVersion": "26.0",
-  "notes": "- \u52a9\u7406\u73fe\u5728\u53ef\u4ee5\u900f\u904e\u5c0d\u8a71\u4e2d\u7684\u6a94\u6848\u5de5\u5177\u67e5\u627e\u5df2\u5132\u5b58\u7684\u5c0d\u8a71\uff0c\u8b80\u53d6\u76f8\u95dc\u5167\u5bb9\u5f8c\u56de\u7b54\uff1b\u5df2\u5132\u5b58\u7684\u5c0d\u8a71\u70ba\u552f\u8b80\uff0c\u4e0d\u6703\u88ab\u4fee\u6539\u3002\n- \u767b\u5165\u63d0\u4f9b\u8005\u5e33\u865f\u6642\uff0c\u82e5\u6d41\u7a0b\u8981\u6c42\u9078\u64c7\u9805\u76ee\u6216\u78ba\u8a8d\u8cc7\u8a0a\uff0c\u6388\u6b0a\u5217\u6703\u986f\u793a\u53ef\u9078\u9805\u76ee\u6216\u8aaa\u660e\u9023\u7d50\uff0c\u78ba\u8a8d\u5f8c\u5373\u53ef\u7e7c\u7e8c\u3002\n- \u5de5\u5177\u56de\u5408\u4e0d\u518d\u8981\u6c42\u5148\u8f38\u51fa\u63a8\u7406\u5167\u5bb9\uff0c\u6a21\u578b\u53ef\u4ee5\u76f4\u63a5\u547c\u53eb\u5de5\u5177\u3002\n- \u4e32\u6d41\u56de\u8986\u7684\u6587\u5b57\u6de1\u5165\u4e0d\u518d\u88ab\u5f8c\u7e8c\u66f4\u65b0\u6253\u65b7\uff0c\u6703\u4f9d\u539f\u672c\u9032\u5ea6\u5b8c\u6210\u3002\n- \u6539\u5584\u9577\u56de\u8986\u4e32\u6d41\u8207\u647a\u758a\u601d\u8003\u5167\u5bb9\u6642\u7684\u4ecb\u9762\u5361\u9813\u3002"
+  "notes": "- \u4f7f\u7528 OpenAI \u6a21\u578b\u56de\u8986\u6642\uff0c\u82e5\u4e32\u6d41\u9023\u7dda\u4e2d\u65b7\u6216\u7db2\u8def\u7121\u6cd5\u9023\u7dda\uff0c\u73fe\u5728\u6703\u81ea\u52d5\u91cd\u8a66\uff0c\u6700\u591a 5 \u6b21\uff0c\u91cd\u8a66\u6210\u529f\u5f8c\u53ef\u6b63\u5e38\u5b8c\u6210\u56de\u8986\u3002\n- \u91cd\u8a66\u524d\u986f\u793a\u7684\u672a\u5b8c\u6210\u5167\u5bb9\u6703\u6e05\u9664\u4e26\u91cd\u65b0\u7522\u751f\uff0c\u4e0d\u6703\u5beb\u5165\u5c0d\u8a71\uff0c\u4e5f\u4e0d\u6703\u89f8\u767c\u5de5\u5177\u547c\u53eb\u3002"
 }
