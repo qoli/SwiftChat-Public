@@ -3,14 +3,14 @@
   "channel": "alpha",
   "platform": "macos",
   "version": "0.1.0",
-  "build": "64",
-  "tag": "v0.1.0-alpha.64",
-  "publishedAt": "2026-11-07T05:46:34.931535Z",
-  "releaseUrl": "https://github.com/qoli/SwiftChat-Public/releases/tag/v0.1.0-alpha.64",
-  "downloadUrl": "https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.64/SwiftChat-0.1.0-64-macOS.zip",
-  "sha256": "2ac1d877650e64fca6bc144573a44c7677ff1e4cec2a32f5435caed8a6286204",
-  "length": 29193472,
-  "sparkleEdSignature": "260V4LoVozkDFSyHMwad92e6n2BLSu8bfn/sWfOyo4JRpzwKx1WsS9xc6s8oAM0+xNtqM7mPHUuZOXboTE+hAA==",
+  "build": "65",
+  "tag": "v0.1.0-alpha.65",
+  "publishedAt": "2026-11-07T21:31:57.140115Z",
+  "releaseUrl": "https://github.com/qoli/SwiftChat-Public/releases/tag/v0.1.0-alpha.65",
+  "downloadUrl": "https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.65/SwiftChat-0.1.0-65-macOS.zip",
+  "sha256": "adb899fc28dac75ab42339fab524a0e37ea3d8425a6d454ab9b15ba30fb217d0",
+  "length": 29193836,
+  "sparkleEdSignature": "1yXH38k37Xk801CMcu1IKjFmQpFcsg5QKmy5Q4JX0vhhCrB4rHV5l3ceWlRrFlR+XmGTIl0Uta0g3I0QbI9cCQ==",
   "minimumSystemVersion": "26.0",
-  "notes": "- \u4e32\u6d41\u56e0\u9023\u7dda\u4e2d\u65b7\u800c\u5931\u6557\u6642\uff0c\u6240\u6709 API \u670d\u52d9\u73fe\u5728\u90fd\u6703\u81ea\u52d5\u91cd\u65b0\u5617\u8a66\uff0c\u4e0d\u518d\u76f4\u63a5\u4e2d\u65b7\u9019\u6b21\u56de\u8986\u3002\n- ChatGPT \u6b77\u53f2\u7684\u91cd\u65b0\u6574\u7406\u6309\u9215\u56fa\u5b9a\u986f\u793a\uff1b\u7be9\u9078\u50c5\u986f\u793a AIChat \u6642\u6309\u9215\u6539\u70ba\u505c\u7528\u3002\n- \u65b0\u589e\u6216\u7de8\u8f2f\u81ea\u8a02\u6a21\u578b\u6642\uff0c\u5167\u5bb9\u9577\u5ea6\u4e0a\u9650\u8207\u6700\u5927\u8f38\u51fa Token \u6578\u56fa\u5b9a\u986f\u793a\u4e26\u6a19\u793a\u70ba\u5fc5\u586b\uff0c\u5169\u8005\u7686\u70ba SwiftChat CLM \u6240\u9700\u3002"
+  "notes": "\u672c\u6b21\u6c92\u6709\u4f7f\u7528\u8005\u53ef\u898b\u7684\u61c9\u7528\u7a0b\u5f0f\u8b8a\u66f4\u3002"
 }
