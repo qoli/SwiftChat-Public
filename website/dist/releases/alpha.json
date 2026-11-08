@@ -3,14 +3,14 @@
   "channel": "alpha",
   "platform": "macos",
   "version": "0.1.0",
-  "build": "65",
-  "tag": "v0.1.0-alpha.65",
-  "publishedAt": "2026-11-07T21:31:57.140115Z",
-  "releaseUrl": "https://github.com/qoli/SwiftChat-Public/releases/tag/v0.1.0-alpha.65",
-  "downloadUrl": "https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.65/SwiftChat-0.1.0-65-macOS.zip",
-  "sha256": "adb899fc28dac75ab42339fab524a0e37ea3d8425a6d454ab9b15ba30fb217d0",
-  "length": 29193836,
-  "sparkleEdSignature": "1yXH38k37Xk801CMcu1IKjFmQpFcsg5QKmy5Q4JX0vhhCrB4rHV5l3ceWlRrFlR+XmGTIl0Uta0g3I0QbI9cCQ==",
+  "build": "66",
+  "tag": "v0.1.0-alpha.66",
+  "publishedAt": "2026-11-08T06:01:29.256924Z",
+  "releaseUrl": "https://github.com/qoli/SwiftChat-Public/releases/tag/v0.1.0-alpha.66",
+  "downloadUrl": "https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.66/SwiftChat-0.1.0-66-macOS.zip",
+  "sha256": "e89f1199e494ea34bfd78ae39e3565952bf0cdbee50cfaeeb6fd72e3926d3a9e",
+  "length": 29397604,
+  "sparkleEdSignature": "cvlq0JlDS5Lnsav8EUDazZLNEuDhfCFsjAVOzFPdi4Se6gSyOvTtGkvIzj55HH5UJp8FEY8CojKvfsqHgtCWAw==",
   "minimumSystemVersion": "26.0",
-  "notes": "\u672c\u6b21\u6c92\u6709\u4f7f\u7528\u8005\u53ef\u898b\u7684\u61c9\u7528\u7a0b\u5f0f\u8b8a\u66f4\u3002"
+  "notes": "- \u56de\u8986\u4e32\u6d41\u671f\u9593\u5373\u53ef\u986f\u793a\u4e92\u52d5\u4ecb\u9762\uff0c\u4e0d\u5fc5\u7b49\u6574\u6bb5\u56de\u8986\u7d50\u675f\u3002\n- Google \u4e32\u6d41\u63d0\u524d\u4e2d\u65b7\u6642\u6703\u81ea\u52d5\u91cd\u8a66\uff0c\u4e0d\u5fc5\u624b\u52d5\u91cd\u65b0\u9001\u51fa\u3002\n- \u5728\u8a2d\u5b9a\u300cAccounts & Services\u300d\u7684 iCloud \u5340\u584a\u958b\u555f\u300cSync Settings\u300d\u5f8c\uff0c\u81ea\u8a02\u670d\u52d9\u3001\u65b0\u5c0d\u8a71\u7684\u6a21\u578b\u9078\u64c7\u8207\u8f38\u5165\u504f\u597d\u6703\u81ea\u52d5\u540c\u6b65\uff0c\u4e5f\u53ef\u6309\u300cSync Now\u300d\u624b\u52d5\u540c\u6b65\u3002\n- \u53ef\u53e6\u5916\u958b\u555f\u300cSync API Keys\u300d\uff0c\u900f\u904e iCloud Keychain \u5728\u88dd\u7f6e\u9593\u5171\u7528\u5df2\u8f38\u5165\u7684 API \u91d1\u9470\uff1bOAuth \u767b\u5165\u8207\u74b0\u5883\u8b8a\u6578\u63d0\u4f9b\u7684\u91d1\u9470\u4e0d\u6703\u540c\u6b65\uff0c\u95dc\u9589\u5f8c\u91d1\u9470\u53ea\u4fdd\u7559\u5728\u672c\u6a5f\u3002\n- \u540c\u6b65\u9700\u767b\u5165 iCloud\uff0cAPI \u91d1\u9470\u540c\u6b65\u53e6\u9700\u555f\u7528 iCloud Keychain\uff1b\u5207\u63db iCloud \u5e33\u865f\u6703\u505c\u6b62\u540c\u6b65\uff0c\u4e26\u63d0\u793a\u91cd\u65b0\u958b\u555f\u3002\n- \u540c\u6b65\u958b\u555f\u6642\u79fb\u9664\u81ea\u8a02\u670d\u52d9\uff0c\u5176\u4ed6\u88dd\u7f6e\u4e0a\u7684\u540c\u4e00\u670d\u52d9\u4e5f\u6703\u4e00\u4f75\u79fb\u9664\u3002"
 }
