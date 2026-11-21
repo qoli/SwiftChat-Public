@@ -1,7 +1,3 @@
 <?xml version='1.0' encoding='utf-8'?>
-<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0"><channel><title>SwiftChat Alpha</title><link>https://swiftchat.ronniewong.cc</link><description>SwiftChat macOS alpha updates</description><item><title>SwiftChat 0.1.0 (69) Alpha</title><description>- 產生回覆時，輸入框上方會顯示目前的思考或工具步驟，展開後可查看這次回覆的所有步驟。
-- 產生回覆期間可以先在輸入框寫下一則訊息；附件與送出仍要等回覆結束。
-- 產生回覆時，停止按鈕外圈會顯示旋轉圓環；送出後等待處理時，送出按鈕也會換成圓環。
-- Work with Apps 會再次自動跟隨 ChatGPT Desktop 目前開啟的對話；桌面版拒絕本機連線時仍可自動辨識，無法核對時會提示重新整理或改用「Choose conversation…」手動選擇。
-- 調整視窗或側邊欄寬度後，正在閱讀的段落會留在原位。
-- 回覆串流時減少多餘的畫面更新，產生過程更平順。</description><sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion><enclosure url="https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.69/SwiftChat-0.1.0-69-macOS.zip" length="29531230" type="application/octet-stream" sparkle:version="69" sparkle:shortVersionString="0.1.0" sparkle:edSignature="9YO3aFVdDykPjbt2X/dsuARHXY25kgk0fyzpN/1u/Xo4CtvhRa3RWjdXJKDtn2krQgSqHU6igXuH2nPRNZWyAg==" /></item></channel></rss>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0"><channel><title>SwiftChat Alpha</title><link>https://swiftchat.ronniewong.cc</link><description>SwiftChat macOS alpha updates</description><item><title>SwiftChat 0.1.0 (70) Alpha</title><description>- Work with Apps 遇到多個同名的 Codex 對話時，會比對視窗中可見的最後一則使用者訊息，自動判斷目前開啟的是哪一個對話。
+- 仍無法唯一判斷時，會提示改用「Choose conversation…」手動選擇要分享的對話。</description><sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion><enclosure url="https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.70/SwiftChat-0.1.0-70-macOS.zip" length="29542573" type="application/octet-stream" sparkle:version="70" sparkle:shortVersionString="0.1.0" sparkle:edSignature="RcUu7rSaqRLM9gTj0ZZLPjweJ00XSLXIPOo50v3xekg4yAdT5Du2lUwgFrIDX7uWN2mLXXNZyXnCiOiKjEPXCw==" /></item></channel></rss>
