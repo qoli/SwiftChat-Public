@@ -3,14 +3,14 @@
   "channel": "alpha",
   "platform": "macos",
   "version": "0.1.0",
-  "build": "70",
-  "tag": "v0.1.0-alpha.70",
-  "publishedAt": "2026-11-21T17:22:51.387186Z",
-  "releaseUrl": "https://github.com/qoli/SwiftChat-Public/releases/tag/v0.1.0-alpha.70",
-  "downloadUrl": "https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.70/SwiftChat-0.1.0-70-macOS.zip",
-  "sha256": "b2514575b33ee1b2885f3b8bad38a8996eb13e0c9ce1963ee19cd83606af3c5e",
-  "length": 29542573,
-  "sparkleEdSignature": "RcUu7rSaqRLM9gTj0ZZLPjweJ00XSLXIPOo50v3xekg4yAdT5Du2lUwgFrIDX7uWN2mLXXNZyXnCiOiKjEPXCw==",
+  "build": "71",
+  "tag": "v0.1.0-alpha.71",
+  "publishedAt": "2026-11-21T19:14:12.598733Z",
+  "releaseUrl": "https://github.com/qoli/SwiftChat-Public/releases/tag/v0.1.0-alpha.71",
+  "downloadUrl": "https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.71/SwiftChat-0.1.0-71-macOS.zip",
+  "sha256": "94604646520d55da99bb13afcf7dfdd0614a59eff5bd883063239cea1e1d60b3",
+  "length": 29543376,
+  "sparkleEdSignature": "aeeqyqg0cRidqHinlxo0Xly12mZfpRUMXkqGarKsjNB80/YhfeBHeNnLzxm1UlSVJiihgnEk52VIwCH9Kj98Aw==",
   "minimumSystemVersion": "26.0",
-  "notes": "- Work with Apps \u9047\u5230\u591a\u500b\u540c\u540d\u7684 Codex \u5c0d\u8a71\u6642\uff0c\u6703\u6bd4\u5c0d\u8996\u7a97\u4e2d\u53ef\u898b\u7684\u6700\u5f8c\u4e00\u5247\u4f7f\u7528\u8005\u8a0a\u606f\uff0c\u81ea\u52d5\u5224\u65b7\u76ee\u524d\u958b\u555f\u7684\u662f\u54ea\u4e00\u500b\u5c0d\u8a71\u3002\n- \u4ecd\u7121\u6cd5\u552f\u4e00\u5224\u65b7\u6642\uff0c\u6703\u63d0\u793a\u6539\u7528\u300cChoose conversation\u2026\u300d\u624b\u52d5\u9078\u64c7\u8981\u5206\u4eab\u7684\u5c0d\u8a71\u3002"
+  "notes": "- \u751f\u6210\u4e2d\u7684\u6d3b\u52d5\u6307\u793a\u79fb\u5230\u8f38\u5165\u6846\u4e0a\u65b9\u7684\u4e0a\u4e0b\u6587\u5217\uff0c\u8207\u9644\u4ef6\u3001\u4e0a\u4e0b\u6587\u9805\u76ee\u4e26\u6392\uff0c\u4e26\u56fa\u5b9a\u6392\u5728\u6700\u524d\u9762\u3002\n- \u5c55\u958b\u6d3b\u52d5\u6b77\u53f2\u6642\uff0c\u7d00\u9304\u6539\u4ee5\u6d6e\u5c64\u986f\u793a\u5728\u8a72\u5217\u4e0a\u65b9\uff0c\u4e0d\u518d\u53e6\u5916\u4f54\u7528\u8f38\u5165\u6846\u4e0a\u65b9\u7684\u4e00\u6574\u5217\u7a7a\u9593\u3002"
 }
