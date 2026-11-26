@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0"><channel><title>SwiftChat Alpha</title><link>https://swiftchat.ronniewong.cc</link><description>SwiftChat macOS alpha updates</description><item><title>SwiftChat 0.1.0 (74) Alpha</title><description>- 已連接的 ChatGPT Desktop 可在對話來源面板選擇「Match Current Conversation」：SwiftChat 會把 ChatGPT Desktop 帶到前景，透過它的複製對話連結快捷鍵（⌥⌘L）取得目前對話，並設為傳送範圍。
-- 這項比對需要輔助使用權限與控制 System Events 的自動化權限；權限不足時會顯示原因，並可從自動化提示直接開啟設定。
-- 開啟 SSH 危險指令保護後，指令中出現 rm、dd、mkfs、chmod 或 diskutil 就會先請你確認，即使只是參數或引號中的文字。
-- 無法確定指令名稱的指令，以及 mkfs.ext4 這類帶後綴的名稱，不再觸發這項確認。
-- 測試 SSH 連線或安裝金鑰失敗時，SSH 設定仍會顯示本機金鑰與指紋，不再顯示為尚未建立。</description><sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion><enclosure url="https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.74/SwiftChat-0.1.0-74-macOS.zip" length="32574939" type="application/octet-stream" sparkle:version="74" sparkle:shortVersionString="0.1.0" sparkle:edSignature="4tgr67vrxLH0MiNlHSMoWOXA2KtmcVEe8IrhsSrII4FKo1zE3NvjfNMYo9eohmEfS5MvoMHMtl/xr8k91yvwBw==" /></item></channel></rss>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0"><channel><title>SwiftChat Alpha</title><link>https://swiftchat.ronniewong.cc</link><description>SwiftChat macOS alpha updates</description><item><title>SwiftChat 0.1.0 (77) Alpha</title><description>- 長對話中的 ChatGPT 串流回覆會持續顯示更新，不再停住。
+- 對話中的 shell 工具活動會顯示這次執行的指令。
+- 較長的草稿在輸入框內最多顯示 8 行，超過後在框內捲動。
+- 輸入框的活動提示改用動態光球，進行中的文字帶有流動光澤。</description><sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion><enclosure url="https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.77/SwiftChat-0.1.0-77-macOS.zip" length="32676864" type="application/octet-stream" sparkle:version="77" sparkle:shortVersionString="0.1.0" sparkle:edSignature="my3Fhg7YGy31xGTsxcgl1qK2/IdOnJEfUY1F6mEid7hL8zyar8Y/0Y6E7ae+pR+vzUWE1TnsC9bpMPc1+Yt5DQ==" /></item></channel></rss>
