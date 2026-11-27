@@ -3,14 +3,14 @@
   "channel": "alpha",
   "platform": "macos",
   "version": "0.1.0",
-  "build": "78",
-  "tag": "v0.1.0-alpha.78",
-  "publishedAt": "2026-11-26T23:23:31.689821Z",
-  "releaseUrl": "https://github.com/qoli/SwiftChat-Public/releases/tag/v0.1.0-alpha.78",
-  "downloadUrl": "https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.78/SwiftChat-0.1.0-78-macOS.zip",
-  "sha256": "2f09360775c1f7238ef5947ba96698f85fde4b376776b7559a2671566630ad75",
-  "length": 32676865,
-  "sparkleEdSignature": "UUqae/EPd8N8/H4oRjsmZUr9lp6QC3vHQrB+Yj1Qt+2jl4viiH6G53771++1SPtkXQfZhDbw/vV0PstVYzfxDQ==",
+  "build": "79",
+  "tag": "v0.1.0-alpha.79",
+  "publishedAt": "2026-11-27T09:45:51.427945Z",
+  "releaseUrl": "https://github.com/qoli/SwiftChat-Public/releases/tag/v0.1.0-alpha.79",
+  "downloadUrl": "https://github.com/qoli/SwiftChat-Public/releases/download/v0.1.0-alpha.79/SwiftChat-0.1.0-79-macOS.zip",
+  "sha256": "08dd92cbdf7c9631ae3703b29d3ff6dac891e4ee4aecf305195a896373e8836c",
+  "length": 32757477,
+  "sparkleEdSignature": "McPragRiQNUN6fGhmt1boCIpN/dasrKfeRrens5QO1hUSYzrHYvJkgUE53ZvbmZfaI8jyFK44J24tveAbI9QDQ==",
   "minimumSystemVersion": "26.0",
-  "notes": "- \u4fee\u6b63\u5167\u5bb9\u6216\u8996\u7a97\u5927\u5c0f\u8b8a\u52d5\u5f8c\uff0c\u300c\u8df3\u5230\u6700\u65b0\u300d\u6309\u9215\u672a\u53cd\u6620\u76ee\u524d\u6372\u52d5\u4f4d\u7f6e\u7684\u554f\u984c\u3002"
+  "notes": "- \u555f\u7528\u4e26\u9a57\u8b49 SSH \u4e3b\u6a5f\u5f8c\uff0c\u52a9\u7406\u53ef\u4ee5\u5728\u5c0d\u8a71\u7684\u5de5\u4f5c\u6a94\u6848\u8207 SSH \u4e3b\u6a5f\u4e4b\u9593\u4e0a\u50b3\u6216\u4e0b\u8f09\u55ae\u4e00\u6a94\u6848\u3002\n- \u6a94\u6848\u4ee5\u4f4d\u5143\u7d44\u76f4\u63a5\u50b3\u8f38\uff0c\u4e0d\u7d93\u904e\u6a21\u578b\u5167\u5bb9\uff0c\u4e8c\u9032\u4f4d\u6a94\u4e5f\u80fd\u5b8c\u6574\u642c\u79fb\u3002\n- \u5df2\u5b58\u5728\u7684\u76ee\u6a19\u6a94\u6848\u9810\u8a2d\u4fdd\u7559\uff0c\u9700\u660e\u78ba\u5141\u8a31\u624d\u6703\u8986\u5beb\uff1b\u9060\u7aef\u8986\u5beb\u9700\u4f3a\u670d\u5668\u652f\u63f4 SFTP posix-rename\u3002\n- \u672c\u6a5f\u7f3a\u5c11\u7684\u4e0a\u5c64\u8cc7\u6599\u593e\u6703\u81ea\u52d5\u5efa\u7acb\uff0c\u9060\u7aef\u4e0a\u5c64\u8cc7\u6599\u593e\u9700\u5148\u5b58\u5728\uff1b`/memory` \u5c0d\u8a71\u7d00\u9304\u53ea\u80fd\u4e0a\u50b3\uff0c\u4e0d\u80fd\u4f5c\u70ba\u4e0b\u8f09\u76ee\u7684\u5730\u3002\n- \u50b3\u8f38\u5148\u5beb\u5165\u66ab\u5b58\u6a94\uff0c\u5b8c\u6210\u5f8c\u624d\u767c\u4f48\uff1b\u82e5\u4e2d\u9014\u4e2d\u65b7\uff0c\u7d50\u679c\u53ef\u80fd\u4e0d\u78ba\u5b9a\u3002"
 }
